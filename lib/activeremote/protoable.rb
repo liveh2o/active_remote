@@ -3,9 +3,9 @@ module Activeremote
 	# Provide proto behaviors for a model
 	module Protoable
 		def self.included(klass)
-			klass.extend(::ProtobufServiceHelpers)
-			klass.extend(::ProtobufServiceHelpers::ClassMethods)
-			klass.__send__(:include, ::ProtobufServiceHelpers::InstanceMethods)
+			klass.extend(::Activeremote::Protoable)
+			klass.extend(::Activeremote::Protoable::ClassMethods)
+			klass.__send__(:include, ::Activeremote::Protoable::InstanceMethods)
 
 			klass.class_eval do
 				class << self
