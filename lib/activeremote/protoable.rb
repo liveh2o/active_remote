@@ -57,7 +57,7 @@ module Activeremote
 					if callable.is_a?(Symbol)
 						unless self.respond_to?(callable)
 							column = _protobuf_columns[field.to_sym]
-							callable = :"_convert_#{callable}_to_#{column.type}"
+							callable = :"_convert_#{callable}_to_#{column.try(:type)}"
 						end
 						callable = method(callable) if self.respond_to?(callable)
 					end
@@ -111,7 +111,7 @@ module Activeremote
 				return errors.any? ? 400 : 200
 			end
 
-			def bas64_encoded_value_for_protobuf(attr_key)
+			def base64_encoded_value_for_protobuf(attr_key)
 				value = attributes[attr_key]
 				{ :encoded => value, :raw => self.class._base64_to_bytes(value) }
 			end
