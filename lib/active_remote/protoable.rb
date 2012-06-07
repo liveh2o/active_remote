@@ -1,11 +1,12 @@
-module Activeremote
-
-	# Provide proto behaviors for a model
+##
+# Provide protobuf behaviors for a model
+#
+module ActiveRemote
 	module Protoable
 		def self.included(klass)
-			klass.extend(::Activeremote::Protoable)
-			klass.extend(::Activeremote::Protoable::ClassMethods)
-			klass.__send__(:include, ::Activeremote::Protoable::InstanceMethods)
+			klass.extend(::ActiveRemote::Protoable)
+			klass.extend(::ActiveRemote::Protoable::ClassMethods)
+			klass.__send__(:include, ::ActiveRemote::Protoable::InstanceMethods)
 
 			klass.class_eval do
 				class << self
@@ -228,7 +229,7 @@ module Activeremote
 					_bytes_to_base64(field.raw)
 				end
 			end
-			alias_method :convert_base64_to_string, :_convert_base64_to_encoded_string 
+			alias_method :convert_base64_to_string, :_convert_base64_to_encoded_string
 
 			def _convert_base64_to_raw_string(field)
 				if field.has_field?(:raw)
