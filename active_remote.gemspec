@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   #
   s.add_dependency "activerecord"
   s.add_dependency "atlas"
+  s.add_dependency "buttress"
 
   ##
   # Development Dependencies
