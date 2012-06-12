@@ -1,3 +1,5 @@
+require 'active_remote/protobuf_helpers'
+
 ##
 # Provide protobuf behaviors for a model
 #
