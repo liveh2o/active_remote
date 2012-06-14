@@ -10,14 +10,9 @@ module ActiveRemote
 
     def pagination_response_options(request, search_relation)
       options = nil
+
       if _protobuf_paginate_ready?(request)
-        options = Atlas::SearchOptions.new({
-          :pagination => Atlas::Pagination.new({
-            :total_entries => search_relation.total_entries,
-            :total_pages => search_relation.total_pages,
-            :count => search_relation.count
-          })
-        })
+        options = Atlas::SearchOptions.new(:pagination => _protobuf_options_pagination_hash(request, search_relation))
       end
 
       return options
@@ -34,6 +29,14 @@ module ActiveRemote
     end
 
     private 
+
+    def _protobuf_options_pagination_hash(request, search_relation)
+      request.options.pagination.to_hash.merge({
+        :total_entries => search_relation.total_entries,
+        :total_pages => search_relation.total_pages,
+        :count => search_relation.count
+      })
+    end
 
     def _protobuf_paginate_order(search_scope, pagination)
       if respond_to_and_has_and_present?(pagination, :sort_column)
