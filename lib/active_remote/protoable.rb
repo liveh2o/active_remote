@@ -88,6 +88,10 @@ module ActiveRemote
 
     module InstanceMethods
       def delete_from_proto
+        update_attribute(:status, Atlas::StatusType::DELETED.value)
+      end
+
+      def destroy_from_proto
         destroy
       end
 
@@ -123,9 +127,9 @@ module ActiveRemote
         if read_attribute(attr_key).present?
           value = attributes[attr_key]
 
-          return { 
+          return {
             :encoded => value,
-            :raw => self.class._base64_to_bytes(value) 
+            :raw => self.class._base64_to_bytes(value)
           }
         end
       end
