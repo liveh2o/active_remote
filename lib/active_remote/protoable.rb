@@ -88,7 +88,11 @@ module ActiveRemote
 
     module InstanceMethods
       def delete_from_proto
-        update_attribute(:status, Atlas::StatusType::DELETED.value)
+        if respond_to?("status=")       
+          update_attribute(:status, Atlas::StatusType::DELETED.value) 
+        else
+          destroy_from_proto
+        end
       end
 
       def destroy_from_proto
