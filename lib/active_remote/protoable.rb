@@ -301,6 +301,20 @@ module ActiveRemote
 
         return value
       end
+
+      # Method that returns the scope based on the fields that are present
+      # in the protobuf.  
+      #
+      # Only works if scopes are named with convention of "by_#{field_name}"
+      def scope_from_search_proto(search_scope, proto, *field_symbols)
+        field_symbols.each do |field|
+          if responds_to_and_has_and_present?(proto, field)        
+            search_scope = search_scope.__send__("by_#{field}", proto.__send__(field)) 
+          end
+        end
+
+        return search_scope
+      end
     end
 
     def _protobuf_base_model
@@ -324,9 +338,15 @@ module ActiveRemote
 
       return updateable_hash
     end
+    
+    ##
+    # Instance Aliases
+    #
     alias_method :create_hash, :update_hash
     alias_method :protobuf_create_hash, :update_hash
     alias_method :protobuf_update_hash, :update_hash
+    alias_method :responds_to_and_has?, :respond_to_and_has?
+    alias_method :responds_to_and_has_and_present?, :respond_to_and_has_and_present?
 
   end
 
