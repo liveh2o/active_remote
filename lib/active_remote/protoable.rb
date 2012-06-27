@@ -172,6 +172,14 @@ module ActiveRemote
         end
       end
 
+      def destroy_all_from_protos(*protos)
+        protos.flatten!
+
+        find_and_process_protos(protos) do |record, proto|
+          record.destroy_from_proto
+        end
+      end
+
       def update_all_from_protos(*protos)
         protos.flatten!
 
