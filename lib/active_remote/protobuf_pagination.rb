@@ -5,7 +5,8 @@ module ActiveRemote
 
     def self.included(klass)
       klass.__send__(:include, ::ActiveRemote::ProtobufHelpers)
-      klass.extend(::ProtobufPagination)
+      klass.extend(::ActiveRemote::ProtobufHelpers)
+      klass.extend(::ActiveRemote::ProtobufPagination)
     end
 
     def pagination_response_options(request, search_relation)

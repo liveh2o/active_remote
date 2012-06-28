@@ -307,7 +307,7 @@ module ActiveRemote
       #
       # Only works if scopes are named with convention of "by_#{field_name}"
       def scope_from_search_proto(search_scope, proto, *field_symbols)
-        field_symbols.each do |field|
+        field_symbols.flatten.each do |field|
           if responds_to_and_has_and_present?(proto, field)        
             search_scope = search_scope.__send__("by_#{field}", proto.__send__(field)) 
           end
