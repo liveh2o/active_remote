@@ -80,6 +80,7 @@ module ActiveRemote
 
     # Map out the columns for future reference on type conversion
     def self._protobuf_map_columns(klass)
+      return unless klass.table_exists?
       klass.columns.map do |column|
         klass._protobuf_columns[column.name.to_sym] = column
         klass._protobuf_column_types[column.type.to_sym] << column.name.to_sym
@@ -88,8 +89,8 @@ module ActiveRemote
 
     module InstanceMethods
       def delete_from_proto
-        if respond_to?("status=")       
-          update_attribute(:status, Atlas::StatusType::DELETED.value) 
+        if respond_to?("status=")
+          update_attribute(:status, Atlas::StatusType::DELETED.value)
         else
           destroy_from_proto
         end
@@ -303,13 +304,13 @@ module ActiveRemote
       end
 
       # Method that returns the scope based on the fields that are present
-      # in the protobuf.  
+      # in the protobuf.
       #
       # Only works if scopes are named with convention of "by_#{field_name}"
       def scope_from_search_proto(search_scope, proto, *field_symbols)
         field_symbols.flatten.each do |field|
-          if responds_to_and_has_and_present?(proto, field)        
-            search_scope = search_scope.__send__("by_#{field}", proto.__send__(field)) 
+          if responds_to_and_has_and_present?(proto, field)
+            search_scope = search_scope.__send__("by_#{field}", proto.__send__(field))
           end
         end
 
@@ -338,7 +339,7 @@ module ActiveRemote
 
       return updateable_hash
     end
-    
+
     ##
     # Instance Aliases
     #
