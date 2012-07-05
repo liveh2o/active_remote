@@ -129,9 +129,8 @@ module ActiveRemote
       end
 
       def base64_encoded_value_for_protobuf(attr_key)
-        if read_attribute(attr_key).present?
-          value = attributes[attr_key]
-
+        value = read_attribute(attr_key)
+        if value.present?
           return {
             :encoded => value,
             :raw => self.class._base64_to_bytes(value)
