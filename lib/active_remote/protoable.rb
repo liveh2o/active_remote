@@ -260,19 +260,19 @@ module ActiveRemote
       end
 
       def _convert_base64_to_encoded_string(field)
-        if field.has_field?(:encoded)
-          field.encoded
-        elsif field.has_field?(:raw)
-          _bytes_to_base64(field.raw)
+        if field.key?(:encoded)
+          field[:encoded]
+        elsif field.key?(:raw)
+          _bytes_to_base64(field[:raw])
         end
       end
       alias_method :convert_base64_to_string, :_convert_base64_to_encoded_string
 
       def _convert_base64_to_raw_string(field)
-        if field.has_field?(:raw)
-          field.raw
-        elsif field.has_field?(:encoded)
-          _base64_to_bytes(field.encoded)
+        if field.key?(:raw)
+          field[:raw]
+        elsif field.key?(:encoded)
+          _base64_to_bytes(field[:encoded])
         end
       end
 
