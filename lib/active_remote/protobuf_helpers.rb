@@ -1,6 +1,6 @@
 module ActiveRemote
   module ProtobufHelpers
-    
+
     def respond_to_and_has?(request, key)
       request.respond_to?(key) &&
         request.respond_to?(:has_field?) &&
