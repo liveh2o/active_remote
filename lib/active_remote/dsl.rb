@@ -59,7 +59,7 @@ module ActiveRemote
 
       def extract_service_class
         names = ActiveSupport::Inflector.underscore(self.name).split('/')
-        names.slice(2, 3)
+        names.slice(1, 2)
       end
     end
 
