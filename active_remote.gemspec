@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   # Dependencies
   #
   s.add_dependency "activerecord"
+  s.add_dependency "protobuf"
   s.add_dependency "atlas"
   s.add_dependency "buttress"
 

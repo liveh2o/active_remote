@@ -2,7 +2,7 @@ module ActiveRemote
   module Persistence
 
     def self.included(klass)
-      klass.class_eval do 
+      klass.class_eval do
         extend ActiveRemote::Persistence::ClassMethods
         include ActiveRemote::Persistence::InstanceMethods
       end
@@ -97,11 +97,9 @@ module ActiveRemote
         build_message(message_class, record_or_records)
       end
 
-      def default_message
-        Atlas.const_get(service_name).const_get(self.name.demodulize)
-      end
 
       private
+
 
       def records_hash(rpc_method, records)
         message = request_type(rpc_method).new

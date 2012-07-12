@@ -2,23 +2,18 @@ module ActiveRemote
   module DSL
 
     def self.included(klass)
-      klass.class_eval do 
+      klass.class_eval do
         extend ActiveRemote::DSL::ClassMethods
         include ActiveRemote::DSL::InstanceMethods
       end
     end
 
     module ClassMethods
+
       # Whitelist enable attributes for serialization purposes.
       def attr_publishable(*attributes)
         @publishable_attributes ||= []
         @publishable_attributes += attributes
-      end
-
-      # Set the service for the given remote model.
-      def active_remote_service(service_name)
-        @service_name = service_name.to_s.capitalize
-        @service_class = self.infer_service_class(:service_name => service_name, :class_name => self.name.demodulize)
       end
 
       # Retrieve the attributes that have been whitelisted.
@@ -26,21 +21,16 @@ module ActiveRemote
         @publishable_attributes
       end
 
-      # Retrieve the service class, or atempt to find it.
-      # TODO deprecate in favor of DSL.active_remote_service
+      # Set the service class for the given remote model.
+      # Verifies that the given class is a Protobuf Service.
+      def remote(service_class)
+        @service_class = service_class
+      end
+      alias :active_remote_service :remote
+
+      # Retrieve the previously set service class.
       def service_class
-        @service_class ||= self.infer_service_class
-      end
-
-      # Set the class which will serve this remote model.
-      # TODO deprecate in favor of DSL.active_remote_service
-      def service_class=(value)
-        @service_class = value
-      end
-
-      # Retrieve the name of the stringified name of the service.
-      def service_name
-        @service_name
+        @service_class
       end
 
       ##

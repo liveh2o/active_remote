@@ -21,7 +21,7 @@ describe ActiveRemote::Base do
 
   its(:has_errors?) { should be_false }
 
-  context ".new" do
+  describe ".new" do
     context "when initialized with a protobuf object" do
       it "sets attributes" do
         described_class.new()
@@ -29,7 +29,7 @@ describe ActiveRemote::Base do
     end
   end
 
-  context ".find" do
+  describe ".find" do
     let(:args) { {} }
 
     before do
@@ -46,7 +46,7 @@ describe ActiveRemote::Base do
     end
   end
 
-  context ".find!" do
+  describe ".find!" do
     let(:request) { double(:request) }
 
     before do
@@ -63,7 +63,7 @@ describe ActiveRemote::Base do
     end
   end
 
-  context ".save" do
+  describe ".save" do
     before { described_class.any_instance.should_receive(:save) }
 
     it "saves a remote record with the given attributes" do
@@ -79,7 +79,7 @@ describe ActiveRemote::Base do
     end
   end
 
-  context ".create_all" do
+  describe ".create_all" do
     it "creates remote records" do
       records = []
       described_class.any_instance.should_receive(:execute).with(:create_all, records, :bulk => true)
@@ -88,7 +88,7 @@ describe ActiveRemote::Base do
     end
   end
 
-  context ".create_all!" do
+  describe ".create_all!" do
     it "creates remote records without building a message" do
       request = double(:request)
       described_class.any_instance.should_receive(:execute!).with(:create_all, request)
@@ -97,7 +97,7 @@ describe ActiveRemote::Base do
     end
   end
 
-  context ".update_all" do
+  describe ".update_all" do
     it "updates remote records" do
       records = []
       described_class.any_instance.should_receive(:execute).with(:update_all, records, :bulk => true)
@@ -106,7 +106,7 @@ describe ActiveRemote::Base do
     end
   end
 
-  context ".update_all!" do
+  describe ".update_all!" do
     it "updates remote records without building a message" do
       request = double(:request)
       described_class.any_instance.should_receive(:execute!).with(:update_all, request)
@@ -115,7 +115,7 @@ describe ActiveRemote::Base do
     end
   end
 
-  context ".delete_all" do
+  describe ".delete_all" do
     it "deletes remote records" do
       records = []
       described_class.any_instance.should_receive(:execute).with(:delete_all, records, :bulk => true)
@@ -124,7 +124,7 @@ describe ActiveRemote::Base do
     end
   end
 
-  context ".delete_all!" do
+  describe ".delete_all!" do
     it "deletes remote records without building a message" do
       request = double(:request)
       described_class.any_instance.should_receive(:execute!).with(:delete_all, request)
@@ -133,7 +133,7 @@ describe ActiveRemote::Base do
     end
   end
 
-  context ".service_class" do
+  describe ".service_class" do
     before { ActiveRemote::Foo::Bar.service_class = nil }
 
     context "when not set" do
@@ -148,14 +148,14 @@ describe ActiveRemote::Base do
     end
   end
 
-  context "#delete" do
+  describe "#delete" do
     it "deletes a remote record" do
       subject.should_receive(:execute).with(:delete, subject.attributes)
       subject.delete
     end
   end
 
-  context "#execute" do
+  describe "#execute" do
     let(:args){ Hash.new }
     let(:request) { double(:request) }
 
@@ -182,7 +182,7 @@ describe ActiveRemote::Base do
     end
   end
 
-  context "#execute!" do
+  describe "#execute!" do
     let(:request) { double(:request) }
 
     before {
@@ -288,7 +288,7 @@ describe ActiveRemote::Base do
     end
   end
 
-  context "#save" do
+  describe "#save" do
     let(:subclass) { ActiveRemote::Foo::Bar }
 
     context "without an id or guid" do
@@ -313,6 +313,13 @@ describe ActiveRemote::Base do
         remote.should_receive(:execute).with(:update, remote.attributes)
         remote.save
       end
+    end
+  end
+
+  describe '.remote' do
+    it 'sets the service class on the remote' do
+      subclass.remote ActiveRemote::Foo::Bar
+      subject.service_class.should eq ActiveRemote::Foo::Bar
     end
   end
 end
