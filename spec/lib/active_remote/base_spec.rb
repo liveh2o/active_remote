@@ -316,10 +316,12 @@ describe ActiveRemote::Base do
     end
   end
 
-  describe '.remote' do
+  describe '#remote' do
+    let(:subclass) { ActiveRemote::Foo::Bar }
+
     it 'sets the service class on the remote' do
-      subclass.remote ActiveRemote::Foo::Bar
-      subject.service_class.should eq ActiveRemote::Foo::Bar
+      described_class.remote subclass
+      subject.service_class.should eq(subclass)
     end
   end
 end

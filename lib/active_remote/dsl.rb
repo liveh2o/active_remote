@@ -54,7 +54,6 @@ module ActiveRemote
     end
 
     module InstanceMethods
-      private
 
       def service_class
         self.class.service_class
