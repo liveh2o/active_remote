@@ -14,9 +14,6 @@ module ActiveRemote
     define_model_callbacks :search, :only => :after
     define_model_callbacks :save
 
-    ##
-    # Constructor
-    #
     def initialize(attributes = {})
       run_callbacks :initialize do
         @attributes = HashWithIndifferentAccess.new(attributes.to_hash)
