@@ -10,54 +10,109 @@ module ActiveRemote
 
     module ClassMethods
 
+      # Set the app name for the underlying service class.
+      #
+      #   class User < ActiveRemote::Base
+      #     app :lottery
+      #   end
+      #
+      def app(name)
+        @app = name
+      end
+
       # Whitelist enable attributes for serialization purposes.
+      #
+      #   class User < ActiveRemote::Base
+      #     attr_publishable :guid, :status
+      #   end
+      #
       def attr_publishable(*attributes)
-        @publishable_attributes ||= []
-        @publishable_attributes += attributes
+        _publishable_attributes += attributes
+      end
+
+      # Set the namespace for the underlying service class.
+      #
+      #   class User < ActiveRemote::Base
+      #     namespace :acme
+      #   end
+      #
+      def namespace(name)
+        @namespace = name
+      end
+
+      # Set the service name of the underlying service class.
+      # "_service" is an implied appended string to the service name,
+      # e.g. :user would expand to the UserService constant.
+      #
+      #   class User < ActiveRemote::Base
+      #     service :jangly_users
+      #   end
+      #
+      def service(name)
+        @service = name
+      end
+
+      # Set the service class directly, circumventing the
+      # namespace, app, service dsl methods.
+      #
+      #   class User < ActiveRemote::Base
+      #     service_class Acme::Lottery::JanglyUserService
+      #   end
+      #
+      def service_class(klass)
+        @service_class = klass
+      end
+
+      # Getter for the namespace value, if any.
+      def _namespace
+        @namespace
       end
 
       # Retrieve the attributes that have been whitelisted.
-      def publishable_attributes
-        @publishable_attributes
+      def _publishable_attributes
+        @publishable_attributes ||= []
       end
 
-      # Set the service class for the given remote model.
-      # Verifies that the given class is a Protobuf Service.
-      def remote(service_class)
-        @service_class = service_class
-      end
-      alias :active_remote_service :remote
-
-      # Retrieve the previously set service class.
-      def service_class
-        @service_class
+      # Getter for the service value, if any.
+      def _service
+        @service || self.class.name.underscore
       end
 
-      ##
-      # TODO: This feels janky (urbandictionary.com/define.php?term=Janky).
-      # There's probably a better way to do it.
-      #
-      def infer_service_class(args = {})
-        args.collect(&:to_s)
-        module_name, class_name = extract_service_class if args.empty?
-
-        module_name = args.fetch(:service_name, module_name).capitalize
-        class_name = args.fetch(:class_name, class_name).classify
-
-        Atlas.const_get(module_name).const_get("#{class_name}Service")
+      # Retrieve (or determine) the service class for the inheriting model.
+      def _service_class
+        @service_class ||= lookup_service_class
       end
 
-      def extract_service_class
-        names = ActiveSupport::Inflector.underscore(self.name).split('/')
-        names.slice(1, 2)
+      private
+
+      # Combine the namespace, app, and service values,
+      # constantize the combined values, returning the class or an applicable
+      # error if const was missing.
+      def lookup_service_class
+        service_name = "#{_service}_service"
+        const_name = [ _namespace, _app, service_name ].compact.join("::")
+        return const_name.constantize
       end
+
     end
 
     module InstanceMethods
 
-      def service_class
-        self.class.service_class
+      private
+
+      def _publishable_attributes
+        self.class._publishable_attributes
       end
+
+      def _service
+        self.class._service
+      end
+
+      def _service_class
+        self.class._service_class
+      end
+
     end
+
   end
 end
