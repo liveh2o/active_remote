@@ -3,6 +3,8 @@ require 'active_remote/protobuf_helpers'
 module ActiveRemote
   module ProtobufPagination
 
+    EMPTY_PAGINATION_ERROR_THRESHOLD = 1_000
+
     def self.included(klass)
       klass.__send__(:include, ::ActiveRemote::ProtobufHelpers)
       klass.extend(::ActiveRemote::ProtobufHelpers)
@@ -24,12 +26,17 @@ module ActiveRemote
         pagination = proto_object.options.pagination
         search_scope = search_scope.paginate(:page => pagination.page, :per_page => pagination.per_page)
         search_scope = _protobuf_paginate_order(search_scope, pagination)
+      else
+        count = search_scope.count
+        if count > EMPTY_PAGINATION_ERROR_THRESHOLD
+          raise 'Search returns too many results without pagination. %d results found. Threshold is %d' % [count, EMPTY_PAGINATION_ERROR_THRESHOLD]
+        end
       end
 
       return search_scope
     end
 
-    private 
+    private
 
     def _protobuf_options_pagination_hash(request, search_relation)
       request.options.pagination.to_hash.merge({
@@ -54,7 +61,7 @@ module ActiveRemote
     end
 
     def _protobuf_paginate_order_desc?(pagination)
-      respond_to_and_has_and_present?(pagination, :sort_direction) && 
+      respond_to_and_has_and_present?(pagination, :sort_direction) &&
         pagination.sort_direction == ::Atlas::DBDirection::DESC
     end
 
@@ -62,7 +69,7 @@ module ActiveRemote
       respond_to_and_has_and_present?(proto, :options) &&
         respond_to_and_has_and_present?(proto.options, :pagination) &&
         respond_to_and_has_and_present?(proto.options.pagination, :per_page) &&
-        respond_to_and_has_and_present?(proto.options.pagination, :page) 
+        respond_to_and_has_and_present?(proto.options.pagination, :page)
     end
 
   end
