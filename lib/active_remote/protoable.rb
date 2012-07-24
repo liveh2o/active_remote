@@ -114,7 +114,7 @@ module ActiveRemote
       # TODO: Do we really need to send the name of the status as the message?
       # If the consumer can understand protobuf messages, it can map an enum...
       def record_status_for_protobuf
-        if status?
+        if status.present?
           return ::Atlas::Status.new(:status => status, :message => record_status_message)
         end
       end
