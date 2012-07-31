@@ -259,6 +259,10 @@ module ActiveRemote
         _protobuf_column_types[:timestamp] && _protobuf_column_types[:timestamp].include?(key)
       end
 
+      def _protobuf_time_column?(key)
+        _protobuf_column_types[:time] && _protobuf_column_types[:time].include?(key)
+      end
+
       def _convert_base64_to_encoded_string(field)
         if field.key?(:encoded)
           field[:encoded]
@@ -291,7 +295,11 @@ module ActiveRemote
       def _protobuf_filter_and_convert(key, value)
         column = _protobuf_columns[key]
         value = case
-                when _protobuf_datetime_column?(key) || _protobuf_timestamp_column?(key) then
+                when _protobuf_datetime_column?(key) then
+                  _convert_int64_to_datetime(value)
+                when _protobuf_timestamp_column?(key) then
+                  _convert_int64_to_datetime(value)
+                when _protobuf_time_column?(key) then
                   _convert_int64_to_datetime(value)
                 when _protobuf_column_converters.has_key?(key.to_sym) then
                   _protobuf_column_converters[key.to_sym].call(value)
