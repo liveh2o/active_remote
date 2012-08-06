@@ -92,11 +92,11 @@ module ActiveRemote
       # Attempt to soft-delete the record by setting is_deleted/deleted_at
       # or status. If none of those fields exist, destroy the record.
       def delete_from_proto
-        if attributes.key?(:is_deleted)
+        if respond_to?("is_deleted=")
           attrs = { :is_deleted => true }
-          attrs[:deleted_at] = Time.now.utc if attributes.key?(:deleted_at)
+          attrs[:deleted_at] = Time.now.utc if respond_to?("deleted_at=")
           update_attributes(attrs)
-        elsif attributes.key?(:status)
+        elsif respond_to?("status=")
           # TODO remove the status check once statuses are gone-zo.
           #  and make brandon do it.
           update_attribute(:status, ::Atlas::StatusType::DELETED.value)
