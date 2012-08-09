@@ -110,7 +110,7 @@ module ActiveRemote
       end
 
       def errors_for_protobuf
-        return [] unless errors.any?
+        return [] if valid?
 
         errors.messages.map do |field, error_messages|
           {
@@ -134,7 +134,7 @@ module ActiveRemote
 
       # TODO: Move these status codes to a constant
       def status_code_for_protobuf
-        return errors.any? ? 400 : 200
+        return valid? ? 200 : 400
       end
 
       def base64_encoded_value_for_protobuf(attr_key)
@@ -152,7 +152,7 @@ module ActiveRemote
         yield(updated_attributes) if block_given?
 
         assign_attributes(updated_attributes)
-        return errors.any? ? false : save!
+        return valid? ? save! : false
       end
     end
 
@@ -169,7 +169,7 @@ module ActiveRemote
         create_attributes = protobuf_create_hash(proto)
         record = _protobuf_base_model.new(create_attributes)
 
-        record.save! unless record.errors.any?
+        record.save! if record.valid?
         return record
       end
 
