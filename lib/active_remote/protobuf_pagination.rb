@@ -21,15 +21,17 @@ module ActiveRemote
       return options
     end
 
-    def pagination_scope(search_scope, proto_object)
+    def pagination_scope(search_scope, proto_object, options = {})
       if _protobuf_paginate_ready?(proto_object)
         pagination = proto_object.options.pagination
         search_scope = search_scope.paginate(:page => pagination.page, :per_page => pagination.per_page)
         search_scope = _protobuf_paginate_order(search_scope, pagination)
       else
+        threshold = options.fetch(:threshold, EMPTY_PAGINATION_ERROR_THRESHOLD)
         count = search_scope.count
-        if count > EMPTY_PAGINATION_ERROR_THRESHOLD
-          raise 'Search returns too many results without pagination. %d results found. Threshold is %d' % [count, EMPTY_PAGINATION_ERROR_THRESHOLD]
+
+        if count > threshold
+          raise 'Search returns too many results without pagination. %d results found. Threshold is %d' % [count, threshold]
         end
       end
 
