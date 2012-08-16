@@ -18,6 +18,11 @@ describe ActiveRemote::Base do
   let(:message) do
     double(:protos, :fields => [ double(:field, :name => :records, :repeated? => true) ], :records => [])
   end
+  let(:remote_with_errors) {
+    remote = described_class.new
+    remote.stub_chain(:last_response, :message).and_return("Hello World!")
+    remote.stub(:has_errors?).and_return(true)
+  }
 
   its(:has_errors?) { should be_false }
 
@@ -29,37 +34,16 @@ describe ActiveRemote::Base do
     end
   end
 
-  describe ".find" do
+  describe ".search" do
     let(:args) { {} }
 
     before do
-      described_class.any_instance.should_receive(:execute).with(:search, args)
+      described_class.any_instance.should_receive(:_execute).with(:search, args)
       described_class.any_instance.stub(:last_response).and_return(message)
     end
 
     it "searches with the given arguments" do
-      described_class.find(args)
-    end
-
-    it "is aliased as search" do
       described_class.search(args)
-    end
-  end
-
-  describe ".find!" do
-    let(:request) { double(:request) }
-
-    before do
-      described_class.any_instance.should_receive(:execute!).with(:search, request)
-      described_class.any_instance.stub(:last_response).and_return(message)
-    end
-
-    it "searches with the given arguments and skips sanitization" do
-      described_class.find!(request)
-    end
-
-    it "is aliased as search!" do
-      described_class.search!(request)
     end
   end
 
@@ -82,60 +66,31 @@ describe ActiveRemote::Base do
   describe ".create_all" do
     it "creates remote records" do
       records = []
-      described_class.any_instance.should_receive(:execute).with(:create_all, records, :bulk => true)
+      described_class.any_instance.should_receive(:_execute).with(:create_all, records, :bulk => true)
       described_class.any_instance.stub(:last_response).and_return(message)
       described_class.create_all(records)
-    end
-  end
-
-  describe ".create_all!" do
-    it "creates remote records without building a message" do
-      request = double(:request)
-      described_class.any_instance.should_receive(:execute!).with(:create_all, request)
-      described_class.any_instance.stub(:last_response).and_return(message)
-      described_class.create_all!(request)
     end
   end
 
   describe ".update_all" do
     it "updates remote records" do
       records = []
-      described_class.any_instance.should_receive(:execute).with(:update_all, records, :bulk => true)
+      described_class.any_instance.should_receive(:_execute).with(:update_all, records, :bulk => true)
       described_class.any_instance.stub(:last_response).and_return(message)
       described_class.update_all(records)
-    end
-  end
-
-  describe ".update_all!" do
-    it "updates remote records without building a message" do
-      request = double(:request)
-      described_class.any_instance.should_receive(:execute!).with(:update_all, request)
-      described_class.any_instance.stub(:last_response).and_return(message)
-      described_class.update_all!(request)
     end
   end
 
   describe ".delete_all" do
     it "deletes remote records" do
       records = []
-      described_class.any_instance.should_receive(:execute).with(:delete_all, records, :bulk => true)
+      described_class.any_instance.should_receive(:_execute).with(:delete_all, records, :bulk => true)
       described_class.any_instance.stub(:last_response).and_return(message)
       described_class.delete_all(records)
     end
   end
 
-  describe ".delete_all!" do
-    it "deletes remote records without building a message" do
-      request = double(:request)
-      described_class.any_instance.should_receive(:execute!).with(:delete_all, request)
-      described_class.any_instance.stub(:last_response).and_return(message)
-      described_class.delete_all!(request)
-    end
-  end
-
   describe ".service_class" do
-    before { ActiveRemote::Foo::Bar.service_class = nil }
-
     context "when not set" do
       it "is inferred" do
         ActiveRemote::Foo::Bar.service_class.should eq(Foo::BarService)
@@ -143,14 +98,14 @@ describe ActiveRemote::Base do
     end
 
     it "is settable" do
-      ActiveRemote::Foo::Bar.service_class = FooBarService
+      ActiveRemote::Foo::Bar.service_class FooBarService
       ActiveRemote::Foo::Bar.service_class.should eq(FooBarService)
     end
   end
 
   describe "#delete" do
     it "deletes a remote record" do
-      subject.should_receive(:execute).with(:delete, subject.attributes)
+      subject.should_receive(:_execute).with(:delete, subject.attributes)
       subject.delete
     end
   end
@@ -161,24 +116,24 @@ describe ActiveRemote::Base do
 
     before {
       subject.stub(:request).and_return(request)
-      subject.stub(:execute!)
+      subject.stub(:_execute!)
     }
 
     it "creates a request" do
       subject.should_receive(:request).with(:create, args, {})
-      subject.execute(:create, args)
+      subject._execute(:create, args)
     end
 
     it "creates a request with options" do
       records = []
       options = { :bulk => true }
       subject.should_receive(:request).with(:create, records, options)
-      subject.execute(:create, records, options)
+      subject._execute(:create, records, options)
     end
 
     it "executes the given RPC method" do
-      subject.should_receive(:execute!).with(:create, request)
-      subject.execute(:create, args)
+      subject.should_receive(:_execute!).with(:create, request)
+      subject._execute(:create, args)
     end
   end
 
@@ -186,9 +141,9 @@ describe ActiveRemote::Base do
     let(:request) { double(:request) }
 
     before {
-      described_class.service_class = FooBarService
+      described_class.service_class FooBarService
     }
-    after { described_class.service_class = nil }
+    after { described_class.service_class nil }
 
     context "when called" do
       before {
@@ -254,11 +209,9 @@ describe ActiveRemote::Base do
     let(:records) { [ { :name => 'Foo' }, { :name => 'Bar' } ] }
     let(:attributes) { records.first }
 
-    after { described_class.service_class = nil }
-
     it "creates a message" do
       pending
-      described_class.service_class = Abacus::TagService
+      described_class.service_class Abacus::TagService
       expected_message = Abacus::Tag.new(attributes)
 
       package = subject.request(:create, attributes)
@@ -267,7 +220,7 @@ describe ActiveRemote::Base do
 
     it "creates a bulk message" do
       pending
-      described_class.service_class = Abacus::TagService
+      described_class.service_class Abacus::TagService
       expected_message = Abacus::Tags.new
 
       package = described_class.request(:create_all, records, :bulk => true)
@@ -276,7 +229,7 @@ describe ActiveRemote::Base do
 
     it "creates a message with nested messages" do
       pending
-      described_class.service_class = Abacus::TransactionService
+      described_class.service_class Abacus::TransactionService
       records_hash = { :status => { :status => 7 }, :guid => 'GUID' }
 
       expected_message = Abacus::Transaction.new
@@ -294,7 +247,7 @@ describe ActiveRemote::Base do
     context "without an id or guid" do
       it "calls create" do
         remote = subclass.new(:name => 'foo')
-        remote.should_receive(:execute).with(:create, remote.attributes)
+        remote.should_receive(:_execute).with(:create, remote.attributes)
         remote.save
       end
     end
@@ -302,7 +255,7 @@ describe ActiveRemote::Base do
     context "with an id" do
       it "calls update" do
         remote = subclass.new(:id => 1)
-        remote.should_receive(:execute).with(:update, remote.attributes)
+        remote.should_receive(:_execute).with(:update, remote.attributes)
         remote.save
       end
     end
@@ -310,18 +263,9 @@ describe ActiveRemote::Base do
     context "with a guid" do
       it "calls update" do
         remote = subclass.new(:guid => 'GUID')
-        remote.should_receive(:execute).with(:update, remote.attributes)
+        remote.should_receive(:_execute).with(:update, remote.attributes)
         remote.save
       end
-    end
-  end
-
-  describe '#remote' do
-    let(:subclass) { ActiveRemote::Foo::Bar }
-
-    it 'sets the service class on the remote' do
-      described_class.remote subclass
-      subject.service_class.should eq(subclass)
     end
   end
 end
