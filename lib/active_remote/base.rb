@@ -1,3 +1,6 @@
+require 'active_remote/dsl'
+require 'active_remote/persistence'
+require 'active_remote/serialization'
 module ActiveRemote
   class Base
 
