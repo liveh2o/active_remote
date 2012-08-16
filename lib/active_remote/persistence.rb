@@ -1,15 +1,9 @@
 module ActiveRemote
   module Persistence
-
     def self.included(klass)
       klass.class_eval do
         extend ActiveRemote::Persistence::ClassMethods
         include ActiveRemote::Persistence::InstanceMethods
-      end
-
-      class << klass
-        alias_method :create, :save
-        alias_method :create!, :save!
         include ActiveRemote::RPC unless include?(ActiveRemote::RPC)
       end
     end
@@ -18,15 +12,16 @@ module ActiveRemote
     # Class methods
     #
     module ClassMethods
-      def save(attributes)
+      def create(attributes)
         remote = self.new(attributes)
         remote.save
         remote
       end
 
-      def save!(attributes)
-        remote = save(attributes)
-        raise remote.last_response.message if remote.has_errors?
+      def create!(attributes)
+        remote = self.new(attributes)
+        remote.save!
+        remote
       end
 
 
