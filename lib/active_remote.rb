@@ -5,5 +5,6 @@ require 'active_support/inflector'
 require 'active_support/json'
 
 require 'active_remote/base'
+require 'active_remote/errors'
 
 require 'active_remote/version'
