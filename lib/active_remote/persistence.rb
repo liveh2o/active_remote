@@ -10,6 +10,7 @@ module ActiveRemote
       class << klass
         alias_method :create, :save
         alias_method :create!, :save!
+        include ActiveRemote::RPC unless include?(ActiveRemote::RPC)
       end
     end
 
@@ -85,14 +86,6 @@ module ActiveRemote
         options.fetch(:records, true) ? remote.serialize_records : remote
       end
 
-      # Return a protobuf request object for the given rpc request.
-      def request(rpc_method, args, options = {})
-        bulk = options.fetch(:bulk, false)
-        record_or_records = bulk ? records_hash(rpc_method, args) : args
-        message_class = request_type(rpc_method)
-        build_message(message_class, record_or_records)
-      end
-
       def update_all(*records)
         options = records.extract_options!
         remote = self.new
@@ -117,12 +110,6 @@ module ActiveRemote
         field = message.fields.values.first.name
         { field => records.flatten.compact.uniq }
       end
-
-      # Return the class applicable to the request for the given rpc method.
-      def request_type(rpc_method)
-        service_class.rpcs[_service][rpc_method].request_type
-      end
-
     end
 
 
@@ -171,34 +158,6 @@ module ActiveRemote
         raise @last_response.message if has_errors?
       end
 
-      # Invoke an RPC call to the service for the given rpc method.
-      # Returns a boolean indicating success or failure.
-      def _execute(rpc_method, proto, options = {})
-        proto = request(rpc_method, proto, options) if proto.is_a?(Hash)
-        @last_request = proto
-
-        _service_class.client.__send__(rpc_method, @last_request) do |c|
-
-          # In the event of service failure, record the error.
-          c.on_failure do |error|
-            errors << error.message
-            @last_response = error
-          end
-
-          # In the event of service success, assign the response, rewrite the
-          # @attributes hash, and mixin AR behavior to the response proto.
-          c.on_success do |response|
-            @last_response = response
-
-            # TODO: this should be consolidated so its not repeated in the constructor
-            @attributes = HashWithIndifferentAccess.new(response.to_hash)
-            mimic_response(response)
-          end
-        end
-
-        return success?
-      end
-
       def has_errors?
         return errors.length > 0
       end
@@ -218,11 +177,6 @@ module ActiveRemote
 
       def records_hash(rpc_method, records)
         self.class.records_hash(rpc_method, records)
-      end
-
-      # Return a protobuf request object for the given rpc call.
-      def request(rpc_method, args, options = {})
-        self.class.request(rpc_method, args, options)
       end
 
       # With callbacks, run an update/create call.
