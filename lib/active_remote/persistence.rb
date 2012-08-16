@@ -18,18 +18,6 @@ module ActiveRemote
     # Class methods
     #
     module ClassMethods
-
-      def search(args, options = {})
-        remote = self.new
-        remote._active_remote_search(args)
-        options.fetch(:records, true) ? remote.serialize_records : remote
-      end
-
-      def search!(args, options = {})
-        remote = search(args, options)
-        raise remote.last_response.message if remote.has_errors?
-      end
-
       def save(attributes)
         remote = self.new(attributes)
         remote.save
@@ -117,19 +105,6 @@ module ActiveRemote
     # Instance methods
     #
     module InstanceMethods
-
-      # Search for the given resource.
-      def _active_remote_search(args)
-        run_callbacks :search do
-          _execute(:search, args)
-        end
-      end
-
-      # Search and return results, raising an error if it failed.
-      def _active_remote_search!(args)
-        _active_remote_search(args)
-        raise @last_response.message if has_errors?
-      end
 
       # Merge the given hash with the existing resource attributes hash.
       def assign_attributes(attributes)

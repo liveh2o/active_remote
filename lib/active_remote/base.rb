@@ -1,6 +1,7 @@
 require 'active_remote/dsl'
-require 'active_remote/rpc'
 require 'active_remote/persistence'
+require 'active_remote/rpc'
+require 'active_remote/search'
 require 'active_remote/serialization'
 
 module ActiveRemote
@@ -11,6 +12,7 @@ module ActiveRemote
     include ::ActiveRemote::DSL
     include ::ActiveRemote::Persistence
     include ::ActiveRemote::RPC
+    include ::ActiveRemote::Search
     include ::ActiveRemote::Serialization
 
     attr_reader :attributes, :errors, :last_request, :last_response
