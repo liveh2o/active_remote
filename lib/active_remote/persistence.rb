@@ -1,3 +1,5 @@
+require 'active_remote/rpc'
+
 module ActiveRemote
   module Persistence
     def self.included(klass)
