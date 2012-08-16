@@ -26,15 +26,13 @@ module ActiveRemote
         remote
       end
 
-
       ##
       # Bulk class methods
       #
       def create_all(*records)
-        options = records.extract_options!
         remote = self.new
-        remote._execute(:create_all, records.flatten, :bulk => true)
-        options.fetch(:records, true) ? remote.serialize_records : remote
+        remote._execute(:create_all, { :records => records.flatten })
+        remote.serialize_records
       end
 
       def create_all!(*records)
@@ -45,10 +43,9 @@ module ActiveRemote
       end
 
       def delete_all(*records)
-        options = records.extract_options!
         remote = self.new
-        remote._execute(:delete_all, records.flatten, :bulk => true)
-        options.fetch(:records, true) ? remote.serialize_records : remote
+        remote._execute(:delete_all, { :records => records.flatten })
+        remote.serialize_records
       end
 
       def delete_all!(*records)
@@ -59,10 +56,9 @@ module ActiveRemote
       end
 
       def destroy_all(*records)
-        options = records.extract_options!
         remote = self.new
-        remote._execute(:destroy_all, records.flatten, :bulk => true)
-        options.fetch(:records, true) ? remote.serialize_records : remote
+        remote._execute(:destroy_all, { :records => records.flatten })
+        remote.serialize_records
       end
 
       def destroy_all!(*records)
@@ -73,10 +69,9 @@ module ActiveRemote
       end
 
       def update_all(*records)
-        options = records.extract_options!
         remote = self.new
-        remote._execute(:update_all, records.flatten, :bulk => true)
-        options.fetch(:records, true) ? remote.serialize_records : remote
+        remote._execute(:update_all, { :records => records.flatten })
+        remote.serialize_records
       end
 
       def update_all!(*records)
@@ -84,16 +79,6 @@ module ActiveRemote
 
         raise RemoteRecordNotSaved if remote_records.detect { |remote| remote.has_errors? }
         remote_records
-      end
-
-      private
-
-      # Make a hash for bulk calls.
-      # { :records => [ ..., ... ] }
-      def records_hash(rpc_method, records)
-        message = request_type(rpc_method).new
-        field = message.fields.values.first.name
-        { field => records.flatten.compact.uniq }
       end
     end
 
@@ -146,15 +131,6 @@ module ActiveRemote
 
       def persisted?
         return (attributes.fetch(:id, false) || attributes.fetch(:guid, false))
-      end
-
-      def records
-        raise @last_response.message if has_errors?
-        last_response.records
-      end
-
-      def records_hash(rpc_method, records)
-        self.class.records_hash(rpc_method, records)
       end
 
       # With callbacks, run an update/create call.
