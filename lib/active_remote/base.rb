@@ -15,7 +15,7 @@ module ActiveRemote
     include ::ActiveRemote::Search
     include ::ActiveRemote::Serialization
 
-    attr_reader :attributes, :errors, :last_request, :last_response
+    attr_reader :attributes, :last_request, :last_response
 
     define_model_callbacks :initialize, :only => :after
     define_model_callbacks :search, :only => :after
@@ -27,6 +27,5 @@ module ActiveRemote
         @errors = []
       end
     end
-
   end
 end
