@@ -1,6 +1,7 @@
+require 'active_support/inflector'
+
 module ActiveRemote
   module DSL
-
     def self.included(klass)
       klass.class_eval do
         extend ActiveRemote::DSL::ClassMethods
@@ -16,8 +17,9 @@ module ActiveRemote
       #     app :lottery
       #   end
       #
-      def app(name)
-        @app = name
+      def app(name = false)
+        @app = name unless name == false
+        @app
       end
 
       # Whitelist enable attributes for serialization purposes.
@@ -36,8 +38,9 @@ module ActiveRemote
       #     namespace :acme
       #   end
       #
-      def namespace(name)
-        @namespace = name
+      def namespace(name = false)
+        @namespace = name unless name == false
+        @namespace
       end
 
       # Set the service name of the underlying service class.
@@ -48,8 +51,9 @@ module ActiveRemote
       #     service :jangly_users
       #   end
       #
-      def service(name)
-        @service = name
+      def service(name = false)
+        @service = name unless name == false
+        @service ||= self.class.name.underscore
       end
 
       # Set the service class directly, circumventing the
@@ -59,13 +63,9 @@ module ActiveRemote
       #     service_class Acme::Lottery::JanglyUserService
       #   end
       #
-      def service_class(klass)
-        @service_class = klass
-      end
-
-      # Getter for the namespace value, if any.
-      def _namespace
-        @namespace
+      def service_class(klass = false)
+        @service_class = klass unless klass == false
+        @service_class ||= lookup_service_class
       end
 
       # Retrieve the attributes that have been whitelisted.
@@ -73,46 +73,34 @@ module ActiveRemote
         @publishable_attributes ||= []
       end
 
-      # Getter for the service value, if any.
-      def _service
-        @service || self.class.name.underscore
-      end
-
-      # Retrieve (or determine) the service class for the inheriting model.
-      def _service_class
-        @service_class ||= lookup_service_class
-      end
-
-      private
+    private
 
       # Combine the namespace, app, and service values,
       # constantize the combined values, returning the class or an applicable
       # error if const was missing.
       def lookup_service_class
-        service_name = "#{_service}_service"
-        const_name = [ _namespace, _app, service_name ].compact.join("::")
-        return const_name.constantize
-      end
+        service_name = "#{service}_service"
+        const_name = [ namespace, app, service_name ].compact.join("::")
 
+        return const_name.present? ? const_name.constantize : const_name
+      end
     end
 
     module InstanceMethods
 
-      private
+    private
 
       def _publishable_attributes
         self.class._publishable_attributes
       end
 
       def _service
-        self.class._service
+        self.class.service
       end
 
       def _service_class
-        self.class._service_class
+        self.class.service_class
       end
-
     end
-
   end
 end
