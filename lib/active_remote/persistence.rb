@@ -40,10 +40,11 @@ module ActiveRemote
         options.fetch(:records, true) ? remote.serialize_records : remote
       end
 
-      # TODO make bangable
       def create_all!(*records)
-        remote = create_all(records)
-        raise remote.last_response.message if remote.has_errors?
+        remote_records = create_all(records)
+
+        raise RemoteRecordNotSaved if remote_records.detect { |remote| remote.has_errors? }
+        remote_records
       end
 
       def delete_all(*records)
@@ -53,11 +54,11 @@ module ActiveRemote
         options.fetch(:records, true) ? remote.serialize_records : remote
       end
 
-      # TODO make bangable
-      def delete_all!(request, options = {})
-        remote = self.new
-        remote._execute!(:delete_all, request)
-        options.fetch(:records, true) ? remote.serialize_records : remote
+      def delete_all!(*records)
+        remote_records = delete_all(records)
+
+        raise RemoteRecordNotSaved if remote_records.detect { |remote| remote.has_errors? }
+        remote_records
       end
 
       def destroy_all(*records)
@@ -67,11 +68,11 @@ module ActiveRemote
         options.fetch(:records, true) ? remote.serialize_records : remote
       end
 
-      # TODO make bangable
-      def destroy_all!(request, options = {})
-        remote = self.new
-        remote._execute!(:destroy_all, request)
-        options.fetch(:records, true) ? remote.serialize_records : remote
+      def destroy_all!(*records)
+        remote_records = destroy_all(records)
+
+        raise RemoteRecordNotSaved if remote_records.detect { |remote| remote.has_errors? }
+        remote_records
       end
 
       def update_all(*records)
@@ -81,13 +82,12 @@ module ActiveRemote
         options.fetch(:records, true) ? remote.serialize_records : remote
       end
 
-      # TODO make bangable
-      def update_all!(request, options = {})
-        remote = self.new
-        remote._execute!(:update_all, request)
-        options.fetch(:records, true) ? remote.serialize_records : remote
-      end
+      def update_all!(*records)
+        remote_records = update_all(records)
 
+        raise RemoteRecordNotSaved if remote_records.detect { |remote| remote.has_errors? }
+        remote_records
+      end
 
       private
 
@@ -100,37 +100,41 @@ module ActiveRemote
       end
     end
 
-
     ##
     # Instance methods
     #
     module InstanceMethods
 
       # Merge the given hash with the existing resource attributes hash.
+      #
       def assign_attributes(attributes)
         self.attributes.merge!(attributes)
       end
 
       # Execute a delete rpc call.
+      #
       def delete
         _execute(:delete, attributes)
       end
 
       # Execute a delete rpc call, raising returned errors.
+      #
       def delete!
-        _execute(:delete, attributes)
-        raise @last_response.message if has_errors?
+        delete
+        raise ActiveRemoteError.new(errors.to_s) if has_errors?
       end
 
       # Execute a destroy rpc call.
+      #
       def destroy
         _execute(:destroy, attributes)
       end
 
       # Execute a destroy rpc call, raising returned errors.
+      #
       def destroy!
-        _execute(:destroy, attributes)
-        raise @last_response.message if has_errors?
+        destroy
+        raise ActiveRemoteError.new(errors.to_s) if has_errors?
       end
 
       # Checks to see if the remote object has errors.
@@ -173,7 +177,7 @@ module ActiveRemote
       # if the remote encounters one.
       def save!
         save
-        raise @last_response.message if has_errors?
+        raise RemoteRecordNotSaved.new(errors.to_s) if has_errors?
       end
 
       def success?
@@ -191,8 +195,6 @@ module ActiveRemote
         assign_attributes(attributes)
         save!
       end
-
     end
-
   end
 end
