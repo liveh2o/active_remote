@@ -133,8 +133,10 @@ module ActiveRemote
         raise @last_response.message if has_errors?
       end
 
+      # Checks to see if the remote object has errors.
+      #
       def has_errors?
-        return errors.length > 0
+        return respond_to?(:errors) && errors.present?
       end
 
       def new_record?
