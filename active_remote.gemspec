@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   #
   s.add_dependency "activerecord"
   s.add_dependency "atlas"
-  s.add_dependency "buttress"
+  s.add_dependency "buttress", ">= 0.4.6"
 
   ##
   # Development Dependencies

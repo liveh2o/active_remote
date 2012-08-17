@@ -1,4 +1,5 @@
 require 'active_remote/protobuf_helpers'
+require 'buttress/inheritable_class_instance_variables'
 
 ##
 # Provide protobuf behaviors for a model
@@ -13,7 +14,8 @@ module ActiveRemote
       klass.extend(::ActiveRemote::ProtobufHelpers)
       klass.__send__(:include, ::ActiveRemote::ProtobufHelpers)
       klass.__send__(:include, ::ActiveRemote::Protoable::InstanceMethods)
-      klass.__send__(:include, ::Buttress::Failable) unless(klass.include?(::Buttress::Failable))
+      klass.__send__(:include, ::InheritableClassInstanceVariables)
+      klass.__send__(:include, ::Buttress::Failable)
 
       klass.class_eval do
         class << self
@@ -23,6 +25,9 @@ module ActiveRemote
         @_protobuf_columns = {}
         @_protobuf_column_types = Hash.new { |h,k| h[k] = [] }
         @_protobuf_column_converters = {}
+
+        # NOTE: Make sure each inherited object has the database layout
+        inheritable_attributes :_protobuf_columns, :_protobuf_column_types, :_protobuf_column_converters
       end
 
       _protobuf_map_columns(klass)
