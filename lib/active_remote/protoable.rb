@@ -265,7 +265,7 @@ module ActiveRemote
         return protobuf_value.respond_to?(:to_i) ? Time.at(protobuf_value.to_i) : protobuf_value
       end
 
-      def _protobuf_date_columns?(key)
+      def _protobuf_date_column?(key)
         _protobuf_column_types[:date] && _protobuf_column_types[:date].include?(key)
       end
 
