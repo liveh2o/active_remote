@@ -172,6 +172,7 @@ module ActiveRemote
 
       def create_from_proto(proto)
         create_attributes = protobuf_create_hash(proto)
+        yield(create_attributes) if block_given?
         record = _protobuf_base_model.new(create_attributes)
 
         record.save! if record.valid?
