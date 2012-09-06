@@ -105,7 +105,6 @@ module ActiveRemote
         remote.serialize_records
       end
 
-
       # Delete multiple records at the same time. Returns a collection of active
       # remote objects from the passed records. If the service returns any record
       # with error messages, raises an ActiveRemote::RemoteRecordNotSaved exception.
@@ -277,7 +276,7 @@ module ActiveRemote
       # Returns true if the remote record has been saved; otherwise, returns false.
       #
       def persisted?
-        return (attributes.fetch(:id, false) || attributes.fetch(:guid, false))
+        return attributes.fetch(:guid, false) || false
       end
 
       # Saves the remote record.
