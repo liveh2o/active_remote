@@ -19,16 +19,17 @@ module ActiveRemote
 
         remote = self.new
         remote._active_remote_search(args)
-        options.fetch(:records, true) ? remote.serialize_records : remote
+        options.fetch(:serialize_records, true) ? remote.serialize_records : remote
       end
     end
 
     # Search for the given resource.
     #
     def _active_remote_search(args, options = {})
-      page = 0
-      auto_paging = options.fetch(:auto_paging, true)
+      auto_paging = options.fetch(:auto_paging, _auto_paging?(args))
+
       remote_records = []
+      page = 0
 
       run_callbacks :search do
         while page < _total_pages do
@@ -56,6 +57,13 @@ module ActiveRemote
           :per_page => self.class.auto_page_size
         }
       })
+    end
+
+    def _auto_paging?(args)
+      options = args[:options]
+      pagination = options[:pagination] unless options.nil?
+
+      return pagination.nil?
     end
 
     def _total_pages
