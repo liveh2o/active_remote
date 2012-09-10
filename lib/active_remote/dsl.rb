@@ -43,6 +43,11 @@ module ActiveRemote
         @namespace
       end
 
+      # Retrieve the attributes that have been whitelisted.
+      def _publishable_attributes
+        @publishable_attributes ||= []
+      end
+
       # Set the service name of the underlying service class.
       # "_service" is an implied appended string to the service name,
       # e.g. :user would expand to the UserService constant.
@@ -65,12 +70,7 @@ module ActiveRemote
       #
       def service_class(klass = false)
         @service_class = klass unless klass == false
-        @service_class ||= lookup_service_class
-      end
-
-      # Retrieve the attributes that have been whitelisted.
-      def _publishable_attributes
-        @publishable_attributes ||= []
+        @service_class ||= _determine_service_class
       end
 
     private
@@ -78,7 +78,7 @@ module ActiveRemote
       # Combine the namespace, app, and service values,
       # constantize the combined values, returning the class or an applicable
       # error if const was missing.
-      def lookup_service_class
+      def _determine_service_class
         service_name = "#{service}_service"
         const_name = [ namespace, app, service_name ].compact.join("::")
 
