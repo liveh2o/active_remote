@@ -10,7 +10,6 @@ module ActiveRemote
     end
 
     module ClassMethods
-
       # Return a protobuf request object for the given rpc request.
       #
       def request(rpc_method, attributes)
@@ -39,14 +38,9 @@ module ActiveRemote
           raise ActiveRemoteError, error.message
         end
 
-        # In the event of service success, assign the response, rewrite the
-        # @attributes hash, and mixin AR behavior to the response proto.
+        # In the event of service success, assign the response.
         c.on_success do |response|
           @last_response = response
-
-          # TODO: this should be consolidated so its not repeated in the constructor
-          @attributes = HashWithIndifferentAccess.new(response.to_hash)
-          mimic_response(response)
         end
       end
     end
