@@ -11,6 +11,9 @@ module ActiveRemote
       klass.extend(::ActiveRemote::ProtobufPagination)
     end
 
+    ##
+    # Public Instance Methods
+    # 
     def pagination_response_options(request, search_relation)
       options = nil
 
@@ -19,6 +22,15 @@ module ActiveRemote
       end
 
       return options
+    end
+
+    def pagination_order_scope(search_scope, proto_object)
+      if _protobuf_paginate_ready?(proto_object)
+        pagination = proto_object.options.pagination
+        search_scope = _protobuf_paginate_order(search_scope, pagination)
+      end
+
+      return search_scope
     end
 
     def pagination_scope(search_scope, proto_object, options = {})
@@ -38,8 +50,12 @@ module ActiveRemote
       return search_scope
     end
 
+
     private
 
+    ##
+    # Private Instance Methods
+    #
     def _protobuf_options_pagination_hash(request, search_relation)
       request.options.pagination.to_hash.merge({
         :total_entries => search_relation.total_entries,
