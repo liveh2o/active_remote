@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version       = ActiveRemote::VERSION
   s.authors       = ["MDev"]
   s.email         = ["dev@moneydesktop.com"]
-  s.homepage      = "https://gitlab.moneydesktop.com/active_remote"
+  s.homepage      = "https://git.moneydesktop.com/dev/active_remote"
   s.description   = %q{ActiveRecord Protobuf integration}
   s.summary       = s.description
 
@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   ##
   # Dependencies
   #
-  s.add_dependency "activerecord"
+  s.add_dependency "activemodel"
   s.add_dependency "protobuf"
   s.add_dependency "atlas"
   s.add_dependency "buttress"
