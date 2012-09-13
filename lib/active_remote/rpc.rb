@@ -33,7 +33,7 @@ module ActiveRemote
 
       _service_class.client.__send__(rpc_method, @last_request) do |c|
 
-        # In the event of service failure, record the error.
+        # In the event of service failure, raise the error.
         c.on_failure do |error|
           raise ActiveRemoteError, error.message
         end
