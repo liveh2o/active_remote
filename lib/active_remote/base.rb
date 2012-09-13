@@ -23,8 +23,10 @@ module ActiveRemote
 
     def initialize(attributes = {})
       run_callbacks :initialize do
-        @attributes = HashWithIndifferentAccess.new(attributes.to_hash)
+        @attributes = HashWithIndifferentAccess.new
         @errors = []
+
+        assign_attributes(attributes.to_hash)
       end
     end
   end
