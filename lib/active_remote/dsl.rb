@@ -48,19 +48,6 @@ module ActiveRemote
         @publishable_attributes ||= []
       end
 
-      # Set the service name of the underlying service class.
-      # "_service" is an implied appended string to the service name,
-      # e.g. :user would expand to the UserService constant.
-      #
-      #   class User < ActiveRemote::Base
-      #     service_name :jangly_users
-      #   end
-      #
-      def service_name(name = false)
-        @service_name = name unless name == false
-        @service_name ||= self.class.name.underscore
-      end
-
       # Set the service class directly, circumventing the
       # namespace, app, service dsl methods.
       #
@@ -73,15 +60,34 @@ module ActiveRemote
         @service_class ||= _determine_service_class
       end
 
+      # Set the service name of the underlying service class.
+      # "_service" is an implied appended string to the service name,
+      # e.g. :user would expand to the UserService constant.
+      #
+      #   class User < ActiveRemote::Base
+      #     service_name :jangly_users
+      #   end
+      #
+      def service_name(name = false)
+        @service_name = name unless name == false
+        @service_name ||= _determine_service_name
+      end
+
     private
 
       # Combine the namespace, app, and service values,
       # constantize the combined values, returning the class or an applicable
       # error if const was missing.
       def _determine_service_class
-        const_name = [ namespace, app_name, "#{service_name}_service" ].compact.join("::")
+        class_name = [ namespace, app_name, service_name ].join("/")
+        const_name = class_name.camelize
 
         return const_name.present? ? const_name.constantize : const_name
+      end
+
+      def _determine_service_name
+        underscored_name = self.name.underscore
+        "#{underscored_name}_service".to_sym
       end
     end
 
