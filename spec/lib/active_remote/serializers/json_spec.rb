@@ -1,5 +1,13 @@
 require 'spec_helper'
 
 describe ActiveRemote::Serializers::JSON do
-  pending "Write specs for this!"
+  describe "#as_json" do
+    context "with publishable attributes defined" do
+      it "serializes to JSON with only the publishable attributes"
+    end
+
+    context "without publishable attributes defined" do
+      it "serializes to JSON"
+    end
+  end
 end
