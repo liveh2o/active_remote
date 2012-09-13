@@ -14,12 +14,12 @@ module ActiveRemote
       # Set the app name for the underlying service class.
       #
       #   class User < ActiveRemote::Base
-      #     app :lottery
+      #     app_name :lottery
       #   end
       #
-      def app(name = false)
-        @app = name unless name == false
-        @app
+      def app_name(name = false)
+        @app_name = name unless name == false
+        @app_name
       end
 
       # Whitelist enable attributes for serialization purposes.
@@ -53,12 +53,12 @@ module ActiveRemote
       # e.g. :user would expand to the UserService constant.
       #
       #   class User < ActiveRemote::Base
-      #     service :jangly_users
+      #     service_name :jangly_users
       #   end
       #
-      def service(name = false)
-        @service = name unless name == false
-        @service ||= self.class.name.underscore
+      def service_name(name = false)
+        @service_name = name unless name == false
+        @service_name ||= self.class.name.underscore
       end
 
       # Set the service class directly, circumventing the
@@ -79,8 +79,7 @@ module ActiveRemote
       # constantize the combined values, returning the class or an applicable
       # error if const was missing.
       def _determine_service_class
-        service_name = "#{service}_service"
-        const_name = [ namespace, app, service_name ].compact.join("::")
+        const_name = [ namespace, app_name, "#{service_name}_service" ].compact.join("::")
 
         return const_name.present? ? const_name.constantize : const_name
       end
