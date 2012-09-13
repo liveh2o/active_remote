@@ -5,8 +5,6 @@ describe ActiveRemote::Persistence do
     double(:protos, :fields => [ double(:field, :name => :records, :repeated? => true) ], :records => [])
   end
 
-  its(:has_errors?) { should be_false }
-
   describe ".create_all" do
     xit "creates remote records" do
       records = []
@@ -92,7 +90,7 @@ describe ActiveRemote::Persistence do
   describe ".create" do
     it "initializes and saves a new record"
 
-    context "when the record has errors"
+    context "when the record has errors" do
       it "returns an unsaved record"
     end
   end
@@ -100,7 +98,7 @@ describe ActiveRemote::Persistence do
   describe ".create!" do
     it "initializes and saves a new record"
 
-    context "when the record has errors"
+    context "when the record has errors" do
       it "raises an exception"
     end
   end
@@ -147,31 +145,31 @@ describe ActiveRemote::Persistence do
 
   describe "#has_errors?" do
     context "when errors are not present" do
-      xits(:has_errors?) { should be_false }
+      # its(:has_errors?) { should be_false }
     end
 
     context "when errors are present" do
-      xits(:has_errors?) { should be_true }
+      # its(:has_errors?) { should be_true }
     end
   end
 
   describe "#new_record?" do
     context "when the record is persisted" do
-      xits(:new_record?) { should be_false }
+      # its(:new_record?) { should be_false }
     end
 
     context "when the record is not persisted" do
-      xits(:new_record?) { should be_true }
+      # its(:new_record?) { should be_true }
     end
   end
 
   describe "#persisted?" do
     context "when the record has a guid" do
-      xits(:persisted?) { should be_true }
+      # its(:persisted?) { should be_true }
     end
 
     context "when the record does not have a guid" do
-      xits(:persisted?) { should be_false }
+      # its(:persisted?) { should be_false }
     end
   end
 
@@ -209,11 +207,11 @@ describe ActiveRemote::Persistence do
 
   describe "#success?" do
     context "when errors are present" do
-      xits(:success?) { should be_false }
+      # its(:success?) { should be_false }
     end
 
     context "when errors are not present" do
-      xits(:success?) { should be_true }
+      # its(:success?) { should be_true }
     end
   end
 
