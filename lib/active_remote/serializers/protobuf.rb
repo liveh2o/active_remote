@@ -3,37 +3,23 @@ module ActiveRemote
     module Protobuf
       module ClassMethods
         # Recursively build messages from a hash of attributes.
-        # TODO: Need to pull this functionality into the protobuf gem.
+        # TODO: Pull this functionality into the protobuf gem.
         #
         def build_message(message_class, attributes)
           attributes.inject(message_class.new) do |message, (key, value)|
             if field = message.get_field(key)
 
               # Override the value based on the field type where issues
-              # exist in the pb gem.
-              # FIXME this needs to be removed and/or sucked into the pb gem.
+              # exist in the protobuf gem.
+              #
               if field.repeated?
                 value = [ value ].flatten
               elsif field.enum?
                 value = value.to_i
               else
-                case field.type
-                when :bool then
-                  if value == 1
-                    value = true
-                  elsif value == 0
-                    value = false
-                  end
-                when /int/ then
-                  value = value.to_i
-                when :double then
-                  value = value.to_f
-                when :string then
-                  value = value.to_s
-                end
+                value = coerce(value, field.type)
               end
 
-              # FIXME not sure how this is even working
               if field.message? && field.repeated?
                 value = value.map do |attributes|
                   build_message(field.type, attributes)
@@ -46,6 +32,23 @@ module ActiveRemote
             end
 
             message
+          end
+        end
+
+        def coerce(value, field_type)
+          case field_type
+          when :bool then
+            if value == 1
+              return true
+            elsif value == 0
+              return false
+            end
+          when /int/ then
+            return value.to_i
+          when :double then
+            return value.to_f
+          when :string then
+            return value.to_s
           end
         end
       end
