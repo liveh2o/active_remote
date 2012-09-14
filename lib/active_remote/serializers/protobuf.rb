@@ -13,7 +13,9 @@ module ActiveRemote
               # exist in the protobuf gem.
               #
               if field.repeated?
-                value = [ value ].flatten
+                collection = [ value ].flatten
+                collection.map! { |value| coerce(value, field.type) }
+                value = collection
               elsif field.enum?
                 value = value.to_i
               else
