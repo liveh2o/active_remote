@@ -110,8 +110,8 @@ module ActiveRemote
         self.class._publishable_attributes
       end
 
-      def _service
-        self.class.service
+      def _service_name
+        self.class.service_name
       end
 
       def _service_class
