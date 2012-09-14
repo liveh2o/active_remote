@@ -1,3 +1,4 @@
+require 'active_remote/bulk'
 require 'active_remote/dsl'
 require 'active_remote/persistence'
 require 'active_remote/rpc'
@@ -9,6 +10,7 @@ module ActiveRemote
     extend ::ActiveModel::Callbacks
     include ::ActiveModel::Serializers::JSON
 
+    include ::ActiveRemote::Bulk
     include ::ActiveRemote::DSL
     include ::ActiveRemote::Persistence
     include ::ActiveRemote::RPC
