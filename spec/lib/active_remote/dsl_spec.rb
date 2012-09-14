@@ -1,12 +1,8 @@
 require 'spec_helper'
 
 describe ActiveRemote::DSL do
-  before {
-    reset_dsl_variables(Tag)
-  }
-  after {
-    Tag.service_class Generic::Remote::TagService
-  }
+  before { reset_dsl_variables(Tag) }
+  after { Tag.service_class Generic::Remote::TagService }
 
   describe ".app_name" do
     context "when given a value" do
