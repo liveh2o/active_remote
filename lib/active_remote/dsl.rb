@@ -29,10 +29,11 @@ module ActiveRemote
       #   end
       #
       def attr_publishable(*attributes)
-        _publishable_attributes += attributes
+        @publishable_attributes ||= []
+        @publishable_attributes += attributes
       end
 
-      # Set the number of records per page when auto paging
+      # Set the number of records per page when auto paging.
       #
       #   class User < ActiveRemote::Base
       #     auto_paging_size 100
@@ -54,9 +55,10 @@ module ActiveRemote
         @namespace
       end
 
-      # Retrieve the attributes that have been whitelisted.
-      def _publishable_attributes
-        @publishable_attributes ||= []
+      # Retrieve the attributes that have been whitelisted for serialization.
+      #
+      def publishable_attributes
+        @publishable_attributes
       end
 
       # Set the service class directly, circumventing the
@@ -107,7 +109,7 @@ module ActiveRemote
     private
 
       def _publishable_attributes
-        self.class._publishable_attributes
+        self.class.publishable_attributes
       end
 
       def _service_name

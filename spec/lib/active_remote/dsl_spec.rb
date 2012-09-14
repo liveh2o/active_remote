@@ -18,7 +18,12 @@ describe ActiveRemote::DSL do
   end
 
   describe ".attr_publishable" do
-    it "appends given attributes to @publishable_attributes"
+    it "appends given attributes to @publishable_attributes" do
+      Tag.attr_publishable :guid
+      Tag.attr_publishable :name
+
+      Tag.publishable_attributes.should =~ [ :guid, :name ]
+    end
   end
 
   describe ".auto_paging_size" do
