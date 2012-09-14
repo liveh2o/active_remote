@@ -51,6 +51,11 @@ module ActiveRemote
       #
       def assign_attributes(attributes)
         self.attributes.merge!(attributes)
+
+        self.attributes.each do |key, value|
+          setter = "#{key}="
+          __send__(setter, value) if respond_to?(setter)
+        end
       end
 
       # Deletes the record from the service (the service determines if the
