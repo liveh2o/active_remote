@@ -131,13 +131,7 @@ module ActiveRemote
       #
       def save
         run_callbacks :save do
-          if persisted?
-            _execute(:update, attributes)
-          else
-            _execute(:create, attributes)
-          end
-
-          success?
+          create_or_update
         end
       end
 
@@ -152,8 +146,7 @@ module ActiveRemote
       # Also runs any before/after save callbacks that are defined.
       #
       def save!
-        save
-        raise RemoteRecordNotSaved.new(errors.to_s) if has_errors?
+        save || raise(RemoteRecordNotSaved.new(errors.to_s))
       end
 
       # Returns true if the record doesn't have errors; otherwise, returns false.
@@ -178,6 +171,24 @@ module ActiveRemote
       def update_attributes!(attributes)
         assign_attributes(attributes)
         save!
+      end
+
+    private
+
+      def create
+        _execute(:create, attributes)
+        assign_attributes(last_response.to_hash)
+        success?
+      end
+
+      def create_or_update
+        new_record? ? create : update
+      end
+
+      def update
+        _execute(:update, attributes)
+        assign_attributes(last_response.to_hash)
+        success?
       end
     end
   end
