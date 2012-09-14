@@ -14,6 +14,8 @@ describe ActiveRemote::DSL do
   end
 
   describe ".attr_publishable" do
+    after { reset_publishable_attributes(Tag) }
+
     it "appends given attributes to @publishable_attributes" do
       Tag.attr_publishable :guid
       Tag.attr_publishable :name
