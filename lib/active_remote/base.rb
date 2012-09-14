@@ -31,5 +31,13 @@ module ActiveRemote
         assign_attributes(attributes.to_hash)
       end
     end
+
+    def freeze
+      @attributes.freeze; self
+    end
+
+    def frozen?
+      @attributes.frozen?
+    end
   end
 end
