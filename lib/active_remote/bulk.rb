@@ -40,17 +40,6 @@ module ActiveRemote
         remote.serialize_records
       end
 
-      # Create multiple records at the same time. Returns a collection of active
-      # remote objects from the passed records. If the service returns any record
-      # with error messages, raises an ActiveRemote::RemoteRecordNotSaved exception.
-      #
-      def create_all!(*records)
-        remote_records = create_all(records)
-
-        raise RemoteRecordNotSaved if remote_records.detect { |remote| remote.has_errors? }
-        remote_records
-      end
-
       # Delete multiple records at the same time. Returns a collection of active
       # remote objects from the passed records. Records that were not deleted
       # are returned with error messages indicating what went wrong.
@@ -78,17 +67,6 @@ module ActiveRemote
         remote.serialize_records
       end
 
-      # Delete multiple records at the same time. Returns a collection of active
-      # remote objects from the passed records. If the service returns any record
-      # with error messages, raises an ActiveRemote::RemoteRecordNotSaved exception.
-      #
-      def delete_all!(*records)
-        remote_records = delete_all(records)
-
-        raise RemoteRecordNotSaved if remote_records.detect { |remote| remote.has_errors? }
-        remote_records
-      end
-
       # Destroy multiple records at the same time. Returns a collection of active
       # remote objects from the passed records. Records that were not destroyed
       # are returned with error messages indicating what went wrong.
@@ -114,17 +92,6 @@ module ActiveRemote
         remote = self.new
         remote._execute(:destroy_all, parse_records(records))
         remote.serialize_records
-      end
-
-      # Destroy multiple records at the same time. Returns a collection of active
-      # remote objects from the passed records. If the service returns any record
-      # with error messages, raises an ActiveRemote::RemoteRecordNotSaved exception.
-      #
-      def destroy_all!(*records)
-        remote_records = destroy_all(records)
-
-        raise RemoteRecordNotSaved if remote_records.detect { |remote| remote.has_errors? }
-        remote_records
       end
 
       # Parse given records to get them ready to be built into a request.
@@ -169,17 +136,6 @@ module ActiveRemote
         remote = self.new
         remote._execute(:update_all, parse_records(records))
         remote.serialize_records
-      end
-
-      # Update multiple records at the same time. Returns a collection of active
-      # remote objects from the passed records. If the service returns any record
-      # with error messages, raises an ActiveRemote::RemoteRecordNotSaved exception.
-      #
-      def update_all!(*records)
-        remote_records = update_all(records)
-
-        raise RemoteRecordNotSaved if remote_records.detect { |remote| remote.has_errors? }
-        remote_records
       end
     end
   end
