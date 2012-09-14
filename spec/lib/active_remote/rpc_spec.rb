@@ -4,29 +4,23 @@ describe ActiveRemote::RPC do
   subject { Tag.new }
 
   describe ".request" do
+    let(:attributes) { Hash.new }
     let(:message) { double(:message) }
 
-    before {
-      Tag.stub(:request_type)
-      Tag.stub(:build_message).and_return(message)
-    }
-
     it "builds an RPC request" do
-      Tag.request(:create, {}).should eq message
+      Tag.should_receive(:build_message).with(Generic::Remote::Tag, attributes)
+      Tag.request(:create, attributes)
     end
   end
 
   describe ".request_type" do
-    it "fetches the request type for the given RPC method"
+    it "fetches the request type for the given RPC method" do
+      Tag.request_type(:search).should eq Generic::Remote::TagRequest
+    end
   end
 
   describe "#_execute" do
     let(:request) { double(:request) }
-
-    before {
-      Tag.service_class Generic::Remote::TagService
-    }
-    after { reset_dsl_variables(Tag) }
 
     it "calls the given RPC method" do
       mock_remote_service(Tag.service_class, :create, :response => double(:to_hash => {}))
