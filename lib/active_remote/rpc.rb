@@ -20,7 +20,7 @@ module ActiveRemote
       # Return the class applicable to the request for the given rpc method.
       #
       def request_type(rpc_method)
-        service_class.rpcs[_service][rpc_method].request_type
+        service_class.rpcs[_service_name][rpc_method].request_type
       end
     end
 
@@ -28,8 +28,8 @@ module ActiveRemote
     # Returns a boolean indicating success or failure.
     #
     def _execute(rpc_method, request_args)
-      proto = request(rpc_method, request_args) if request_args.is_a?(Hash)
-      @last_request = proto
+      @last_request = request_args
+      @last_request = request(rpc_method, request_args) if request_args.is_a?(Hash)
 
       _service_class.client.__send__(rpc_method, @last_request) do |c|
 
