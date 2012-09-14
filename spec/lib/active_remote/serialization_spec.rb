@@ -7,7 +7,7 @@ describe ActiveRemote::Serialization do
     }
     let(:records) { [ { :foo => 'bar' } ] }
 
-    subject { Baz.new }
+    subject { Tag.new }
 
     context "when the last response has records" do
 
@@ -15,7 +15,7 @@ describe ActiveRemote::Serialization do
 
       it "serializes records into active remote objects" do
         subject.serialize_records.each do |record|
-          record.should be_a Baz
+          record.should be_a Tag
         end
       end
     end

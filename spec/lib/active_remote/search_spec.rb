@@ -6,19 +6,19 @@ describe ActiveRemote::Search do
       let(:args) { Hash.new }
 
       before {
-        Baz.any_instance.stub(:_active_remote_search)
+        Tag.any_instance.stub(:_active_remote_search)
       }
 
       it "searches with the given args" do
-        Baz.any_instance.should_receive(:_active_remote_search).with(args)
-        Baz.paginated_search(args)
+        Tag.any_instance.should_receive(:_active_remote_search).with(args)
+        Tag.paginated_search(args)
       end
 
       it "returns records" do
         records = double(:records)
 
-        Baz.any_instance.stub(:serialize_records).and_return(records)
-        Baz.paginated_search(args).should eq records
+        Tag.any_instance.stub(:serialize_records).and_return(records)
+        Tag.paginated_search(args).should eq records
       end
 
       context "when will_paginate is loaded" do
@@ -26,8 +26,8 @@ describe ActiveRemote::Search do
           paginated_records = double(:paginated_records)
           records = double(:records, :paginate => paginated_records)
 
-          Baz.any_instance.stub(:serialize_records).and_return(records)
-          Baz.paginated_search(args).should eq paginated_records
+          Tag.any_instance.stub(:serialize_records).and_return(records)
+          Tag.paginated_search(args).should eq paginated_records
         end
       end
     end
@@ -46,19 +46,19 @@ describe ActiveRemote::Search do
       let(:args) { Hash.new }
 
       before {
-        Baz.any_instance.stub(:_active_remote_search)
+        Tag.any_instance.stub(:_active_remote_search)
       }
 
       it "searches with the given args" do
-        Baz.any_instance.should_receive(:_active_remote_search).with(args)
-        Baz.search(args)
+        Tag.any_instance.should_receive(:_active_remote_search).with(args)
+        Tag.search(args)
       end
 
       it "returns records" do
         records = double(:records)
 
-        Baz.any_instance.stub(:serialize_records).and_return(records)
-        Baz.search(args).should eq records
+        Tag.any_instance.stub(:serialize_records).and_return(records)
+        Tag.search(args).should eq records
       end
     end
 
@@ -79,7 +79,7 @@ describe ActiveRemote::Search do
       MessageWithOptions.new(:records => [], :options => options)
     }
 
-    subject { Baz.new }
+    subject { Tag.new }
 
     before { subject.stub(:last_response).and_return(last_response) }
 

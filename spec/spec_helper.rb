@@ -8,6 +8,8 @@ end
 
 Bundler.require(:default, :development, :test)
 
+require 'support/protobuf'
+
 RSpec.configure do |config|
   config.include Protobuf::RSpec::Helpers
 end
@@ -15,7 +17,7 @@ end
 ##
 # Define a generic class that inherits from active remote base
 #
-class Baz < ::ActiveRemote::Base
+class Tag < ::ActiveRemote::Base
 end
 
 ##
@@ -27,16 +29,6 @@ class MessageWithOptions
   def initialize(attributes = {})
     @records = attributes.fetch(:records, nil)
     @options = attributes.fetch(:options, nil)
-  end
-end
-
-##
-# Define a generic class for use when testing the service class
-#
-module Foo
-  module Bar
-    class BazService
-    end
   end
 end
 

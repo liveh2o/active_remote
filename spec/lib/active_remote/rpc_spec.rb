@@ -1,20 +1,18 @@
 require 'spec_helper'
 
 describe ActiveRemote::RPC do
-  let(:active_remote) { Baz }
-
-  subject { active_remote.new }
+  subject { Tag.new }
 
   describe ".request" do
     let(:message) { double(:message) }
 
     before {
-      active_remote.stub(:request_type)
-      active_remote.stub(:build_message).and_return(message)
+      Tag.stub(:request_type)
+      Tag.stub(:build_message).and_return(message)
     }
 
     it "builds an RPC request" do
-      active_remote.request(:create, {}).should eq message
+      Tag.request(:create, {}).should eq message
     end
   end
 
@@ -26,17 +24,17 @@ describe ActiveRemote::RPC do
     let(:request) { double(:request) }
 
     before {
-      active_remote.service_class Foo::Bar::BazService
+      Tag.service_class Generic::Remote::TagService
     }
-    after { reset_dsl_variables(active_remote) }
+    after { reset_dsl_variables(Tag) }
 
     it "calls the given RPC method" do
-      mock_remote_service(active_remote.service_class, :create, :response => double(:to_hash => {}))
+      mock_remote_service(Tag.service_class, :create, :response => double(:to_hash => {}))
       subject._execute(:create, request)
     end
 
     it "sets the last request" do
-      mock_remote_service(active_remote.service_class, :create, :response => double(:to_hash => {}))
+      mock_remote_service(Tag.service_class, :create, :response => double(:to_hash => {}))
 
       subject._execute(:create, request)
       subject.last_request.should eq(request)
@@ -48,7 +46,7 @@ describe ActiveRemote::RPC do
 
       before {
         subject.stub(:request).and_return(request)
-        mock_remote_service(active_remote.service_class, :create, :response => double(:to_hash => {}))
+        mock_remote_service(Tag.service_class, :create, :response => double(:to_hash => {}))
       }
 
       it "creates a request" do
@@ -61,7 +59,7 @@ describe ActiveRemote::RPC do
       let(:success_response) { double(:status => 'success', :awesome_town => true, :to_hash => {}) }
 
       before {
-        mock_remote_service(active_remote.service_class, :create, :response => success_response)
+        mock_remote_service(Tag.service_class, :create, :response => success_response)
       }
 
       it "sets the last response" do
@@ -74,7 +72,7 @@ describe ActiveRemote::RPC do
       let(:error_response) { double(:error, :message => "Boom goes the dynamite!") }
 
       before {
-        mock_remote_service(active_remote.service_class, :create, :error => error_response)
+        mock_remote_service(Tag.service_class, :create, :error => error_response)
       }
 
       it "raises an exception" do

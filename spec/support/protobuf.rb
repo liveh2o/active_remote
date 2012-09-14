@@ -1,0 +1,1 @@
+require 'support/protobuf/tag_service'
