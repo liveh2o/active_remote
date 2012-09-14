@@ -32,6 +32,17 @@ module ActiveRemote
         _publishable_attributes += attributes
       end
 
+      # Set the number of records per page when auto paging
+      #
+      #   class User < ActiveRemote::Base
+      #     auto_paging_size 100
+      #   end
+      #
+      def auto_paging_size(size=nil)
+        @auto_paging_size = size unless size.nil?
+        @auto_paging_size ||= 1000
+      end
+
       # Set the namespace for the underlying service class.
       #
       #   class User < ActiveRemote::Base
