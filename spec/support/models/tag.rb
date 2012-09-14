@@ -5,4 +5,7 @@ require 'support/protobuf/tag_service'
 #
 class Tag < ::ActiveRemote::Base
   service_class ::Generic::Remote::TagService
+
+  attr_accessor :guid, :name
+
 end
