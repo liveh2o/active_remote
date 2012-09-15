@@ -8,7 +8,8 @@ require 'active_remote/serialization'
 module ActiveRemote
   class Base
     extend ::ActiveModel::Callbacks
-    include ::ActiveModel::Serializers::JSON
+
+    include ::ActiveAttr::Model
 
     include ::ActiveRemote::Bulk
     include ::ActiveRemote::DSL
@@ -17,19 +18,15 @@ module ActiveRemote
     include ::ActiveRemote::Search
     include ::ActiveRemote::Serialization
 
-    attr_accessor :attributes, :errors
     attr_reader :last_request, :last_response
 
     define_model_callbacks :initialize, :only => :after
     define_model_callbacks :search, :only => :after
     define_model_callbacks :save
 
-    def initialize(attributes = {})
+    def initialize(*)
       run_callbacks :initialize do
-        @attributes = HashWithIndifferentAccess.new
-        @errors = []
-
-        assign_attributes(attributes.to_hash)
+        super
       end
     end
 

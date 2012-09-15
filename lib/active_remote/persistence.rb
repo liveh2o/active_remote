@@ -49,14 +49,14 @@ module ActiveRemote
       # Allows you to set all of the remote record's attributes by passing in
       # a hash of attributes with keys matching attribute names.
       #
-      def assign_attributes(attributes)
-        self.attributes.merge!(attributes)
-
-        self.attributes.each do |key, value|
-          setter = "#{key}="
-          __send__(setter, value) if respond_to?(setter)
-        end
-      end
+      # def assign_attributes(attributes)
+      #   self.attributes.merge!(attributes)
+      #
+      #   self.attributes.each do |key, value|
+      #     setter = "#{key}="
+      #     __send__(setter, value) if respond_to?(setter)
+      #   end
+      # end
 
       # Deletes the record from the service (the service determines if the
       # record is hard or soft deleted) and freezes this instance to indicate
@@ -110,13 +110,13 @@ module ActiveRemote
       # returns false.
       #
       def new_record?
-        return ! persisted?
+        return self[:guid].nil?
       end
 
       # Returns true if the remote record has been saved; otherwise, returns false.
       #
       def persisted?
-        return attributes.fetch(:guid, false) || false
+        return ! new_record?
       end
 
       # Saves the remote record.
@@ -146,7 +146,7 @@ module ActiveRemote
       # Also runs any before/after save callbacks that are defined.
       #
       def save!
-        save || raise(RemoteRecordNotSaved.new(errors.to_s))
+        save || raise(RemoteRecordNotSaved)
       end
 
       # Returns true if the record doesn't have errors; otherwise, returns false.

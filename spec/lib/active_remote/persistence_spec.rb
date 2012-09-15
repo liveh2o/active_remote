@@ -38,20 +38,6 @@ describe ActiveRemote::Persistence do
     end
   end
 
-  describe "#assign_attributes" do
-    let(:attributes) { HashWithIndifferentAccess.new(:name => 'bar') }
-
-    it "updates attributes with the given hash" do
-      subject.assign_attributes(attributes)
-      subject.attributes.should eq attributes
-    end
-
-    it "updates any attributes that have accessors defined" do
-      subject.assign_attributes(attributes)
-      subject.name.should eq attributes[:name]
-    end
-  end
-
   describe "#delete" do
     before { subject.stub(:_execute) }
     after { subject.unstub(:_execute) }
@@ -124,13 +110,13 @@ describe ActiveRemote::Persistence do
 
   describe "#has_errors?" do
     context "when errors are not present" do
-      before { subject.errors = [] }
+      before { subject.errors.clear }
 
       its(:has_errors?) { should be_false }
     end
 
     context "when errors are present" do
-      before { subject.errors << "Boom!" }
+      before { subject.errors[:base] << "Boom!" }
 
       its(:has_errors?) { should be_true }
     end
@@ -192,7 +178,7 @@ describe ActiveRemote::Persistence do
     end
 
     context "when the record is saved" do
-      before { subject.errors = [] }
+      before { subject.errors.clear }
 
       it "returns true" do
         subject.save.should be_true
@@ -200,7 +186,7 @@ describe ActiveRemote::Persistence do
     end
 
     context "when the record is not saved" do
-      before { subject.errors << "Boom!" }
+      before { subject.errors[:base] << "Boom!" }
 
       it "returns false" do
         subject.save.should be_false
@@ -229,13 +215,13 @@ describe ActiveRemote::Persistence do
 
   describe "#success?" do
     context "when errors are present" do
-      before { subject.errors << "Boom!" }
+      before { subject.errors[:base] << "Boom!" }
 
       its(:success?) { should be_false }
     end
 
     context "when errors are not present" do
-      before { subject.errors = [] }
+      before { subject.errors.clear }
 
       its(:success?) { should be_true }
     end
