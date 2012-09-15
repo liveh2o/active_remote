@@ -21,8 +21,6 @@ Gem::Specification.new do |s|
   #
   s.add_dependency "activemodel"
   s.add_dependency "protobuf"
-  s.add_dependency "atlas"
-  s.add_dependency "buttress"
 
   ##
   # Development Dependencies
