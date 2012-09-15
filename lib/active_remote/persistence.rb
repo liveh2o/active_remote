@@ -6,7 +6,7 @@ module ActiveRemote
       klass.class_eval do
         extend ActiveRemote::Persistence::ClassMethods
         include ActiveRemote::Persistence::InstanceMethods
-        include ActiveRemote::RPC unless include?(ActiveRemote::RPC)
+        include ActiveRemote::RPC
       end
     end
 

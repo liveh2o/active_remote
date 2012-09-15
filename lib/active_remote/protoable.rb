@@ -13,7 +13,7 @@ module ActiveRemote
       klass.extend(::ActiveRemote::ProtobufHelpers)
       klass.__send__(:include, ::ActiveRemote::ProtobufHelpers)
       klass.__send__(:include, ::ActiveRemote::Protoable::InstanceMethods)
-      klass.__send__(:include, ::Buttress::Failable) unless(klass.include?(::Buttress::Failable))
+      klass.__send__(:include, ::Buttress::Failable)
 
       klass.class_eval do
         class << self

@@ -3,7 +3,7 @@ module ActiveRemote
     def self.included(klass)
       klass.class_eval do
         extend ::ActiveRemote::Search::ClassMethods
-        include ::ActiveRemote::RPC unless include?(::ActiveRemote::RPC)
+        include ::ActiveRemote::RPC
       end
     end
 
