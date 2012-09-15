@@ -8,6 +8,20 @@ module ActiveRemote
       end
     end
 
+    def add_errors_from_response
+      return unless last_response.respond_to?(:errors)
+
+      last_response.errors.each do |error|
+        if error.respond_to?(:message)
+          errors.add(error.field, error.message)
+        elsif error.respond_to(:messages)
+          error.messages.each do |message|
+            errors.add(error.field, message)
+          end
+        end
+      end
+    end
+
     def serialize_records
       return nil unless last_response.respond_to?(:records)
 

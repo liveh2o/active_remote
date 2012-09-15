@@ -178,6 +178,7 @@ module ActiveRemote
       def create
         _execute(:create, attributes)
         assign_attributes(last_response.to_hash)
+        add_errors_from_response
         success?
       end
 
@@ -188,6 +189,7 @@ module ActiveRemote
       def update
         _execute(:update, attributes)
         assign_attributes(last_response.to_hash)
+        add_errors_from_response
         success?
       end
     end
