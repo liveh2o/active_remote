@@ -30,10 +30,10 @@ module ActiveRemote
       #   Tag.create_all(Tag.new(:name => 'foo'), Tag.new(:name => 'bar'))
       #
       #   # Protobuf objects
-      #   Tag.create_all(Atlas::Abacus::Tag.new(:name => 'foo'), Atlas::Abacus::Tag.new(:name => 'bar'))
+      #   Tag.create_all(Generic::Remote::Tag.new(:name => 'foo'), Generic::Remote::Tag.new(:name => 'bar'))
       #
       #   # Bulk protobuf object
-      #   Tag.create_all(Atlas::Abacus::Tags.new(:records => [ Atlas::Abacus::Tag.new(:name => 'foo') ])
+      #   Tag.create_all(Generic::Remote::Tags.new(:records => [ Generic::Remote::Tag.new(:name => 'foo') ])
       #
       def create_all(*records)
         remote = self.new
@@ -57,10 +57,10 @@ module ActiveRemote
       #   Tag.delete_all(Tag.new(:guid => 'foo'), Tag.new(:guid => 'bar'))
       #
       #   # Protobuf objects
-      #   Tag.delete_all(Atlas::Abacus::Tag.new(:guid => 'foo'), Atlas::Abacus::Tag.new(:guid => 'bar'))
+      #   Tag.delete_all(Generic::Remote::Tag.new(:guid => 'foo'), Generic::Remote::Tag.new(:guid => 'bar'))
       #
       #   # Bulk protobuf object
-      #   Tag.delete_all(Atlas::Abacus::Tags.new(:records => [ Atlas::Abacus::Tag.new(:guid => 'foo') ])
+      #   Tag.delete_all(Generic::Remote::Tags.new(:records => [ Generic::Remote::Tag.new(:guid => 'foo') ])
       #
       def delete_all(*records)
         remote = self.new
@@ -84,10 +84,10 @@ module ActiveRemote
       #   Tag.destroy_all(Tag.new(:guid => 'foo'), Tag.new(:guid => 'bar'))
       #
       #   # Protobuf objects
-      #   Tag.destroy_all(Atlas::Abacus::Tag.new(:guid => 'foo'), Atlas::Abacus::Tag.new(:guid => 'bar'))
+      #   Tag.destroy_all(Generic::Remote::Tag.new(:guid => 'foo'), Generic::Remote::Tag.new(:guid => 'bar'))
       #
       #   # Bulk protobuf object
-      #   Tag.destroy_all(Atlas::Abacus::Tags.new(:records => [ Atlas::Abacus::Tag.new(:guid => 'foo') ])
+      #   Tag.destroy_all(Generic::Remote::Tags.new(:records => [ Generic::Remote::Tag.new(:guid => 'foo') ])
       #
       def destroy_all(*records)
         remote = self.new
@@ -128,10 +128,10 @@ module ActiveRemote
       #   Tag.update_all(Tag.new(:guid => 'foo', :name => 'baz'), Tag.new(:guid => 'bar', :name => 'qux'))
       #
       #   # Protobuf objects
-      #   Tag.update_all(Atlas::Abacus::Tag.new(:guid => 'foo', :name => 'baz'), Atlas::Abacus::Tag.new(:guid => 'bar', :name => 'qux'))
+      #   Tag.update_all(Generic::Remote::Tag.new(:guid => 'foo', :name => 'baz'), Generic::Remote::Tag.new(:guid => 'bar', :name => 'qux'))
       #
       #   # Bulk protobuf object
-      #   Tag.update_all(Atlas::Abacus::Tags.new(:records => [ Atlas::Abacus::Tag.new(:guid => 'foo', :name => 'baz') ])
+      #   Tag.update_all(Generic::Remote::Tags.new(:records => [ Generic::Remote::Tag.new(:guid => 'foo', :name => 'baz') ])
       #
       def update_all(*records)
         remote = self.new
