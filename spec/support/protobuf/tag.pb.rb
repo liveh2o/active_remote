@@ -9,7 +9,7 @@ module Generic
     class Tag < ::Protobuf::Message
       optional :string, :guid, 1
       optional :string, :name, 2
-      optional :Error, :error, 3
+      repeated :Error, :errors, 3
     end
     class Tags < ::Protobuf::Message
       repeated :Tag, :records, 1

@@ -4,6 +4,7 @@ require 'protobuf/message/extend'
 
 module Generic
   class Error < ::Protobuf::Message
-    optional :string, :message, 1
+    optional :string, :field, 1
+    optional :string, :message, 2
   end
 end
