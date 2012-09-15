@@ -1,17 +1,9 @@
 #!/usr/bin/env rake
 require "bundler/gem_tasks"
+require 'rspec/core/rake_task'
 
-begin
-  require "rspec"
-  require "rspec/core/rake_task"
+desc "Run specs"
+RSpec::Core::RakeTask.new(:spec)
 
-  RSpec::Core::RakeTask.new(:spec) do |t|
-    t.rspec_opts = "--color"
-  end
-
-  task :default => [:spec]
-rescue => e
-  warn "RSpec is not loaded"
-end
-
-Dir["lib/tasks/**/*.rake"].each { |ext| load ext } if defined?(Rake)
+desc "Run specs (default)"
+task :default => :spec
