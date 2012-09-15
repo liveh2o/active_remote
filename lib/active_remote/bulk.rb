@@ -4,6 +4,7 @@ module ActiveRemote
   module Bulk
     def self.included(klass)
       klass.class_eval do
+        extend ActiveRemote::Bulk::ClassMethods
         include ActiveRemote::Persistence unless include?(ActiveRemote::Persistence)
       end
     end
