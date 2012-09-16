@@ -89,8 +89,20 @@ module ActiveRemote
       return pagination.nil?
     end
 
+    def _options
+      last_response.try(:options) if last_response.respond_to?(:options)
+    end
+
+    def _pagination
+      options = _options
+      pagination = options.try(:pagination) if options.respond_to?(:pagination)
+      pagination
+    end
+
     def _total_pages
-      last_response.try(:options).try(:pagination).try(:total_pages) || 1
+      pagination = _pagination
+      total_pages = pagination.total_pages if pagination.respond_to?(:total_pages)
+      total_pages || 1
     end
   end
 end
