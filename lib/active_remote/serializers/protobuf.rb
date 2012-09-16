@@ -1,6 +1,10 @@
 module ActiveRemote
   module Serializers
     module Protobuf
+      def self.included(klass)
+        klass.extend ::ActiveRemote::Serializers::Protobuf::ClassMethods
+      end
+
       module ClassMethods
         # Recursively build messages from a hash of attributes.
         # TODO: Pull this functionality into the protobuf gem.
