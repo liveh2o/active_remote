@@ -1,6 +1,33 @@
 require 'spec_helper'
 
 describe ActiveRemote::Search do
+  describe ".find" do
+    let(:args) { Hash.new }
+    let(:record) { double(:record) }
+    let(:records) { [ record ] }
+
+    before { Tag.stub(:search).and_return(records) }
+
+    it "searches with the given args" do
+      Tag.should_receive(:search).with(args)
+      Tag.find(args)
+    end
+
+    context "when records are returned" do
+      it "returns the first record" do
+        Tag.find(args).should eq record
+      end
+    end
+
+    context "when no records are returned" do
+      before { Tag.stub(:search).and_return([]) }
+
+      it "raise an exception" do
+        expect { Tag.find(args) }.to raise_error(::ActiveRemote::RemoteRecordNotFound)
+      end
+    end
+  end
+
   describe ".paginated_search" do
     context "given args that respond to :to_hash" do
       let(:args) { Hash.new }

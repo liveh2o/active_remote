@@ -8,6 +8,13 @@ module ActiveRemote
     end
 
     module ClassMethods
+      def find(args)
+        remote = self.search(args).first
+        raise RemoteRecordNotFound if remote.nil?
+
+        return remote
+      end
+
       def paginated_search(args)
         args = _active_remote_search_args(args)
 
