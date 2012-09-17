@@ -1,4 +1,5 @@
 require 'active_remote/bulk'
+require 'active_remote/dirty'
 require 'active_remote/dsl'
 require 'active_remote/persistence'
 require 'active_remote/rpc'
@@ -17,6 +18,10 @@ module ActiveRemote
     include ::ActiveRemote::RPC
     include ::ActiveRemote::Search
     include ::ActiveRemote::Serialization
+
+    # Overrides some methods, providing support for dirty tracking,
+    # so it needs to be included last.
+    include ::ActiveRemote::Dirty
 
     attr_reader :last_request, :last_response
 
