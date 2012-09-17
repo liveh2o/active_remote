@@ -75,6 +75,11 @@ module ActiveRemote
       end
     end
 
+    def reload
+      _active_remote_search(:guid => self.guid)
+      assign_attributes(last_response.to_hash)
+    end
+
   private
 
     def _auto_paging(args, page = 1)

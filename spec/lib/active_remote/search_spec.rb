@@ -146,4 +146,26 @@ describe ActiveRemote::Search do
       end
     end
   end
+
+  describe "#reload" do
+    let(:args) { { :guid => 'foo' } }
+    let(:attributes) { HashWithIndifferentAccess.new }
+
+    subject { Tag.new(args) }
+
+    before {
+      subject.stub(:_active_remote_search)
+      subject.stub(:last_response).and_return(attributes)
+    }
+
+    it "reloads the record" do
+      subject.should_receive(:_active_remote_search).with(args)
+      subject.reload
+    end
+
+    it "assigns new attributes" do
+      subject.should_receive(:assign_attributes).with(attributes)
+      subject.reload
+    end
+  end
 end
