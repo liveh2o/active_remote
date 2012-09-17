@@ -169,10 +169,12 @@ describe ActiveRemote::Persistence do
     end
 
     context "when the record is not new" do
-      subject { Tag.new(:guid => 'foo') }
+      let(:attributes) { { 'guid' => 'foo' } }
+
+      subject { Tag.new(attributes) }
 
       it "updates the record" do
-        subject.should_receive(:_execute).with(:update, subject.attributes)
+        subject.should_receive(:_execute).with(:update, attributes)
         subject.save
       end
     end
