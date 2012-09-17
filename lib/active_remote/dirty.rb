@@ -37,5 +37,9 @@ module ActiveRemote
       __send__("#{name}_will_change!") unless value == self[name]
       super
     end
+
+    def update(*)
+      super(changed)
+    end
   end
 end

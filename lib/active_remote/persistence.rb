@@ -186,7 +186,8 @@ module ActiveRemote
         new_record? ? create : update
       end
 
-      def update
+      def update(attribute_names = @attributes.keys)
+        attributes.slice!(attribute_names)
         _execute(:update, attributes)
         assign_attributes(last_response.to_hash)
         add_errors_from_response
