@@ -3,6 +3,23 @@ require 'spec_helper'
 describe ActiveRemote::RPC do
   subject { Tag.new }
 
+  describe ".remote_call" do
+    let(:args) { double(:args) }
+    let(:response) { double(:response) }
+
+    before { Tag.any_instance.stub(:_execute) }
+
+    it "calls the given RPC method" do
+      Tag.any_instance.should_receive(:_execute).with(:remote_method, args)
+      Tag.remote_call(:remote_method, args)
+    end
+
+    it "returns the response" do
+      Tag.any_instance.stub(:last_response).and_return(response)
+      Tag.remote_call(:remote_method, args).should eq response
+    end
+  end
+
   describe ".request" do
     let(:attributes) { Hash.new }
     let(:message) { double(:message) }

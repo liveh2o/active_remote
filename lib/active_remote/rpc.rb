@@ -10,11 +10,21 @@ module ActiveRemote
     end
 
     module ClassMethods
+      # Execute an RPC call to the remote service and return the raw response.
+      #
+      def remote_call(rpc_method, request_args)
+        remote = self.new
+        remote._execute(rpc_method, request_args)
+        remote.last_response
+      end
+
       # Return a protobuf request object for the given rpc request.
       #
-      def request(rpc_method, attributes)
+      def request(rpc_method, request_args)
+        return request_args unless request_args.is_a?(Hash)
+
         message_class = request_type(rpc_method)
-        build_message(message_class, attributes)
+        build_message(message_class, request_args)
       end
 
       # Return the class applicable to the request for the given rpc method.
@@ -25,11 +35,9 @@ module ActiveRemote
     end
 
     # Invoke an RPC call to the service for the given rpc method.
-    # Returns a boolean indicating success or failure.
     #
     def _execute(rpc_method, request_args)
-      @last_request = request_args
-      @last_request = request(rpc_method, request_args) if request_args.is_a?(Hash)
+      @last_request = request(rpc_method, request_args)
 
       _service_class.client.__send__(rpc_method, @last_request) do |c|
 
