@@ -6,9 +6,13 @@ module ActiveRemote
   class ActiveRemoteError < StandardError
   end
 
+  # Raised by ActiveRemove::Base.find when remote record is not found when
+  # searching with the given arguments.
+  class RemoteRecordNotFound < ActiveRemoteError
+  end
 
-  # Raised by ActiveRemove::Base.save! and ActiveRemote::Base.create! methods when remote record cannot be
-  # saved because it is invalid.
+  # Raised by ActiveRemove::Base.save! and ActiveRemote::Base.create! methods
+  # when remote record cannot be saved because it is invalid.
   class RemoteRecordNotSaved < ActiveRemoteError
   end
 
