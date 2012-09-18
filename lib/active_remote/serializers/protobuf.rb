@@ -56,6 +56,8 @@ module ActiveRemote
           when :string then
             return value.to_s
           end
+
+          return value
         end
       end
 
