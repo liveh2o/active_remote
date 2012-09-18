@@ -6,6 +6,10 @@ module ActiveRemote
   class ActiveRemoteError < StandardError
   end
 
+  # Raised by ActiveRemove::Base.save when the remote record is readonly.
+  class ReadOnlyRemoteRecord < ActiveRemoteError
+  end
+
   # Raised by ActiveRemove::Base.find when remote record is not found when
   # searching with the given arguments.
   class RemoteRecordNotFound < ActiveRemoteError

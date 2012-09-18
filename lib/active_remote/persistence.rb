@@ -39,6 +39,17 @@ module ActiveRemote
         remote.save!
         remote
       end
+
+      # Mark the class as readonly. Overrides instance-level readonly, making
+      # any instance of this class readonly.
+      def readonly!
+        @readonly = true
+      end
+
+      # Returns true if the class is marked as readonly; otherwise, returns false.
+      def readonly?
+        @readonly
+      end
     end
 
     ##
@@ -119,6 +130,11 @@ module ActiveRemote
         return ! new_record?
       end
 
+      # Returns true if the remote class or remote record is readonly; otherwise, returns false.
+      def readonly?
+        self.class.readonly? || @readonly
+      end
+
       # Saves the remote record.
       #
       # If it is a new record, it will be created through the service, otherwise
@@ -183,6 +199,7 @@ module ActiveRemote
       end
 
       def create_or_update
+        raise ReadOnlyRemoteRecord if readonly?
         new_record? ? create : update
       end
 
