@@ -76,6 +76,7 @@ module ActiveRemote
       # wrong. Returns the frozen instance.
       #
       def delete
+        raise ReadOnlyRemoteRecord if readonly?
         _execute(:delete, attributes)
         freeze if success?
       end
@@ -97,6 +98,7 @@ module ActiveRemote
       # messages indicating what went wrong. Returns the frozen instance.
       #
       def destroy
+        raise ReadOnlyRemoteRecord if readonly?
         _execute(:destroy, attributes)
         freeze if success?
       end
