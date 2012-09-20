@@ -29,6 +29,15 @@ module ActiveRemote
       end
     end
 
+    def serialize_records(*)
+      if serialized_records = super
+        serialized_records.each do |record|
+          record.previous_changes.try(:clear)
+          record.changed_attributes.try(:clear)
+        end
+      end
+    end
+
   private
 
     # Override ActiveAttr's attribute= method so we can provide support for ActiveMOdel::Dirty
