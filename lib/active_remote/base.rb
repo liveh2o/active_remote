@@ -1,3 +1,4 @@
+require 'active_remote/association'
 require 'active_remote/attributes'
 require 'active_remote/bulk'
 require 'active_remote/dirty'
@@ -13,6 +14,7 @@ module ActiveRemote
 
     include ::ActiveAttr::Model
 
+    include ::ActiveRemote::Association
     include ::ActiveRemote::Attributes
     include ::ActiveRemote::Bulk
     include ::ActiveRemote::DSL
