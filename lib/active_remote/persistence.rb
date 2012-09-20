@@ -206,7 +206,7 @@ module ActiveRemote
       end
 
       def update(attribute_names = @attributes.keys)
-        updated_attributes = attributes.slice(attribute_names)
+        updated_attributes = attributes.slice(*attribute_names)
         updated_attributes.merge!("guid" => self[:guid])
 
         _execute(:update, updated_attributes)
