@@ -3,16 +3,47 @@ module ActiveRemote
     def self.included(klass)
       klass.class_eval do
         extend ::ActiveRemote::Search::ClassMethods
+        include ::ActiveRemote::Persistence
         include ::ActiveRemote::RPC
       end
     end
 
     module ClassMethods
+
+      # Tries to load the first record; if it fails, an exception is raised.
+      #
       def find(args)
         remote = self.search(args).first
         raise RemoteRecordNotFound if remote.nil?
 
         return remote
+      end
+
+      # Tries to load the first record; if it fails, then create is called
+      # with the same arguments.
+      #
+      def first_or_create(attributes)
+        remote = self.search(attributes).first
+        remote ||= self.create(attributes)
+        remote
+      end
+
+      # Tries to load the first record; if it fails, then create! is called
+      # with the same arguments.
+      #
+      def first_or_create!(attributes)
+        remote = self.search(attributes).first
+        remote ||= self.create!(attributes)
+        remote
+      end
+
+      # Tries to load the first record; if it fails, then a new record is
+      # initialized with the same arguments.
+      #
+      def first_or_initialize(attributes)
+        remote = self.search(attributes).first
+        remote ||= self.new(attributes)
+        remote
       end
 
       def paginated_search(args)
