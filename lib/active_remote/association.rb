@@ -68,7 +68,7 @@ module ActiveRemote
       #
       def has_many(*klass_names)
         klass_names.flatten.compact.uniq.each do |plural_klass_name|
-          singular_name = plural_klass_name.singularize
+          singular_name = plural_klass_name.to_s.singularize
 
           define_method(plural_klass_name) do
             values = instance_variable_get(:"@#{plural_klass_name}")
