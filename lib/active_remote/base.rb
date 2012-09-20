@@ -1,3 +1,4 @@
+require 'active_remote/attributes'
 require 'active_remote/bulk'
 require 'active_remote/dirty'
 require 'active_remote/dsl'
@@ -12,6 +13,7 @@ module ActiveRemote
 
     include ::ActiveAttr::Model
 
+    include ::ActiveRemote::Attributes
     include ::ActiveRemote::Bulk
     include ::ActiveRemote::DSL
     include ::ActiveRemote::Persistence
@@ -31,6 +33,7 @@ module ActiveRemote
 
     def initialize(*)
       run_callbacks :initialize do
+        @attributes ||= {}
         super
       end
     end
