@@ -1,2 +1,5 @@
 require 'support/models/message_with_options'
+require 'support/models/author'
+require 'support/models/category'
+require 'support/models/post'
 require 'support/models/tag'
