@@ -42,6 +42,8 @@ module ActiveRemote
         end
 
         def coerce(value, field_type)
+          return value if value.nil?
+
           case field_type
           when :bool then
             if value == 1

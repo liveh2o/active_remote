@@ -14,7 +14,7 @@ module ActiveRemote
       last_response.errors.each do |error|
         if error.respond_to?(:message)
           errors.add(error.field, error.message)
-        elsif error.respond_to(:messages)
+        elsif error.respond_to?(:messages)
           error.messages.each do |message|
             errors.add(error.field, message)
           end
