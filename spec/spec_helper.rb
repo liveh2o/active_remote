@@ -8,6 +8,7 @@ end
 
 Bundler.require(:default, :development, :test)
 
+require 'protobuf/rspec'
 require 'support/helpers'
 require 'support/protobuf'
 
