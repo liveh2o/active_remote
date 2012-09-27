@@ -89,13 +89,15 @@ module ActiveRemote
 
       remote_records = []
       page = 0
+      total_pages = 1
 
       run_callbacks :search do
-        while page < _total_pages do
+        while page < total_pages do
           page += 1
 
           if auto_paging
             args = _auto_paging(args, page)
+            total_pages = _total_pages
           end
 
           _execute(:search, args)
