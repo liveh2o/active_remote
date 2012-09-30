@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors       = ["MDev"]
   s.email         = ["dev@moneydesktop.com"]
   s.homepage      = "https://git.moneydesktop.com/dev/active_remote"
-  s.description   = %q{ActiveRecord Protobuf integration}
-  s.summary       = s.description
+  s.summary       = %q{Active Record for your platform}
+  s.description   = %q{Active Remote provides Active Record-like object-relational mapping over RPC. It was written for use with Google Protocol Buffers, but could be extended to use any RPC data format.}
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
