@@ -2,16 +2,19 @@
 
 Active Remote provides [Active Record](https://github.com/rails/rails/tree/master/activerecord)-like object-relational mapping over RPC. Think of it as Active Record for your platform: within a service, use Active Record to persist objects and between services, use Active Remote.
 
-Active Remote provides a base class that when subclassed, provides the functionality you need to setup your remote model. Unlike Active Record, Active Remote doesn't have access to a database table to create attribute mappings. So you'll need to do a little setup to let Active Remote know how to persist your model*.
+Active Remote provides a base class that when subclassed, provides the functionality you need to setup your remote model. Because Active Remote provides model persistence between RPC services, it uses a GUID to retrieve records and establish associations. So Active Remote expects your RPC data format to provide a :guid field that can be used to identify your remote models.
+
+Unlike Active Record, Active Remote doesn't have access to a database table to create attribute mappings. So you'll need to do a little setup to let Active Remote know how to persist your model*.
 
 ```Ruby
-  # Given a product record that has a :name field:
+  # Given a product record that has :guid & :name fields:
   class Product < ActiveRecord::Base
-    # :name
+    # :guid, :name
   end
 
   # Configure your Active Remote model like this:
   class Product < ActiveRemote::Base
+    attribute :guid
     attribute :name
   end
 ```
@@ -58,9 +61,6 @@ Like Active Record, Active Remote relies heavily on naming conventions and stand
     service_name :custom_product_service
   end
 ```
-
-In Active Record, the :id column from the database is used to retrieve records and establish associations. Because Active Remote provides model persistence between RPC services, it uses a GUID instead. So Active Remote expects your RPC data format to provide a :guid field that can be used to identify your remote models.
-
 
 ## Installation
 
