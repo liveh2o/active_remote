@@ -18,7 +18,7 @@ Active Remote provides a base class that when subclassed, provides the functiona
 
 _*Using Ruby's inherited hook, you could build an attribute mapper to setup your remote models for you._
 
-Like Active Record, Active Remote relies heavily on naming conventions and standard CRUD actions. It expects models name to map to it's service (e.g Product => ProductService) and will infer the service name automatically. You can, of course override it if need be.
+Like Active Record, Active Remote relies heavily on naming conventions and standard CRUD actions. It expects models name to map to it's service (e.g Product => ProductService) and will infer the service name automatically.
 
 ```Ruby
   # Given a product service that has #search, #create, #update, and #delete endpoints
@@ -43,7 +43,11 @@ Like Active Record, Active Remote relies heavily on naming conventions and stand
   # Your remote model will just work.
   class Product < ActiveRemote::Base
   end
+```
 
+ You can, of course override it if need be:
+
+```Ruby
   # If you have a custom service:
   class CustomProductService < RPCService
     # CRUD actions
