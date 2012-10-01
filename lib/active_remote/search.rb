@@ -1,3 +1,6 @@
+require 'active_remote/persistence'
+require 'active_remote/rpc'
+
 module ActiveRemote
   module Search
     def self.included(klass)

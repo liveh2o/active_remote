@@ -1,3 +1,5 @@
+require 'active_model/dirty'
+
 # Overrides persistence methods, providing support for dirty tracking.
 #
 module ActiveRemote
