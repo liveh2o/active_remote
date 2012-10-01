@@ -27,6 +27,8 @@ module ActiveRemote
 
       # Set the number of records per page when auto paging.
       #
+      # ====Examples
+      #
       #   class User < ActiveRemote::Base
       #     auto_paging_size 100
       #   end
@@ -36,8 +38,12 @@ module ActiveRemote
         @auto_paging_size ||= 1000
       end
 
-      # Set the namespace for the underlying service class.
+      # Set the namespace for the underlying RPC service class. If no namespace
+      # is given, then none will be used.
       #
+      # ====Examples
+      #
+      #   # If the user's service class is namespaced (e.g. Acme::UserService):
       #   class User < ActiveRemote::Base
       #     namespace :acme
       #   end
@@ -53,11 +59,26 @@ module ActiveRemote
         @publishable_attributes
       end
 
-      # Set the service class directly, circumventing the
-      # namespace, app, service dsl methods.
+      # Set the RPC service class directly. By default, ActiveRemove determines
+      # the RPC service by constantizing the namespace and service name.
+      #
+      # ====Examples
       #
       #   class User < ActiveRemote::Base
-      #     service_class Acme::Lottery::JanglyUserService
+      #     service_class Acme::UserService
+      #   end
+      #
+      #   # ...is the same as:
+      #
+      #   class User < ActiveRemote::Base
+      #     namespace :acme
+      #     service_name :user_service
+      #   end
+      #
+      #   # ...is the same as:
+      #
+      #   class User < ActiveRemote::Base
+      #     namespace :acme
       #   end
       #
       def service_class(klass = false)
@@ -65,9 +86,11 @@ module ActiveRemote
         @service_class ||= _determine_service_class
       end
 
-      # Set the service name of the underlying service class.
-      # "_service" is an implied appended string to the service name,
-      # e.g. :user would expand to the UserService constant.
+      # Set the name of the underlying RPC service class. By default, Active
+      # Remote assumes that a User model will have a UserService (making the
+      # service name :user_service).
+      #
+      # ====Examples
       #
       #   class User < ActiveRemote::Base
       #     service_name :jangly_users
@@ -80,11 +103,11 @@ module ActiveRemote
 
     private
 
-      # Combine the namespace, app, and service values,
-      # constantize the combined values, returning the class or an applicable
-      # error if const was missing.
+      # Combine the namespace and service values, constantize them and return
+      # the class constant.
+      #
       def _determine_service_class
-        class_name = [ namespace, app_name, service_name ].join("/")
+        class_name = [ namespace, service_name ].join("/")
         const_name = class_name.camelize
 
         return const_name.present? ? const_name.constantize : const_name
@@ -96,6 +119,8 @@ module ActiveRemote
       end
     end
 
+    # Convenience methods for accessing DSL methods in instances.
+    #
     module InstanceMethods
 
     private
