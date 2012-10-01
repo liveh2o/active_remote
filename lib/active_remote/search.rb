@@ -12,6 +12,17 @@ module ActiveRemote
 
       # Tries to load the first record; if it fails, an exception is raised.
       #
+      # ====Examples
+      #
+      #   # A single hash
+      #   Tag.find(:guid => 'foo')
+      #
+      #   # Active remote object
+      #   Tag.find(Tag.new(:guid => 'foo'))
+      #
+      #   # Protobuf object
+      #   Tag.find(Generic::Remote::TagRequest.new(:guid => 'foo'))
+      #
       def find(args)
         remote = self.search(args).first
         raise RemoteRecordNotFound if remote.nil?
@@ -21,6 +32,14 @@ module ActiveRemote
 
       # Tries to load the first record; if it fails, then create is called
       # with the same arguments.
+      #
+      # ====Examples
+      #
+      #   # A single hash
+      #   Tag.first_or_create(:name => 'foo')
+      #
+      #   # Protobuf object
+      #   Tag.first_or_create(Generic::Remote::TagRequest.new(:name => 'foo'))
       #
       def first_or_create(attributes)
         remote = self.search(attributes).first
@@ -40,12 +59,32 @@ module ActiveRemote
       # Tries to load the first record; if it fails, then a new record is
       # initialized with the same arguments.
       #
+      # ====Examples
+      #
+      #   # A single hash
+      #   Tag.first_or_initialize(:name => 'foo')
+      #
+      #   # Protobuf object
+      #   Tag.first_or_initialize(Generic::Remote::TagRequest.new(:name => 'foo'))
+      #
       def first_or_initialize(attributes)
         remote = self.search(attributes).first
         remote ||= self.new(attributes)
         remote
       end
 
+      # Searches for records with the given arguments. Returns a collection of
+      # Active Remote objects decorated with pagination attributes if
+      # will_paginate has been loaded.
+      #
+      # ====Examples
+      #
+      #   # A single hash
+      #   Tag.paginated_search(:name => 'foo', :options => { :pagination => { :page => 1, :per_page => 25 } })
+      #
+      #   # Protobuf object
+      #   Tag.paginated_search(Generic::Remote::TagRequest.new(:name => 'foo'))
+      #
       def paginated_search(args)
         args = _active_remote_search_args(args)
 
@@ -61,6 +100,17 @@ module ActiveRemote
         records
       end
 
+      # Searches for records with the given arguments. Returns a collection of
+      # Active Remote objects.
+      #
+      # ====Examples
+      #
+      #   # A single hash
+      #   Tag.search(:name => 'foo')
+      #
+      #   # Protobuf object
+      #   Tag.search(Generic::Remote::TagRequest.new(:name => 'foo'))
+      #
       def search(args)
         args = _active_remote_search_args(args)
 
@@ -82,7 +132,9 @@ module ActiveRemote
       end
     end
 
-    # Search for the given resource.
+    # Search for the given resource. Auto-paginates (i.e. continues searching
+    # for records matching the given search args until all records have been
+    # retrieved) if no pagination options are given.
     #
     def _active_remote_search(args)
       auto_paging = _auto_paging?(args)
@@ -108,6 +160,8 @@ module ActiveRemote
       end
     end
 
+    # Reload this record from the remote service.
+    #
     def reload
       _active_remote_search(:guid => self.guid)
       assign_attributes(last_response.to_hash)
