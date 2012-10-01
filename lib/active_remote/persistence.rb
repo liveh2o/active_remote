@@ -180,6 +180,9 @@ module ActiveRemote
 
     private
 
+      # Handles creating a remote object and serializing it's attributes and
+      # errors from the response.
+      #
       def create
         _execute(:create, attributes)
         assign_attributes(last_response.to_hash)
@@ -187,11 +190,19 @@ module ActiveRemote
         success?
       end
 
+      # Deterines whether the record should be created or updated. New records
+      # are created, existing records are updated. If the record is marked as
+      # readonly, an ActiveRemote::ReadOnlyRemoteRecord is raised.
+      #
       def create_or_update
         raise ReadOnlyRemoteRecord if readonly?
         new_record? ? create : update
       end
 
+      # Handles updating a remote object and serializing it's attributes and
+      # errors from the response. Only attributes with the given attribute names
+      # (plus :guid) will be updated. Defaults to all attributes.
+      #
       def update(attribute_names = @attributes.keys)
         updated_attributes = attributes.slice(*attribute_names)
         updated_attributes.merge!("guid" => self[:guid])

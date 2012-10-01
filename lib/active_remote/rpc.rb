@@ -36,7 +36,7 @@ module ActiveRemote
 
     # Invoke an RPC call to the service for the given rpc method.
     #
-    def _execute(rpc_method, request_args)
+    def execute(rpc_method, request_args)
       @last_request = request(rpc_method, request_args)
 
       _service_class.client.__send__(rpc_method, @last_request) do |c|
