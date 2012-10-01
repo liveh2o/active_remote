@@ -154,7 +154,7 @@ module ActiveRemote
             total_pages = _total_pages
           end
 
-          _execute(:search, args)
+          execute(:search, args)
           remote_records += last_response.records
         end
 

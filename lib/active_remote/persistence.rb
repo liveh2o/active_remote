@@ -64,7 +64,7 @@ module ActiveRemote
       #
       def delete
         raise ReadOnlyRemoteRecord if readonly?
-        _execute(:delete, attributes)
+        execute(:delete, attributes)
         freeze if success?
       end
 
@@ -86,7 +86,7 @@ module ActiveRemote
       #
       def destroy
         raise ReadOnlyRemoteRecord if readonly?
-        _execute(:destroy, attributes)
+        execute(:destroy, attributes)
         freeze if success?
       end
 
@@ -184,7 +184,7 @@ module ActiveRemote
       # errors from the response.
       #
       def create
-        _execute(:create, attributes)
+        execute(:create, attributes)
         assign_attributes(last_response.to_hash)
         add_errors_from_response
         success?
@@ -207,7 +207,7 @@ module ActiveRemote
         updated_attributes = attributes.slice(*attribute_names)
         updated_attributes.merge!("guid" => self[:guid])
 
-        _execute(:update, updated_attributes)
+        execute(:update, updated_attributes)
 
         assign_attributes(last_response.to_hash)
         add_errors_from_response

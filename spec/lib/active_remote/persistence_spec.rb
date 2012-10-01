@@ -6,8 +6,8 @@ describe ActiveRemote::Persistence do
   before { Tag.any_instance.stub(:last_response).and_return(HashWithIndifferentAccess.new) }
 
   describe ".create" do
-    before { Tag.any_instance.stub(:_execute) }
-    after { Tag.any_instance.unstub(:_execute) }
+    before { Tag.any_instance.stub(:execute) }
+    after { Tag.any_instance.unstub(:execute) }
 
     it "initializes and saves a new record" do
       Tag.any_instance.should_receive(:save)
@@ -21,8 +21,8 @@ describe ActiveRemote::Persistence do
   end
 
   describe ".create!" do
-    before { Tag.any_instance.stub(:_execute) }
-    after { Tag.any_instance.unstub(:_execute) }
+    before { Tag.any_instance.stub(:execute) }
+    after { Tag.any_instance.unstub(:execute) }
 
     it "initializes and saves a new record" do
       Tag.any_instance.should_receive(:save!)
@@ -39,11 +39,11 @@ describe ActiveRemote::Persistence do
   end
 
   describe "#delete" do
-    before { subject.stub(:_execute) }
-    after { subject.unstub(:_execute) }
+    before { subject.stub(:execute) }
+    after { subject.unstub(:execute) }
 
     it "deletes a remote record" do
-      subject.should_receive(:_execute).with(:delete, subject.attributes)
+      subject.should_receive(:execute).with(:delete, subject.attributes)
       subject.delete
     end
 
@@ -56,16 +56,16 @@ describe ActiveRemote::Persistence do
   end
 
   describe "#delete!" do
-    before { subject.stub(:_execute) }
-    after { subject.unstub(:_execute) }
+    before { subject.stub(:execute) }
+    after { subject.unstub(:execute) }
 
     it "deletes a remote record" do
-      subject.should_receive(:_execute).with(:delete, subject.attributes)
+      subject.should_receive(:execute).with(:delete, subject.attributes)
       subject.delete!
     end
 
     context "when an error occurs" do
-      before { subject.stub(:_execute).and_raise(ActiveRemote::ActiveRemoteError) }
+      before { subject.stub(:execute).and_raise(ActiveRemote::ActiveRemoteError) }
 
       it "raises an exception" do
         expect { subject.delete! }.to raise_error(ActiveRemote::ActiveRemoteError)
@@ -74,11 +74,11 @@ describe ActiveRemote::Persistence do
   end
 
   describe "#destroy" do
-    before { subject.stub(:_execute) }
-    after { subject.unstub(:_execute) }
+    before { subject.stub(:execute) }
+    after { subject.unstub(:execute) }
 
     it "destroys a remote record" do
-      subject.should_receive(:_execute).with(:destroy, subject.attributes)
+      subject.should_receive(:execute).with(:destroy, subject.attributes)
       subject.destroy
     end
 
@@ -91,16 +91,16 @@ describe ActiveRemote::Persistence do
   end
 
   describe "#destroy!" do
-    before { subject.stub(:_execute) }
-    after { subject.unstub(:_execute) }
+    before { subject.stub(:execute) }
+    after { subject.unstub(:execute) }
 
     it "destroys a remote record" do
-      subject.should_receive(:_execute).with(:destroy, subject.attributes)
+      subject.should_receive(:execute).with(:destroy, subject.attributes)
       subject.destroy!
     end
 
     context "when an error occurs" do
-      before { subject.stub(:_execute).and_raise(ActiveRemote::ActiveRemoteError) }
+      before { subject.stub(:execute).and_raise(ActiveRemote::ActiveRemoteError) }
 
       it "raises an exception" do
         expect { subject.destroy! }.to raise_error(ActiveRemote::ActiveRemoteError)
@@ -151,8 +151,8 @@ describe ActiveRemote::Persistence do
   end
 
   describe "#save" do
-    before { subject.stub(:_execute) }
-    after { subject.unstub(:_execute) }
+    before { subject.stub(:execute) }
+    after { subject.unstub(:execute) }
 
     it "runs callbacks" do
       subject.should_receive(:run_callbacks).with(:save)
@@ -163,7 +163,7 @@ describe ActiveRemote::Persistence do
       subject { Tag.new }
 
       it "creates the record" do
-        subject.should_receive(:_execute).with(:create, subject.attributes)
+        subject.should_receive(:execute).with(:create, subject.attributes)
         subject.save
       end
     end
@@ -174,7 +174,7 @@ describe ActiveRemote::Persistence do
       subject { Tag.new(attributes) }
 
       it "updates the record" do
-        subject.should_receive(:_execute).with(:update, attributes)
+        subject.should_receive(:execute).with(:update, attributes)
         subject.save
       end
     end
@@ -197,8 +197,8 @@ describe ActiveRemote::Persistence do
   end
 
   describe "#save!" do
-    before { subject.stub(:_execute) }
-    after { subject.unstub(:_execute) }
+    before { subject.stub(:execute) }
+    after { subject.unstub(:execute) }
 
     context "when the record is saved" do
       it "returns true" do

@@ -37,7 +37,7 @@ module ActiveRemote
       #
       def create_all(*records)
         remote = self.new
-        remote._execute(:create_all, parse_records(records))
+        remote.execute(:create_all, parse_records(records))
         remote.serialize_records
       end
 
@@ -64,7 +64,7 @@ module ActiveRemote
       #
       def delete_all(*records)
         remote = self.new
-        remote._execute(:delete_all, parse_records(records))
+        remote.execute(:delete_all, parse_records(records))
         remote.serialize_records
       end
 
@@ -91,7 +91,7 @@ module ActiveRemote
       #
       def destroy_all(*records)
         remote = self.new
-        remote._execute(:destroy_all, parse_records(records))
+        remote.execute(:destroy_all, parse_records(records))
         remote.serialize_records
       end
 
@@ -135,7 +135,7 @@ module ActiveRemote
       #
       def update_all(*records)
         remote = self.new
-        remote._execute(:update_all, parse_records(records))
+        remote.execute(:update_all, parse_records(records))
         remote.serialize_records
       end
     end

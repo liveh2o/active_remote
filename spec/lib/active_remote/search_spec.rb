@@ -116,7 +116,7 @@ describe ActiveRemote::Search do
     end
 
     it "auto-paginates" do
-      subject.should_receive(:_execute).with(:search, args)
+      subject.should_receive(:execute).with(:search, args)
 
       subject._active_remote_search(args)
     end
@@ -129,7 +129,7 @@ describe ActiveRemote::Search do
       }
 
       it "collects results from each paging call" do
-        subject.stub(:_execute)
+        subject.stub(:execute)
 
         records = subject._active_remote_search(args)
         records.should eq [ record, record ]
@@ -140,7 +140,7 @@ describe ActiveRemote::Search do
       let(:args) { { :options => { :pagination => Hash.new } } }
 
       it "doesn't auto-paginate" do
-        subject.should_receive(:_execute).with(:search, args)
+        subject.should_receive(:execute).with(:search, args)
 
         subject._active_remote_search(args)
       end

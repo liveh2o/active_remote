@@ -7,10 +7,10 @@ describe ActiveRemote::RPC do
     let(:args) { double(:args) }
     let(:response) { double(:response) }
 
-    before { Tag.any_instance.stub(:_execute) }
+    before { Tag.any_instance.stub(:execute) }
 
     it "calls the given RPC method" do
-      Tag.any_instance.should_receive(:_execute).with(:remote_method, args)
+      Tag.any_instance.should_receive(:execute).with(:remote_method, args)
       Tag.remote_call(:remote_method, args)
     end
 
@@ -36,18 +36,18 @@ describe ActiveRemote::RPC do
     end
   end
 
-  describe "#_execute" do
+  describe "#execute" do
     let(:request) { double(:request) }
 
     it "calls the given RPC method" do
       mock_remote_service(Tag.service_class, :create, :response => double(:to_hash => {}))
-      subject._execute(:create, request)
+      subject.execute(:create, request)
     end
 
     it "sets the last request" do
       mock_remote_service(Tag.service_class, :create, :response => double(:to_hash => {}))
 
-      subject._execute(:create, request)
+      subject.execute(:create, request)
       subject.last_request.should eq(request)
     end
 
@@ -62,7 +62,7 @@ describe ActiveRemote::RPC do
 
       it "creates a request" do
         subject.should_receive(:request).with(:create, args)
-        subject._execute(:create, args)
+        subject.execute(:create, args)
       end
     end
 
@@ -74,7 +74,7 @@ describe ActiveRemote::RPC do
       }
 
       it "sets the last response" do
-        subject._execute(:create, request)
+        subject.execute(:create, request)
         subject.last_response.should eq(success_response)
       end
     end
@@ -87,7 +87,7 @@ describe ActiveRemote::RPC do
       }
 
       it "raises an exception" do
-        expect { subject._execute(:create, request) }.to raise_error(ActiveRemote::ActiveRemoteError)
+        expect { subject.execute(:create, request) }.to raise_error(ActiveRemote::ActiveRemoteError)
       end
     end
   end

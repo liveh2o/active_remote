@@ -11,7 +11,7 @@ describe ActiveRemote::Bulk do
     }
 
     it "creates remote records" do
-      Tag.any_instance.should_receive(:_execute).with(:create_all, records)
+      Tag.any_instance.should_receive(:execute).with(:create_all, records)
       Tag.create_all(records)
     end
   end
@@ -23,7 +23,7 @@ describe ActiveRemote::Bulk do
     }
 
     it "deletes remote records" do
-      Tag.any_instance.should_receive(:_execute).with(:delete_all, records)
+      Tag.any_instance.should_receive(:execute).with(:delete_all, records)
       Tag.delete_all(records)
     end
   end
@@ -35,7 +35,7 @@ describe ActiveRemote::Bulk do
     }
 
     it "destroys remote records" do
-      Tag.any_instance.should_receive(:_execute).with(:destroy_all, records)
+      Tag.any_instance.should_receive(:execute).with(:destroy_all, records)
       Tag.destroy_all(records)
     end
   end
@@ -67,7 +67,7 @@ describe ActiveRemote::Bulk do
     }
 
     it "updates remote records" do
-      Tag.any_instance.should_receive(:_execute).with(:update_all, records)
+      Tag.any_instance.should_receive(:execute).with(:update_all, records)
       Tag.update_all(records)
     end
   end
