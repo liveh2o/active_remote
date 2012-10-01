@@ -1,3 +1,5 @@
+# Overrides persistence methods, providing support for dirty tracking.
+#
 module ActiveRemote
   module Dirty
     def self.included(klass)
@@ -6,6 +8,8 @@ module ActiveRemote
       end
     end
 
+    # Override #reload to provide dirty tracking.
+    #
     def reload(*)
       super.tap do
         @previously_changed.try(:clear)
@@ -13,6 +17,8 @@ module ActiveRemote
       end
     end
 
+    # Override #save to store changes as previous changes then clear them.
+    #
     def save(*)
       if status = super
         @previously_changed = changes
@@ -22,6 +28,8 @@ module ActiveRemote
       status
     end
 
+    # Override #save to store changes as previous changes then clear them.
+    #
     def save!(*)
       super.tap do
         @previously_changed = changes
@@ -29,6 +37,9 @@ module ActiveRemote
       end
     end
 
+    # Override #serialize_records so that we can clear changes after
+    # initializing records returned from a search.
+    #
     def serialize_records(*)
       if serialized_records = super
         serialized_records.each do |record|
@@ -40,13 +51,16 @@ module ActiveRemote
 
   private
 
-    # Override ActiveAttr's attribute= method so we can provide support for ActiveMOdel::Dirty
+    # Override ActiveAttr's attribute= method so we can provide support for
+    # ActiveModel::Dirty.
     #
     def attribute=(name, value)
       __send__("#{name}_will_change!") unless value == self[name]
       super
     end
 
+    # Override #update to only send changed attributes.
+    #
     def update(*)
       super(changed)
     end
