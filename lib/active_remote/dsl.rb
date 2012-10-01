@@ -11,19 +11,11 @@ module ActiveRemote
 
     module ClassMethods
 
-      # Set the app name for the underlying service class.
-      #
-      #   class User < ActiveRemote::Base
-      #     app_name :lottery
-      #   end
-      #
-      def app_name(name = false)
-        @app_name = name unless name == false
-        @app_name
-      end
-
       # Whitelist enable attributes for serialization purposes.
       #
+      # ====Examples
+      #
+      #   # To only publish the :guid and :status attributes:
       #   class User < ActiveRemote::Base
       #     attr_publishable :guid, :status
       #   end
