@@ -1,6 +1,5 @@
 module ActiveRemote
   module Association
-
     def self.included(klass)
       klass.class_eval do
         extend ActiveRemote::Association::ClassMethods
@@ -8,7 +7,6 @@ module ActiveRemote
     end
 
     module ClassMethods
-
       # Create a `belongs_to` association for a given remote resource.
       # Specify one or more associations to define. The constantized
       # class must be loaded into memory already. A method will be defined
@@ -23,11 +21,15 @@ module ActiveRemote
       # used to search the Client service. The Client model would have no
       # reference to the user.
       #
+      # ====Examples
+      #
       #   class User
       #     belongs_to :client
       #   end
       #
       # An equivalent code snippet without a `belongs_to` declaration would be:
+      #
+      # ====Examples
       #
       #   class User
       #     def client
@@ -49,7 +51,6 @@ module ActiveRemote
 
             return value
           end
-
         end
       end
 
@@ -67,11 +68,15 @@ module ActiveRemote
       # return multiple user records. The client would not
       # have a field indicating which users are associated.
       #
+      # ====Examples
+      #
       #   class Client
       #     has_many :users
       #   end
       #
       # An equivalent code snippet without a `has_many` declaration would be:
+      #
+      # ====Examples
       #
       #   class Client
       #     def users
@@ -94,7 +99,6 @@ module ActiveRemote
 
             return values
           end
-
         end
       end
 
@@ -111,11 +115,15 @@ module ActiveRemote
       # `has_one` Client, the Client remote would have a user_guid field that is
       # searchable. The User model would have no reference to the client.
       #
+      # ====Examples
+      #
       #   class User
       #     has_one :client
       #   end
       #
       # An equivalent code snippet without a `has_one` declaration would be:
+      #
+      # ====Examples
       #
       #   class User
       #     def client
@@ -137,11 +145,8 @@ module ActiveRemote
 
             return value
           end
-
         end
       end
-
     end
-
   end
 end
