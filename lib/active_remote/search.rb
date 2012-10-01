@@ -119,6 +119,8 @@ module ActiveRemote
         remote.serialize_records
       end
 
+    private
+
       def _active_remote_search_args(args)
         unless args.is_a?(Hash)
           if args.respond_to?(:to_hash)
