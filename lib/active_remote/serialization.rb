@@ -8,6 +8,9 @@ module ActiveRemote
       end
     end
 
+    # Examine the last response and add any errors to our internal errors
+    # list.
+    #
     def add_errors_from_response
       return unless last_response.respond_to?(:errors)
 
@@ -22,6 +25,9 @@ module ActiveRemote
       end
     end
 
+    # Examine the last response and serialize any records returned into Active
+    # Remote objects.
+    #
     def serialize_records
       return nil unless last_response.respond_to?(:records)
 
