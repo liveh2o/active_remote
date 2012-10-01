@@ -56,19 +56,6 @@ module ActiveRemote
     # Instance methods
     #
     module InstanceMethods
-
-      # Allows you to set all of the remote record's attributes by passing in
-      # a hash of attributes with keys matching attribute names.
-      #
-      # def assign_attributes(attributes)
-      #   self.attributes.merge!(attributes)
-      #
-      #   self.attributes.each do |key, value|
-      #     setter = "#{key}="
-      #     __send__(setter, value) if respond_to?(setter)
-      #   end
-      # end
-
       # Deletes the record from the service (the service determines if the
       # record is hard or soft deleted) and freezes this instance to indicate
       # that no changes should be made (since they can't be persisted). If the
