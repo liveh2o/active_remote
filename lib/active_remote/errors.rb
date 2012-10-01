@@ -1,3 +1,5 @@
+# TODO: Create more specific errors
+#
 module ActiveRemote
 
   # = Active Remote Errors
@@ -19,7 +21,4 @@ module ActiveRemote
   # when remote record cannot be saved because it is invalid.
   class RemoteRecordNotSaved < ActiveRemoteError
   end
-
-  # TODO: Create more specific errors
-  #
 end
