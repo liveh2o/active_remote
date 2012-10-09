@@ -20,10 +20,47 @@ describe ActiveRemote::Serializers::Protobuf do
     end
 
     context "when a field is a message" do
-      it "builds a new message with the attribute"
+      let(:attributes) { { :category => category } }
+      let(:category) { { :name  => 'foo' } }
+      let(:category_message) { Generic::Remote::Category.new(category) }
+
+      context "and the value is a hash" do
+        it "builds new messages with the value(s)" do
+          message = ::ActiveRemote::Base.build_message(Generic::Remote::Post, attributes)
+          message.category.should eq (category_message)
+        end
+      end
+
+      context "and the value is a message" do
+        let(:attributes) { { :category => category_message } }
+
+        it "returns the value" do
+          message = ::ActiveRemote::Base.build_message(Generic::Remote::Post, attributes)
+          message.category.should eq (category_message)
+        end
+      end
 
       context "and the field is repeated" do
-        it "builds new messages with the attribute value(s)"
+        context "and the value is a hash" do
+          let(:attributes) { { :records => [ tag ] } }
+          let(:tag) { { :name  => 'foo' } }
+          let(:tag_message) { Generic::Remote::Tag.new(tag) }
+
+          it "builds new messages with the value(s)" do
+            message = ::ActiveRemote::Base.build_message(Generic::Remote::Tags, attributes)
+            message.records.first.should eq (tag_message)
+          end
+        end
+
+        context "and the value is a message" do
+          let(:attributes) { { :records => [ tag_message ] } }
+          let(:tag_message) { Generic::Remote::Tag.new }
+
+          it "returns the value" do
+            message = ::ActiveRemote::Base.build_message(Generic::Remote::Tags, attributes)
+            message.records.first.should eq (tag_message)
+          end
+        end
       end
     end
   end

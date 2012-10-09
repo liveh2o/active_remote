@@ -30,10 +30,10 @@ module ActiveRemote
 
               if field.message? && field.repeated?
                 value = value.map do |attributes|
-                  build_message(field.type, attributes)
+                  attributes.is_a?(Hash) ? build_message(field.type, attributes) : attributes
                 end
               elsif field.message?
-                value = build_message(field.type, value)
+                value = value.is_a?(Hash) ? build_message(field.type, value) : value
               end
 
               message.method("#{key}=").call(value)
