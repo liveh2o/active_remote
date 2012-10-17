@@ -20,12 +20,10 @@ module ActiveRemote
               #
               if field.repeated?
                 collection = [ value ].flatten
-                collection.map! { |value| coerce(value, field.type) }
+                collection.map! { |value| coerce(value, field) }
                 value = collection
-              elsif field.enum?
-                value = value.to_i
               else
-                value = coerce(value, field.type)
+                value = coerce(value, field)
               end
 
               if field.message? && field.repeated?
@@ -43,10 +41,11 @@ module ActiveRemote
           end
         end
 
-        def coerce(value, field_type)
+        def coerce(value, field)
           return value if value.nil?
+          return value.to_i if field.enum?
 
-          case field_type
+          case field.type
           when :bool then
             if value == 1
               return true
