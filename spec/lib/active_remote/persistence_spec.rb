@@ -43,7 +43,7 @@ describe ActiveRemote::Persistence do
     after { subject.unstub(:execute) }
 
     it "deletes a remote record" do
-      subject.should_receive(:execute).with(:delete, subject.attributes)
+      subject.should_receive(:execute).with(:delete, subject.attributes.slice("guid"))
       subject.delete
     end
 
@@ -60,7 +60,7 @@ describe ActiveRemote::Persistence do
     after { subject.unstub(:execute) }
 
     it "deletes a remote record" do
-      subject.should_receive(:execute).with(:delete, subject.attributes)
+      subject.should_receive(:execute).with(:delete, subject.attributes.slice("guid"))
       subject.delete!
     end
 
@@ -78,7 +78,7 @@ describe ActiveRemote::Persistence do
     after { subject.unstub(:execute) }
 
     it "destroys a remote record" do
-      subject.should_receive(:execute).with(:destroy, subject.attributes)
+      subject.should_receive(:execute).with(:destroy, subject.attributes.slice("guid"))
       subject.destroy
     end
 
@@ -95,7 +95,7 @@ describe ActiveRemote::Persistence do
     after { subject.unstub(:execute) }
 
     it "destroys a remote record" do
-      subject.should_receive(:execute).with(:destroy, subject.attributes)
+      subject.should_receive(:execute).with(:destroy, subject.attributes.slice("guid"))
       subject.destroy!
     end
 
