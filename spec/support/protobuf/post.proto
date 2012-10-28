@@ -1,0 +1,33 @@
+package generic.remote;
+
+import "generic/error.proto";
+import "generic/remote/category.proto";
+
+message Post { 
+  optional string guid = 1;
+  optional string name = 2;
+  optional string author_guid = 3;
+  optional Category category = 4;
+  repeated Error errors = 5;
+}
+
+message Posts {
+  repeated Post records = 1;
+}
+
+message PostRequest {
+  repeated string guid = 1;
+  repeated string name = 2;
+  repeated string author_guid = 3;
+}
+
+service PostService {
+  rpc Search (PostRequest) returns (Posts);
+  rpc Create (Post) returns (Post);
+  rpc Update (Post) returns (Post);
+  rpc Delete (Post) returns (Post);
+  rpc CreateAll (Posts) returns (Posts);
+  rpc UpdateAll (Posts) returns (Posts);
+  rpc DeleteAll (Posts) returns (Posts);
+  rpc DestroyAll (Posts) returns (Posts);
+}

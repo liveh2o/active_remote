@@ -1,0 +1,29 @@
+package generic.remote;
+
+import "generic/error.proto";
+
+message Tag { 
+  optional string guid = 1;
+  optional string name = 2;
+  repeated Error errors = 3;
+}
+
+message Tags {
+  repeated Tag records = 1;
+}
+
+message TagRequest {
+  repeated string guid = 1;
+  repeated string name = 2;
+}
+
+service TagService {
+  rpc Search (TagRequest) returns (Tags);
+  rpc Create (Tag) returns (Tag);
+  rpc Update (Tag) returns (Tag);
+  rpc Delete (Tag) returns (Tag);
+  rpc CreateAll (Tags) returns (Tags);
+  rpc UpdateAll (Tags) returns (Tags);
+  rpc DeleteAll (Tags) returns (Tags);
+  rpc DestroyAll (Tags) returns (Tags);
+}

@@ -1,0 +1,29 @@
+package generic.remote;
+
+import "generic/error.proto";
+
+message Category { 
+  optional string guid = 1;
+  optional string name = 2;
+  repeated Error errors = 3;
+}
+
+message Categories {
+  repeated Category records = 1;
+}
+
+message CategoryRequest {
+  repeated string guid = 1;
+  repeated string name = 2;
+}
+
+service CategoryService {
+  rpc Search (CategoryRequest) returns (Categories);
+  rpc Create (Category) returns (Category);
+  rpc Update (Category) returns (Category);
+  rpc Delete (Category) returns (Category);
+  rpc CreateAll (Categories) returns (Categories);
+  rpc UpdateAll (Categories) returns (Categories);
+  rpc DeleteAll (Categories) returns (Categories);
+  rpc DestroyAll (Categories) returns (Categories);
+}

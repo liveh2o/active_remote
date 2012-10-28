@@ -1,5 +1,5 @@
 *.gem
-.swp
+*.swp
 .DS_Store
 .bundle
 .config

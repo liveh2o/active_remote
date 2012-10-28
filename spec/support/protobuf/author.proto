@@ -1,0 +1,29 @@
+package generic.remote;
+
+import "generic/error.proto";
+
+message Author { 
+  optional string guid = 1;
+  optional string name = 2;
+  repeated Error errors = 3;
+}
+
+message Authors {
+  repeated Author records = 1;
+}
+
+message AuthorRequest {
+  repeated string guid = 1;
+  repeated string name = 2;
+}
+
+service AuthorService {
+  rpc Search (AuthorRequest) returns (Authors);
+  rpc Create (Author) returns (Author);
+  rpc Update (Author) returns (Author);
+  rpc Delete (Author) returns (Author);
+  rpc CreateAll (Authors) returns (Authors);
+  rpc UpdateAll (Authors) returns (Authors);
+  rpc DeleteAll (Authors) returns (Authors);
+  rpc DestroyAll (Authors) returns (Authors);
+}
