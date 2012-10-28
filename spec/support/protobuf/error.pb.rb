@@ -1,10 +1,21 @@
-require 'protobuf/message/message'
-require 'protobuf/message/enum'
-require 'protobuf/message/extend'
+##
+# This file is auto-generated. DO NOT EDIT!
+#
+require 'protobuf/message'
 
 module Generic
-  class Error < ::Protobuf::Message
-    optional :string, :field, 1
-    optional :string, :message, 2
+  
+  ##
+  # Message Classes
+  #
+  class Error < ::Protobuf::Message; end
+  
+  ##
+  # Message Fields
+  #
+  class Error
+    optional ::Protobuf::Field::StringField, :field, 1
+    optional ::Protobuf::Field::StringField, :message, 2
   end
+  
 end
