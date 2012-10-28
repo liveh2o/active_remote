@@ -30,7 +30,7 @@ module ActiveRemote
       # Return the class applicable to the request for the given rpc method.
       #
       def request_type(rpc_method)
-        service_class.rpcs[service_class][rpc_method].request_type
+        service_class.rpcs[rpc_method].request_type
       end
     end
 

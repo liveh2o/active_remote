@@ -1,4 +1,4 @@
-require 'support/protobuf/post_service'
+require 'support/protobuf/post.pb'
 
 ##
 # Define a generic class that inherits from active remote base

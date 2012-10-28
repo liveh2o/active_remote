@@ -13,7 +13,7 @@ module ActiveRemote
         #
         def build_message(message_class, attributes)
           attributes.inject(message_class.new) do |message, (key, value)|
-            if field = message.get_field(key)
+            if field = message.get_field_by_name(key)
 
               # Override the value based on the field type where issues
               # exist in the protobuf gem.

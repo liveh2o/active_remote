@@ -1,4 +1,4 @@
-require 'support/protobuf/category_service'
+require 'support/protobuf/category.pb'
 
 ##
 # Define a generic class that inherits from active remote base

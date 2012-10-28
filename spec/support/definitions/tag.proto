@@ -1,6 +1,6 @@
 package generic.remote;
 
-import "error.proto";
+import "support/protobuf/error.proto";
 
 message Tag { 
   optional string guid = 1;

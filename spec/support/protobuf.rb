@@ -1,4 +1,4 @@
-require 'support/protobuf/author_service'
-require 'support/protobuf/category_service'
-require 'support/protobuf/post_service'
-require 'support/protobuf/tag_service'
+require 'support/protobuf/author.pb'
+require 'support/protobuf/category.pb'
+require 'support/protobuf/post.pb'
+require 'support/protobuf/tag.pb'
