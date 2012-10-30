@@ -3,6 +3,30 @@ require 'protobuf_extensions/base_field'
 module ActiveRemote
   module Serializers
     module Protobuf
+      ATTRIBUTE_TYPES = {
+        ::Protobuf::Field::DoubleField => Float,
+        ::Protobuf::Field::FloatField => Float,
+        ::Protobuf::Field::Int32Field => Integer,
+        ::Protobuf::Field::Int64Field => Integer,
+        ::Protobuf::Field::Uint32Field => Integer,
+        ::Protobuf::Field::Uint64Field => Integer,
+        ::Protobuf::Field::Sint32Field => Integer,
+        ::Protobuf::Field::Sint64Field => Integer,
+        ::Protobuf::Field::Fixed32Field => Float,
+        ::Protobuf::Field::Fixed64Field => Float,
+        ::Protobuf::Field::Sfixed32Field => Float,
+        ::Protobuf::Field::Sfixed64Field => Float,
+        ::Protobuf::Field::StringField => String,
+        ::Protobuf::Field::BytesField => String,
+        ::Protobuf::Field::BoolField => ::ActiveAttr::Typecasting::Boolean,
+        :bool => ::ActiveAttr::Typecasting::Boolean,
+        :double => Float,
+        :float => Float,
+        :int32 => Integer,
+        :int64 => Integer,
+        :string => String
+      }.freeze
+
       def self.included(klass)
         klass.extend ::ActiveRemote::Serializers::Protobuf::ClassMethods
       end
@@ -19,7 +43,8 @@ module ActiveRemote
               # exist in the protobuf gem.
               #
               if field.repeated?
-                collection = [ value ].flatten
+                collection = [ value ]
+                collection.flatten!
                 collection.map! { |value| coerce(value, field) }
                 value = collection
               else
@@ -45,18 +70,18 @@ module ActiveRemote
           return value if value.nil?
           return value.to_i if field.enum?
 
-          case field.type
-          when :bool then
+          case ::ActiveRemote::Serializers::Protobuf::ATTRIBUTE_TYPES[field.type]
+          when ::ActiveAttr::Typecasting::Boolean then
             if value == 1
               return true
             elsif value == 0
               return false
             end
-          when /int/ then
+          when Integer then
             return value.to_i
-          when :double then
+          when Float then
             return value.to_f
-          when :string then
+          when String then
             return value.to_s
           end
 
