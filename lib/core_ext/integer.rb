@@ -1,17 +1,17 @@
 Integer.class_eval do
-  unless respond_to?(:to_date)
+  unless instance_methods.include?(:to_date)
     def to_date
       to_time.to_date
     end
   end
   
-  unless respond_to?(:to_datetime)
+  unless instance_methods.include?(:to_datetime)
     def to_datetime
       to_time.to_datetime
     end
   end
 
-  unless respond_to?(:to_time)
+  unless instance_methods.include?(:to_time)
     def to_time
       Time.at(self)
     end
