@@ -70,18 +70,20 @@ module ActiveRemote
           return value if value.nil?
           return value.to_i if field.enum?
 
-          case ::ActiveRemote::Serializers::Protobuf::ATTRIBUTE_TYPES[field.type]
-          when ::ActiveAttr::Typecasting::Boolean then
+          protobuf_field_type = ::ActiveRemote::Serializers::Protobuf::ATTRIBUTE_TYPES[field.type]
+
+          case 
+          when protobuf_field_type == ::ActiveAttr::Typecasting::Boolean then
             if value == 1
               return true
             elsif value == 0
               return false
             end
-          when Integer then
+          when protobuf_field_type == Integer then
             return value.to_i
-          when Float then
+          when protobuf_field_type == Float then
             return value.to_f
-          when String then
+          when protobuf_field_type == String then
             return value.to_s
           end
 
