@@ -184,9 +184,14 @@ module ActiveRemote
       # errors from the response.
       #
       def create
-        execute(:create, attributes)
+        new_attributes = attributes.deep_dup
+        new_attributes.delete("guid")
+        
+        execute(:create, new_attributes)
+
         assign_attributes(last_response.to_hash)
         add_errors_from_response
+
         success?
       end
 

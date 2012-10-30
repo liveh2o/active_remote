@@ -163,7 +163,8 @@ describe ActiveRemote::Persistence do
       subject { Tag.new }
 
       it "creates the record" do
-        subject.should_receive(:execute).with(:create, subject.attributes)
+        expected_attributes = subject.attributes.reject { |key, value| key == "guid" }
+        subject.should_receive(:execute).with(:create, expected_attributes)
         subject.save
       end
     end
