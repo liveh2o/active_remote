@@ -12,7 +12,7 @@ Integer.class_eval do
   end
 
   unless respond_to?(:to_time)
-    def to_date
+    def to_time
       Time.at(self)
     end
   end
