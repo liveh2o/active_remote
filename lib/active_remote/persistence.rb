@@ -7,6 +7,8 @@ module ActiveRemote
         extend ActiveRemote::Persistence::ClassMethods
         include ActiveRemote::Persistence::InstanceMethods
         include ActiveRemote::RPC
+
+        define_model_callbacks :save
       end
     end
 
@@ -186,7 +188,7 @@ module ActiveRemote
       def create
         new_attributes = attributes.deep_dup
         new_attributes.delete("guid")
-        
+
         execute(:create, new_attributes)
 
         assign_attributes(last_response.to_hash)

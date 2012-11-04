@@ -8,6 +8,8 @@ module ActiveRemote
         extend ::ActiveRemote::Search::ClassMethods
         include ::ActiveRemote::Persistence
         include ::ActiveRemote::RPC
+
+        define_model_callbacks :search
       end
     end
 

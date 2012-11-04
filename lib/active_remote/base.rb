@@ -30,8 +30,6 @@ module ActiveRemote
     attr_reader :last_request, :last_response
 
     define_model_callbacks :initialize, :only => :after
-    define_model_callbacks :search, :only => :after
-    define_model_callbacks :save
 
     def initialize(*)
       run_callbacks :initialize do
