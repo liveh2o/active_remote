@@ -77,33 +77,6 @@ module ActiveRemote
       end
 
       # Searches for records with the given arguments. Returns a collection of
-      # Active Remote objects decorated with pagination attributes if
-      # will_paginate has been loaded.
-      #
-      # ====Examples
-      #
-      #   # A single hash
-      #   Tag.paginated_search(:name => 'foo', :options => { :pagination => { :page => 1, :per_page => 25 } })
-      #
-      #   # Protobuf object
-      #   Tag.paginated_search(Generic::Remote::TagRequest.new(:name => 'foo'))
-      #
-      def paginated_search(args)
-        args = _active_remote_search_args(args)
-
-        remote = self.new
-        remote._active_remote_search(args)
-        records = remote.serialize_records
-
-        if records.respond_to?(:paginate)
-          pagination_options = remote.last_response.try(:options).try(:pagination).try(:to_hash) || {}
-          records = records.paginate(pagination_options)
-        end
-
-        records
-      end
-
-      # Searches for records with the given arguments. Returns a collection of
       # Active Remote objects.
       #
       # ====Examples
@@ -122,8 +95,7 @@ module ActiveRemote
         remote.serialize_records
       end
 
-    private
-
+      # :noapi:
       def _active_remote_search_args(args)
         unless args.is_a?(Hash)
           if args.respond_to?(:to_hash)
@@ -142,24 +114,8 @@ module ActiveRemote
     # retrieved) if no pagination options are given.
     #
     def _active_remote_search(args)
-      auto_paging = _auto_paging?(args)
-
-      remote_records = []
-      page = 0
-      total_pages = 1
-
       run_callbacks :search do
-        while page < total_pages do
-          page += 1
-          args = _auto_paging(args, page) if auto_paging
-
-          execute(:search, args)
-
-          total_pages = _total_pages if auto_paging
-          remote_records += last_response.records
-        end
-
-        last_response.records = remote_records
+        execute(:search, args)
       end
     end
 
@@ -168,43 +124,6 @@ module ActiveRemote
     def reload
       _active_remote_search(:guid => self.guid)
       assign_attributes(last_response.to_hash)
-    end
-
-  private
-
-    def _auto_paging(args, page = 1)
-      args[:options] ||= {}
-      args[:options].merge!({
-        :pagination => {
-          :page => page,
-          :per_page => self.class.auto_paging_size
-        }
-      })
-
-      args
-    end
-
-    def _auto_paging?(args)
-      options = args[:options]
-      pagination = options[:pagination] unless options.nil?
-
-      return pagination.nil?
-    end
-
-    def _options
-      last_response.try(:options) if last_response.respond_to?(:options)
-    end
-
-    def _pagination
-      options = _options
-      pagination = options.try(:pagination) if options.respond_to?(:pagination)
-      pagination
-    end
-
-    def _total_pages
-      pagination = _pagination
-      total_pages = pagination.total_pages if pagination.respond_to?(:total_pages)
-      total_pages || 1
     end
   end
 end
