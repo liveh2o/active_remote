@@ -45,6 +45,7 @@ module ActiveRemote
               if field.repeated?
                 collection = [ value ]
                 collection.flatten!
+                collection.compact!
                 collection.map! { |value| coerce(value, field) }
                 value = collection
               else
