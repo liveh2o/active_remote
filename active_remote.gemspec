@@ -5,9 +5,9 @@ require "active_remote/version"
 Gem::Specification.new do |s|
   s.name          = "active_remote"
   s.version       = ActiveRemote::VERSION
-  s.authors       = ["MDev"]
-  s.email         = ["dev@moneydesktop.com"]
-  s.homepage      = "https://git.moneydesktop.com/dev/active_remote"
+  s.authors       = ["Adam Hutchison"]
+  s.email         = ["liveh2o@gmail.com"]
+  s.homepage      = "https://github.com/liveh2o/active_remote"
   s.summary       = %q{Active Record for your platform}
   s.description   = %q{Active Remote provides Active Record-like object-relational mapping over RPC. It was written for use with Google Protocol Buffers, but could be extended to use any RPC data format.}
 
@@ -27,7 +27,6 @@ Gem::Specification.new do |s|
   # Development Dependencies
   #
   s.add_development_dependency "rake"
-  s.add_development_dependency "geminabox"
   s.add_development_dependency "rspec"
   s.add_development_dependency "rspec-pride"
   s.add_development_dependency "pry-nav"
