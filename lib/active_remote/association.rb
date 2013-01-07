@@ -37,20 +37,18 @@ module ActiveRemote
       #     end
       #   end
       #
-      def belongs_to(*klass_names)
-        klass_names.flatten.compact.uniq.each do |klass_name|
+      def belongs_to(belongs_to_klass, options={})
+        define_method(belongs_to_klass) do
+          value = instance_variable_get(:"@#{belongs_to_klass}")
 
-          define_method(klass_name) do
-            value = instance_variable_get(:"@#{klass_name}")
-
-            unless value
-              klass = klass_name.to_s.classify.constantize
-              value = klass.search(:guid => read_attribute(:"#{klass_name}_guid")).first
-              instance_variable_set(:"@#{klass_name}", value)
-            end
-
-            return value
+          unless value
+            klass_name = options.fetch(:class_name){ belongs_to_klass }
+            klass = klass_name.to_s.classify.constantize
+            value = klass.search(:guid => read_attribute(:"#{belongs_to_klass}_guid")).first
+            instance_variable_set(:"@#{belongs_to_klass}", value)
           end
+
+          return value
         end
       end
 
