@@ -11,6 +11,8 @@ class Post < ::ActiveRemote::Base
   attribute :author_guid
 
   belongs_to :author
+  belongs_to :coauthor, :class_name => ::Author
   has_one :category
+  has_one :main_category, :class_name => ::Category
 
 end
