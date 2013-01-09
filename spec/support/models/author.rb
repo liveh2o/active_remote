@@ -10,5 +10,6 @@ class Author < ::ActiveRemote::Base
   attribute :name
 
   has_many :posts
+  has_many :flagged_posts, :class_name => "::Post"
 
 end

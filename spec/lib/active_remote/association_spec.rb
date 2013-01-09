@@ -5,27 +5,43 @@ describe ActiveRemote::Association do
   let(:records) { [ record ] }
 
   describe '.belongs_to' do
-    let(:author_guid) { 'AUT-123' }
 
-    subject { Post.new(:author_guid => author_guid) }
-    it { should respond_to(:author) }
+    context 'simple association' do
+      let(:author_guid) { 'AUT-123' }
 
-    it 'searches the associated model for a single record' do
-      Author.should_receive(:search).with(:guid => subject.author_guid).and_return(records)
-      subject.author.should eq record
-    end
+      subject { Post.new(:author_guid => author_guid) }
+      it { should respond_to(:author) }
 
-    it 'memoizes the result record' do
-      Author.should_receive(:search).once.with(:guid => subject.author_guid).and_return(records)
-      3.times { subject.author.should eq record }
-    end
+      it 'searches the associated model for a single record' do
+        Author.should_receive(:search).with(:guid => subject.author_guid).and_return(records)
+        subject.author.should eq record
+      end
 
-    context 'when the search is empty' do
-      it 'returns a nil' do
-        Author.should_receive(:search).with(:guid => subject.author_guid).and_return([])
-        subject.author.should be_nil
+      it 'memorizes the result record' do
+        Author.should_receive(:search).once.with(:guid => subject.author_guid).and_return(records)
+        3.times { subject.author.should eq record }
+      end
+
+      context 'when the search is empty' do
+        it 'returns a nil' do
+          Author.should_receive(:search).with(:guid => subject.author_guid).and_return([])
+          subject.author.should be_nil
+        end
       end
     end
+
+    context 'specific association with class name' do
+      let(:author_guid) { 'AUT-456' }
+
+      subject { Post.new(:author_guid => author_guid) }
+      it { should respond_to(:coauthor) }
+
+      it 'searches the associated model for a single record' do
+        Author.should_receive(:search).with(:guid => subject.author_guid).and_return(records)
+        subject.author.should eq record
+      end
+    end
+
   end
 
   describe '.has_many' do
@@ -51,6 +67,15 @@ describe ActiveRemote::Association do
         subject.posts.should be_empty
       end
     end
+
+    context 'specific association with class name' do
+      it { should respond_to(:flagged_posts) }
+
+      it 'searches the associated model for a single record' do
+        Post.should_receive(:search).with(:author_guid => subject.guid).and_return([])
+        subject.flagged_posts.should be_empty
+      end
+    end
   end
 
   describe '.has_one' do
@@ -73,6 +98,15 @@ describe ActiveRemote::Association do
       it 'returns a nil value' do
         Category.should_receive(:search).with(:post_guid => subject.guid).and_return([])
         subject.category.should be_nil
+      end
+    end
+
+    context 'specific association with class name' do
+      it { should respond_to(:main_category) }
+
+      it 'searches the associated model for a single record' do
+        Category.should_receive(:search).with(:post_guid => subject.guid).and_return(records)
+        subject.main_category.should eq record
       end
     end
   end
