@@ -67,6 +67,15 @@ describe ActiveRemote::Association do
         subject.posts.should be_empty
       end
     end
+
+    context 'specific association with class name' do
+      it { should respond_to(:flagged_posts) }
+
+      it 'searches the associated model for a single record' do
+        Post.should_receive(:search).with(:author_guid => subject.guid).and_return([])
+        subject.flagged_posts.should be_empty
+      end
+    end
   end
 
   describe '.has_one' do
@@ -89,6 +98,15 @@ describe ActiveRemote::Association do
       it 'returns a nil value' do
         Category.should_receive(:search).with(:post_guid => subject.guid).and_return([])
         subject.category.should be_nil
+      end
+    end
+
+    context 'specific association with class name' do
+      it { should respond_to(:main_category) }
+
+      it 'searches the associated model for a single record' do
+        Category.should_receive(:search).with(:post_guid => subject.guid).and_return(records)
+        subject.main_category.should eq record
       end
     end
   end

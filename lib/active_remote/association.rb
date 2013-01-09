@@ -38,17 +38,8 @@ module ActiveRemote
       #   end
       #
       def belongs_to(belongs_to_klass, options={})
-        define_method(belongs_to_klass) do
-          value = instance_variable_get(:"@#{belongs_to_klass}")
-
-          unless value
-            klass_name = options.fetch(:class_name){ belongs_to_klass }
-            klass = klass_name.to_s.classify.constantize
-            value = klass.search(:guid => read_attribute(:"#{belongs_to_klass}_guid")).first
-            instance_variable_set(:"@#{belongs_to_klass}", value)
-          end
-
-          return value
+        perform_association( belongs_to_klass, options ) do |klass, obj|
+          klass.search(:guid => obj.read_attribute(:"#{belongs_to_klass}_guid")).first
         end
       end
 
@@ -82,21 +73,9 @@ module ActiveRemote
       #     end
       #   end
       #
-      def has_many(*klass_names)
-        klass_names.flatten.compact.uniq.each do |plural_klass_name|
-          singular_name = plural_klass_name.to_s.singularize
-
-          define_method(plural_klass_name) do
-            values = instance_variable_get(:"@#{plural_klass_name}")
-
-            unless values
-              klass = plural_klass_name.to_s.classify.constantize
-              values = klass.search(:"#{self.class.name.demodulize.underscore}_guid" => self.guid)
-              instance_variable_set(:"@#{plural_klass_name}", values)
-            end
-
-            return values
-          end
+      def has_many(has_many_class, options={})
+        perform_association( has_many_class, options ) do |klass, obj|
+          klass.search(:"#{obj.class.name.demodulize.underscore}_guid" => obj.guid)
         end
       end
 
@@ -129,20 +108,26 @@ module ActiveRemote
       #     end
       #   end
       #
-      def has_one(*klass_names)
-        klass_names.flatten.compact.uniq.each do |klass_name|
+      def has_one(has_one_klass, options={})
+        perform_association( has_one_klass, options ) do |klass, obj|
+          klass.search(:"#{obj.class.name.demodulize.underscore}_guid" => obj.guid).first
+        end
+      end
 
-          define_method(klass_name) do
-            value = instance_variable_get(:"@#{klass_name}")
+    private
 
-            unless value
-              klass = klass_name.to_s.classify.constantize
-              value = klass.search(:"#{self.class.name.demodulize.underscore}_guid" => self.guid).first
-              instance_variable_set(:"@#{klass_name}", value)
-            end
+      def perform_association(associated_klass, optionz={})
+        define_method(associated_klass) do
+          value = instance_variable_get(:"@#{associated_klass}")
 
-            return value
+          unless value
+            klass_name = optionz.fetch(:class_name){ associated_klass }
+            klass = klass_name.to_s.classify.constantize
+            value = yield( klass, self )
+            instance_variable_set(:"@#{associated_klass}", value)
           end
+
+          return value
         end
       end
     end
