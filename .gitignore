@@ -3,6 +3,7 @@
 .DS_Store
 .bundle
 .config
+.rvmrc
 .yardoc
 Gemfile.lock
 coverage
