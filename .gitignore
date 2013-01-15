@@ -5,6 +5,7 @@
 .config
 .rvmrc
 .yardoc
+.idea
 Gemfile.lock
 coverage
 pkg/*
