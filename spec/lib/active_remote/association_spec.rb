@@ -17,7 +17,7 @@ describe ActiveRemote::Association do
         subject.author.should eq record
       end
 
-      it 'memorizes the result record' do
+      it 'memoizes the result record' do
         Author.should_receive(:search).once.with(:guid => subject.author_guid).and_return(records)
         3.times { subject.author.should eq record }
       end
@@ -68,7 +68,7 @@ describe ActiveRemote::Association do
       subject.posts.should eq records
     end
 
-    it 'memorizes the result record' do
+    it 'memoizes the result record' do
       Post.should_receive(:search).once.with(:author_guid => subject.guid).and_return(records)
       3.times { subject.posts.should eq records }
     end
@@ -110,7 +110,7 @@ describe ActiveRemote::Association do
       subject.category.should eq record
     end
 
-    it 'memorizes the result record' do
+    it 'memoizes the result record' do
       Category.should_receive(:search).once.with(:post_guid => subject.guid).and_return(records)
       3.times { subject.category.should eq record }
     end
