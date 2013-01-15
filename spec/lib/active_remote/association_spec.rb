@@ -42,6 +42,18 @@ describe ActiveRemote::Association do
       end
     end
 
+    context 'specific association with class name and foreign_key' do
+      let(:author_guid) { 'AUT-456' }
+
+      subject { Post.new(:author_guid => author_guid) }
+      it { should respond_to(:bestseller) }
+
+      it 'searches the associated model for a single record' do
+        Author.should_receive(:search).with(:guid => subject.bestseller_guid).and_return(records)
+        subject.author.should eq record
+      end
+    end
+
   end
 
   describe '.has_many' do
@@ -56,7 +68,7 @@ describe ActiveRemote::Association do
       subject.posts.should eq records
     end
 
-    it 'memoizes the result record' do
+    it 'memorizes the result record' do
       Post.should_receive(:search).once.with(:author_guid => subject.guid).and_return(records)
       3.times { subject.posts.should eq records }
     end
@@ -76,6 +88,15 @@ describe ActiveRemote::Association do
         subject.flagged_posts.should be_empty
       end
     end
+
+    context 'specific association with class name and foreign_key' do
+      it { should respond_to(:bestseller_posts) }
+
+      it 'searches the associated model for multiple record' do
+        Post.should_receive(:search).with(:bestseller_guid => subject.guid).and_return(records)
+        subject.bestseller_posts.should eq(records)
+      end
+    end
   end
 
   describe '.has_one' do
@@ -89,7 +110,7 @@ describe ActiveRemote::Association do
       subject.category.should eq record
     end
 
-    it 'memoizes the result record' do
+    it 'memorizes the result record' do
       Category.should_receive(:search).once.with(:post_guid => subject.guid).and_return(records)
       3.times { subject.category.should eq record }
     end
@@ -107,6 +128,15 @@ describe ActiveRemote::Association do
       it 'searches the associated model for a single record' do
         Category.should_receive(:search).with(:post_guid => subject.guid).and_return(records)
         subject.main_category.should eq record
+      end
+    end
+
+    context 'specific association with class name and foreign_key' do
+      it { should respond_to(:default_category) }
+
+      it 'searches the associated model for a single record' do
+        Category.should_receive(:search).with(:template_post_guid => subject.guid).and_return(records)
+        subject.default_category.should eq record
       end
     end
   end

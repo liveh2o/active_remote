@@ -8,7 +8,9 @@ class Category < ::ActiveRemote::Base
 
   attribute :guid
   attribute :name
+  attribute :post_id
 
   belongs_to :post
 
+  alias_method :template_post_guid, :post_id
 end
