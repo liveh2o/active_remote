@@ -8,7 +8,16 @@ module ActiveRemote
         include ActiveRemote::Persistence::InstanceMethods
         include ActiveRemote::RPC
 
+        # Allow users to create callbacks around a `save` call.
+        #
         define_model_callbacks :save
+
+        # Before a save occurs, ensure that we
+        # clear out the errors list.
+        #
+        set_callback :save, :before do |remote|
+          remote.errors.clear
+        end
       end
     end
 
