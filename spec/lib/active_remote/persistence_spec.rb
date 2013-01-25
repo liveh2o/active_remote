@@ -181,18 +181,26 @@ describe ActiveRemote::Persistence do
     end
 
     context "when the record is saved" do
-      before { subject.errors.clear }
-
       it "returns true" do
+        subject.should_receive(:has_errors?) { false }
         subject.save.should be_true
       end
     end
 
     context "when the record is not saved" do
+      it "returns false" do
+        subject.should_receive(:has_errors?) { true }
+        subject.save.should be_false
+      end
+    end
+
+    context "when the record has errors before the save" do
       before { subject.errors[:base] << "Boom!" }
 
-      it "returns false" do
-        subject.save.should be_false
+      it "clears the errors before the save" do
+        subject.errors.should_not be_empty
+        subject.save.should be_true
+        subject.errors.should be_empty
       end
     end
   end
