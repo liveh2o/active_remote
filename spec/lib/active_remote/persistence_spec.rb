@@ -53,6 +53,14 @@ describe ActiveRemote::Persistence do
         subject.frozen?.should be_true
       end
     end
+
+    context "when the record has errors" do
+      before { subject.stub(:has_errors?).and_return(true) }
+
+      it "returns false" do
+        subject.delete.should be_false
+      end
+    end
   end
 
   describe "#delete!" do
@@ -86,6 +94,14 @@ describe ActiveRemote::Persistence do
       it "freezes the record" do
         subject.destroy
         subject.frozen?.should be_true
+      end
+    end
+
+    context "when the record has errors" do
+      before { subject.stub(:has_errors?).and_return(true) }
+
+      it "returns false" do
+        subject.destroy.should be_false
       end
     end
   end

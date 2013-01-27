@@ -76,7 +76,8 @@ module ActiveRemote
       def delete
         raise ReadOnlyRemoteRecord if readonly?
         execute(:delete, attributes.slice("guid"))
-        freeze if success?
+
+        return success? ? freeze : false
       end
 
       # Deletes the record from the service (the service determines if the
@@ -98,7 +99,8 @@ module ActiveRemote
       def destroy
         raise ReadOnlyRemoteRecord if readonly?
         execute(:destroy, attributes.slice("guid"))
-        freeze if success?
+
+        return success? ? freeze : false
       end
 
       # Destroys (hard deletes) the record from the service and freezes this
