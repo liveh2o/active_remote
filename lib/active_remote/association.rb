@@ -38,10 +38,10 @@ module ActiveRemote
       #   end
       #
       def belongs_to(belongs_to_klass, options={})
-        perform_association( belongs_to_klass, options ) do |klass, obj|
+        perform_association(belongs_to_klass, options) do |klass, object|
           foreign_key = options.fetch(:foreign_key) { :"#{belongs_to_klass}_guid" }
-          association_guid = obj.read_attribute(foreign_key)
-          klass.search(:guid => association_guid).first
+          association_guid = object.read_attribute(foreign_key)
+          klass.search(:guid => association_guid).first if association_guid
         end
       end
 
@@ -76,9 +76,9 @@ module ActiveRemote
       #   end
       #
       def has_many(has_many_class, options={})
-        perform_association( has_many_class, options ) do |klass, obj|
-          foreign_key = options.fetch(:foreign_key) { :"#{obj.class.name.demodulize.underscore}_guid" }
-          klass.search(foreign_key => obj.guid)
+        perform_association( has_many_class, options ) do |klass, object|
+          foreign_key = options.fetch(:foreign_key) { :"#{object.class.name.demodulize.underscore}_guid" }
+          object.guid ? klass.search(foreign_key => object.guid) : []
         end
       end
 
@@ -112,9 +112,9 @@ module ActiveRemote
       #   end
       #
       def has_one(has_one_klass, options={})
-        perform_association( has_one_klass, options ) do |klass, obj|
-          foreign_key = options.fetch(:foreign_key) { :"#{obj.class.name.demodulize.underscore}_guid" }
-          klass.search(foreign_key => obj.guid).first
+        perform_association(has_one_klass, options) do |klass, object|
+          foreign_key = options.fetch(:foreign_key) { :"#{object.class.name.demodulize.underscore}_guid" }
+          klass.search(foreign_key => object.guid).first if object.guid
         end
       end
 
