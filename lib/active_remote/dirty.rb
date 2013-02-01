@@ -51,6 +51,15 @@ module ActiveRemote
       end
     end
 
+    # Override #write_attribute (along with #[]=) so we can provide support for
+    # ActiveModel::Dirty.
+    #
+    def write_attribute(name, value)
+      __send__("#{name}_will_change!") unless value == self[name]
+      super
+    end
+    alias_method :[]=, :write_attribute
+
   private
 
     # Override ActiveAttr's attribute= method so we can provide support for
