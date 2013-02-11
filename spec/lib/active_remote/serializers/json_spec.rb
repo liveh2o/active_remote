@@ -3,8 +3,15 @@ require 'spec_helper'
 describe ActiveRemote::Serializers::JSON do
   describe "#as_json" do
     let(:attributes) { { :guid => 'foo', :name => 'bar' } }
+    let(:serializable_attributes) { { "tag" => attributes.stringify_keys } }
 
     subject { Tag.new(attributes) }
+
+    context "when options are nil" do
+      it "substitutes an empty hash" do
+        subject.as_json(nil).should eq serializable_attributes
+      end
+    end
 
     it "accepts standard JSON options" do
       subject.as_json(:root => false).should eq attributes.stringify_keys

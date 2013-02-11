@@ -4,6 +4,8 @@ module ActiveRemote
       # Returns a json representation of the whitelisted publishable attributes.
       #
       def as_json(options = {})
+        options ||= {}
+        
         default_options = { :only => _publishable_json_attributes, :methods => _publishable_json_methods }
         default_options.merge!(options)
 
