@@ -4,6 +4,7 @@ require 'active_remote/bulk'
 require 'active_remote/dirty'
 require 'active_remote/dsl'
 require 'active_remote/persistence'
+require 'active_remote/publication'
 require 'active_remote/rpc'
 require 'active_remote/search'
 require 'active_remote/serialization'
@@ -19,6 +20,7 @@ module ActiveRemote
     include ::ActiveRemote::Bulk
     include ::ActiveRemote::DSL
     include ::ActiveRemote::Persistence
+    include ::ActiveRemote::Publication
     include ::ActiveRemote::RPC
     include ::ActiveRemote::Search
     include ::ActiveRemote::Serialization
