@@ -21,15 +21,6 @@ describe ActiveRemote::DSL do
     end
   end
 
-  describe ".auto_paging_size" do
-    context "when given a value" do
-      it "sets @auto_paging_size to the value" do
-        Tag.auto_paging_size 100
-        Tag.auto_paging_size.should eq 100
-      end
-    end
-  end
-
   describe ".namespace" do
     context "when given a value" do
       it "sets @namespace to the value" do
