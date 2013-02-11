@@ -75,7 +75,7 @@ module ActiveRemote
       #
       def delete
         raise ReadOnlyRemoteRecord if readonly?
-        execute(:delete, attributes.slice("guid"))
+        execute(:delete, @attributes.slice("guid"))
 
         return success? ? freeze : false
       end
@@ -98,7 +98,7 @@ module ActiveRemote
       #
       def destroy
         raise ReadOnlyRemoteRecord if readonly?
-        execute(:destroy, attributes.slice("guid"))
+        execute(:destroy, @attributes.slice("guid"))
 
         return success? ? freeze : false
       end
@@ -197,10 +197,9 @@ module ActiveRemote
       # errors from the response.
       #
       def create
-        new_attributes = attributes.deep_dup
-        new_attributes.delete("guid")
+        @attributes.delete("guid")
 
-        execute(:create, new_attributes)
+        execute(:create, @attributes)
 
         assign_attributes(last_response.to_hash)
         add_errors_from_response
@@ -222,7 +221,7 @@ module ActiveRemote
       # (plus :guid) will be updated. Defaults to all attributes.
       #
       def update(attribute_names = @attributes.keys)
-        updated_attributes = attributes.slice(*attribute_names)
+        updated_attributes = @attributes.slice(*attribute_names)
         updated_attributes.merge!("guid" => self[:guid])
 
         execute(:update, updated_attributes)
