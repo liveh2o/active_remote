@@ -197,9 +197,11 @@ module ActiveRemote
       # errors from the response.
       #
       def create
-        @attributes.delete("guid")
+        # Use the getter here so we get the type casting.
+        new_attributes = attributes
+        new_attributes.delete("guid")
 
-        execute(:create, @attributes)
+        execute(:create, new_attributes)
 
         assign_attributes(last_response.to_hash)
         add_errors_from_response
@@ -221,7 +223,9 @@ module ActiveRemote
       # (plus :guid) will be updated. Defaults to all attributes.
       #
       def update(attribute_names = @attributes.keys)
-        updated_attributes = @attributes.slice(*attribute_names)
+        # Use the getter here so we get the type casting.
+        updated_attributes = attributes
+        updated_attributes.slice!(*attribute_names)
         updated_attributes.merge!("guid" => self[:guid])
 
         execute(:update, updated_attributes)
