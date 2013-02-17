@@ -34,8 +34,9 @@ module ActiveRemote
     define_model_callbacks :initialize, :only => :after
 
     def initialize(*)
+      @attributes ||= {}
+
       run_callbacks :initialize do
-        @attributes ||= {}
         super
       end
     end
