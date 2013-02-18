@@ -49,22 +49,13 @@ module ActiveRemote
 
       last_response.records.map do |record|
         remote = self.class.new
-        remote.skip_tracking_changes do
-          assign_attributes(record.to_hash)
-        end
+
+        remote._active_remote_track_changes = false
+        remote.assign_attributes(record.to_hash)
+        remote._active_remote_track_changes = true
+
         remote
       end
-    end
-
-    ##
-    # Execute the given block without tracking changes.
-    #
-    def skip_tracking_changes(&block)
-      _active_remote_track_changes = false
-      result = yield
-      _active_remote_track_changes = true
-
-      result
     end
 
     # Override #write_attribute (along with #[]=) so we can provide support for
