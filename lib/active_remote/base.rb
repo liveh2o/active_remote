@@ -36,8 +36,10 @@ module ActiveRemote
     def initialize(*)
       @attributes ||= {}
 
-      run_callbacks :initialize do
-        super
+      skip_dirty_tracking do
+        run_callbacks :initialize do
+          super
+        end
       end
     end
 

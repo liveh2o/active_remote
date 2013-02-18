@@ -12,12 +12,20 @@ module ActiveRemote
       end
     end
 
+    def disable_dirty_tracking
+      @_active_remote_track_changes = false
+    end
+
+    def enable_dirty_tracking
+      @_active_remote_track_changes = true
+    end
+
     # Override #reload to provide dirty tracking.
     #
     def reload(*)
       super.tap do
         @previously_changed.try(:clear)
-        @changed_attributes.clear
+        changed_attributes.clear
       end
     end
 
@@ -26,7 +34,7 @@ module ActiveRemote
     def save(*)
       if status = super
         @previously_changed = changes
-        @changed_attributes.clear
+        changed_attributes.clear
       end
 
       status
@@ -37,25 +45,16 @@ module ActiveRemote
     def save!(*)
       super.tap do
         @previously_changed = changes
-        @changed_attributes.clear
+        changed_attributes.clear
       end
     end
 
-    # Override #serialize_records so that we can skip dirty tracking while
-    # initializing records returned from a search.
-    #
-    def serialize_records
-      return nil unless last_response.respond_to?(:records)
+    def skip_dirty_tracking(&block)
+      disable_dirty_tracking
 
-      last_response.records.map do |record|
-        remote = self.class.new
+      yield
 
-        remote._active_remote_track_changes = false
-        remote.assign_attributes(record.to_hash)
-        remote._active_remote_track_changes = true
-
-        remote
-      end
+      enable_dirty_tracking
     end
 
     # Override #write_attribute (along with #[]=) so we can provide support for
