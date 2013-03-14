@@ -8,13 +8,13 @@ module ActiveRemote
       end
     end
 
-    # Examine the last response and add any errors to our internal errors
-    # list.
+    # Examine the given response and add any errors to our internal errors
+    # list. If no response is given, use the last response.
     #
-    def add_errors_from_response
-      return unless last_response.respond_to?(:errors)
+    def add_errors_from_response(response=self.last_response)
+      return unless response.respond_to?(:errors)
 
-      last_response.errors.each do |error|
+      response.errors.each do |error|
         if error.respond_to?(:message)
           errors.add(error.field, error.message)
         elsif error.respond_to?(:messages)
