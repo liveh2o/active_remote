@@ -125,7 +125,9 @@ module ActiveRemote
     #
     def reload
       _active_remote_search(:guid => self.guid)
-      assign_attributes(last_response.to_hash)
+
+      fresh_object = self.class.new(last_response.to_hash)
+      @attributes.update(fresh_object.instance_variable_get('@attributes'))
     end
   end
 end

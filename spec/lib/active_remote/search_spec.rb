@@ -76,7 +76,7 @@ describe ActiveRemote::Search do
 
   describe "#reload" do
     let(:args) { { :guid => 'foo' } }
-    let(:attributes) { HashWithIndifferentAccess.new }
+    let(:attributes) { HashWithIndifferentAccess.new(:guid => 'foo', :name => 'bar') }
 
     subject { Tag.new(args) }
 
@@ -91,8 +91,8 @@ describe ActiveRemote::Search do
     end
 
     it "assigns new attributes" do
-      subject.should_receive(:assign_attributes).with(attributes)
       subject.reload
+      subject.attributes.should eq attributes
     end
   end
 end
