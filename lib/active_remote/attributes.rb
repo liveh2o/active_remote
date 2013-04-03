@@ -8,7 +8,7 @@ module ActiveRemote
       if respond_to? name
         @attributes[name]
       else
-        raise UnknownAttributeError, "unknown attribute: #{name}"
+        raise ::ActiveAttr::UnknownAttributeError, "unknown attribute: #{name}"
       end
     end
     alias_method :[], :read_attribute
@@ -21,7 +21,7 @@ module ActiveRemote
       if respond_to? "#{name}="
         @attributes[name] = typecast_attribute(_attribute_typecaster(name), value)
       else
-        raise UnknownAttributeError, "unknown attribute: #{name}"
+        raise ::ActiveAttr::UnknownAttributeError, "unknown attribute: #{name}"
       end
     end
     alias_method :[]=, :write_attribute
