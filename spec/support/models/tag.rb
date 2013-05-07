@@ -8,5 +8,6 @@ class Tag < ::ActiveRemote::Base
 
   attribute :guid
   attribute :name
+  attribute :updated_at
 
 end

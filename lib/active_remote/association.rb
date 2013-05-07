@@ -2,7 +2,7 @@ module ActiveRemote
   module Association
     def self.included(klass)
       klass.class_eval do
-        extend ActiveRemote::Association::ClassMethods
+        extend ::ActiveRemote::Association::ClassMethods
       end
     end
 

@@ -4,8 +4,8 @@ module ActiveRemote
   module DSL
     def self.included(klass)
       klass.class_eval do
-        extend ActiveRemote::DSL::ClassMethods
-        include ActiveRemote::DSL::InstanceMethods
+        extend ::ActiveRemote::DSL::ClassMethods
+        include ::ActiveRemote::DSL::InstanceMethods
       end
     end
 

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe ActiveRemote::Serializers::JSON do
   describe "#as_json" do
-    let(:attributes) { { :guid => 'foo', :name => 'bar' } }
+    let(:attributes) { { :guid => 'foo', :name => 'bar', :updated_at => nil } }
     let(:serializable_attributes) { { "tag" => attributes.stringify_keys } }
 
     subject { Tag.new(attributes) }

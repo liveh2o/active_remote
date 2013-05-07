@@ -4,9 +4,9 @@ module ActiveRemote
   module Persistence
     def self.included(klass)
       klass.class_eval do
-        extend ActiveRemote::Persistence::ClassMethods
-        include ActiveRemote::Persistence::InstanceMethods
-        include ActiveRemote::RPC
+        extend ::ActiveRemote::Persistence::ClassMethods
+        include ::ActiveRemote::Persistence::InstanceMethods
+        include ::ActiveRemote::RPC
 
         # Allow users to create callbacks around a `save` call.
         #
