@@ -1,13 +1,12 @@
 module ActiveRemote
   module Integration
-
     def self.included(klass)
       klass.class_eval do
-        unless singleton_methods.include?(:cache_timestamp_format)    
+        unless singleton_methods.include?(:cache_timestamp_format)
           ##
           # :singleton-method:
           # Indicates the format used to generate the timestamp format in the cache key.
-          # This is +:number+, by default.        
+          # This is +:number+, by default.
           #
           def self.cache_timestamp_format
             :number
@@ -36,7 +35,7 @@ module ActiveRemote
     #
     #   Product.new.cache_key     # => "products/new"
     #   Product.search(:guid => "derp-5").cache_key # => "products/derp-5" (updated_at not available)
-    #   Person.search(:guid => "derp-5").cache_key  # => "people/derp-5-20071224150000" (updated_at available)   
+    #   Person.search(:guid => "derp-5").cache_key  # => "people/derp-5-20071224150000" (updated_at available)
     #
     def cache_key
       case
@@ -49,6 +48,5 @@ module ActiveRemote
         "#{self.class.name.underscore}/#{self.to_param}"
       end
     end
-
   end
 end

@@ -33,7 +33,5 @@ describe ::ActiveRemote::Integration do
       subject.cache_key.should eq("tag/#{guid}-#{twenty_o_one_one.to_s(:number)}")
       subject[:updated_at] = nil
     end
-
   end
-
 end
