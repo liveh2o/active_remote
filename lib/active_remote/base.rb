@@ -3,6 +3,7 @@ require 'active_remote/attributes'
 require 'active_remote/bulk'
 require 'active_remote/dirty'
 require 'active_remote/dsl'
+require 'active_remote/integration'
 require 'active_remote/persistence'
 require 'active_remote/publication'
 require 'active_remote/rpc'
@@ -19,6 +20,7 @@ module ActiveRemote
     include ::ActiveRemote::Attributes
     include ::ActiveRemote::Bulk
     include ::ActiveRemote::DSL
+    include ::ActiveRemote::Integration
     include ::ActiveRemote::Persistence
     include ::ActiveRemote::Publication
     include ::ActiveRemote::RPC
