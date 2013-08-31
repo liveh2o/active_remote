@@ -53,4 +53,6 @@ module ActiveRemote
       @attributes.frozen?
     end
   end
+
+  ::ActiveSupport.run_load_hooks(:active_remote, Base)
 end
