@@ -10,4 +10,12 @@ class Tag < ::ActiveRemote::Base
   attribute :name
   attribute :updated_at
 
+  after_update :after_update_callback
+  after_create :after_create_callback
+
+  def after_create_callback
+  end
+
+  def after_update_callback
+  end
 end
