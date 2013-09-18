@@ -9,6 +9,12 @@ describe ActiveRemote::Persistence do
     before { Tag.any_instance.stub(:execute) }
     after { Tag.any_instance.unstub(:execute) }
 
+    it "runs create callbacks" do
+      Tag.any_instance.should_receive(:after_create_callback)
+      Tag.create(:name => 'foo')
+    end
+
+
     it "initializes and saves a new record" do
       Tag.any_instance.should_receive(:save)
       Tag.create(:name => 'foo')
@@ -170,7 +176,7 @@ describe ActiveRemote::Persistence do
     before { subject.stub(:execute) }
     after { subject.unstub(:execute) }
 
-    it "runs callbacks" do
+    it "runs save callbacks" do
       subject.should_receive(:run_callbacks).with(:save)
       subject.save
     end
@@ -256,6 +262,15 @@ describe ActiveRemote::Persistence do
 
   describe "#update_attributes" do
     let(:attributes) { HashWithIndifferentAccess.new(:name => 'bar') }
+
+    before { Tag.any_instance.stub(:execute) }
+    after { Tag.any_instance.unstub(:execute) }
+
+    it "runs update callbacks" do
+      tag = Tag.new({:guid => "123"})
+      tag.should_receive(:after_update_callback)
+      tag.update_attributes({})
+    end
 
     before { subject.stub(:save) }
     after { subject.unstub(:save) }
