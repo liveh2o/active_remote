@@ -10,7 +10,7 @@ module ActiveRemote
 
         # Allow users to create callbacks around a `save` call.
         #
-        define_model_callbacks :save
+        define_model_callbacks :save, :create, :update
 
         # Before a save occurs, ensure that we
         # clear out the errors list.
@@ -197,16 +197,18 @@ module ActiveRemote
       # errors from the response.
       #
       def create
-        # Use the getter here so we get the type casting.
-        new_attributes = attributes
-        new_attributes.delete("guid")
+        run_callbacks :create do
+          # Use the getter here so we get the type casting.
+          new_attributes = attributes
+          new_attributes.delete("guid")
 
-        execute(:create, new_attributes)
+          execute(:create, new_attributes)
 
-        assign_attributes(last_response.to_hash)
-        add_errors_from_response
+          assign_attributes(last_response.to_hash)
+          add_errors_from_response
 
-        success?
+          success?
+        end
       end
 
       # Deterines whether the record should be created or updated. New records
@@ -223,17 +225,19 @@ module ActiveRemote
       # (plus :guid) will be updated. Defaults to all attributes.
       #
       def update(attribute_names = @attributes.keys)
-        # Use the getter here so we get the type casting.
-        updated_attributes = attributes
-        updated_attributes.slice!(*attribute_names)
-        updated_attributes.merge!("guid" => self[:guid])
+        run_callbacks :update do
+          # Use the getter here so we get the type casting.
+          updated_attributes = attributes
+          updated_attributes.slice!(*attribute_names)
+          updated_attributes.merge!("guid" => self[:guid])
 
-        execute(:update, updated_attributes)
+          execute(:update, updated_attributes)
 
-        assign_attributes(last_response.to_hash)
-        add_errors_from_response
+          assign_attributes(last_response.to_hash)
+          add_errors_from_response
 
-        success?
+          success?
+        end
       end
     end
   end
