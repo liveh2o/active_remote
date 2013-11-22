@@ -3,6 +3,7 @@
 .DS_Store
 .bundle
 .config
+.ruby-*
 .rvmrc
 .yardoc
 .idea
