@@ -15,8 +15,8 @@ module ActiveRemote
     end
 
     def include_root_in_json=(true_or_false)
-      self[:include_root_in_json] = true_or_false
-      ::ActiveRemote::Base.include_root_in_json = !!true_or_false
+      self[:include_root_in_json] = !!true_or_false
+      ::ActiveRemote::Base.include_root_in_json = self[:include_root_in_json]
     end
 
   end
