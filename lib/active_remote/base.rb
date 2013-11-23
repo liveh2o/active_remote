@@ -32,10 +32,6 @@ module ActiveRemote
     # so it needs to be included last.
     include ::ActiveRemote::Dirty
 
-    if self.respond_to?(:include_root_in_json=)
-      self.include_root_in_json = true
-    end
-
     attr_reader :last_request, :last_response
 
     define_model_callbacks :initialize, :only => :after
