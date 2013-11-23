@@ -5,9 +5,9 @@ require 'active_support/core_ext/hash'
 require 'active_support/inflector'
 require 'active_support/json'
 
-require 'core_ext/date_time'
-require 'core_ext/date'
-require 'core_ext/integer'
+require 'active_remote/core_ext/date_time'
+require 'active_remote/core_ext/date'
+require 'active_remote/core_ext/integer'
 
 require 'active_remote/base'
 require 'active_remote/errors'

@@ -1,6 +1,7 @@
 require 'active_remote/association'
 require 'active_remote/attributes'
 require 'active_remote/bulk'
+require 'active_remote/config'
 require 'active_remote/dirty'
 require 'active_remote/dsl'
 require 'active_remote/integration'
@@ -30,6 +31,10 @@ module ActiveRemote
     # Overrides some methods, providing support for dirty tracking,
     # so it needs to be included last.
     include ::ActiveRemote::Dirty
+
+    if self.respond_to?(:include_root_in_json=)
+      self.include_root_in_json = true
+    end
 
     attr_reader :last_request, :last_response
 
