@@ -27,5 +27,17 @@ describe ::ActiveRemote::Integration do
       subject.cache_key.should eq("tag/#{guid}")
     end
 
+    it "adds the 'updated_at' attribute to the cache_key if updated_at is present" do
+      ::ActiveRemote.config.default_cache_key_updated_at = true
+      twenty_o_one_one = subject[:updated_at] = DateTime.new(2001, 01, 01)
+      subject.should_receive(:new_record?).and_return(false)
+      subject.cache_key.should eq("tag/#{guid}-#{twenty_o_one_one.to_s(:number)}")
+      subject[:updated_at] = nil
+      ::ActiveRemote.config.default_cache_key_updated_at = false
+    end
+
+    it "defaults the cache updated_at to false" do
+      ::ActiveRemote.config.default_cache_key_updated_at?.should be_false
+    end
   end
 end
