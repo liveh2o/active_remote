@@ -42,10 +42,22 @@ describe ActiveRemote::Bulk do
 
   describe ".parse_records" do
     let(:records) { [ Hash.new ] }
+    let(:attribute_record) {
+      record = double(Hash)
+      record.stub(:attributes) { {} }
+      record
+    }
+    let(:records) { [ Hash.new ] }
 
     it "preps records to be built into a bulk request" do
       parsed_records = { :records => records }
       Tag.parse_records(records).should eq parsed_records
+    end
+
+    it "preps records to be built into a bulk request (prioritizing :attributes over :to_hash)" do
+      attribute_record.should_receive(:attributes)
+      parsed_records = { :records => [ {} ] }
+      Tag.parse_records([ attribute_record ]).should eq parsed_records
     end
 
     context "when given a bulk message" do
