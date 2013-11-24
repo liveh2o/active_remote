@@ -46,7 +46,7 @@ module ActiveRemote
         @publishable_attributes
       end
 
-      # Set the RPC service class directly. By default, ActiveRemove determines
+      # Set the RPC service class directly. By default, ActiveRemote determines
       # the RPC service by constantizing the namespace and service name.
       #
       # ====Examples

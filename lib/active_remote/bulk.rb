@@ -104,7 +104,12 @@ module ActiveRemote
       #
       def parse_records(*records)
         records.flatten!
-        records.collect!(&:to_hash)
+        
+        if records.first.respond_to?(:attributes)
+          records.collect!(&:attributes)
+        else
+          records.collect!(&:to_hash)
+        end
 
         return records.first if records.first.has_key?(:records)
 

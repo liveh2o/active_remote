@@ -1,6 +1,7 @@
 require 'active_remote/association'
 require 'active_remote/attributes'
 require 'active_remote/bulk'
+require 'active_remote/config'
 require 'active_remote/dirty'
 require 'active_remote/dsl'
 require 'active_remote/integration'

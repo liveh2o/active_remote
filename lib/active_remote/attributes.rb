@@ -6,7 +6,7 @@ module ActiveRemote
       name = name.to_s
 
       if respond_to? name
-        @attributes[name]
+        attribute(name)
       else
         raise ::ActiveAttr::UnknownAttributeError, "unknown attribute: #{name}"
       end
@@ -19,7 +19,7 @@ module ActiveRemote
       name = name.to_s
 
       if respond_to? "#{name}="
-        @attributes[name] = typecast_attribute(_attribute_typecaster(name), value)
+        __send__("attribute=", name, value)
       else
         raise ::ActiveAttr::UnknownAttributeError, "unknown attribute: #{name}"
       end

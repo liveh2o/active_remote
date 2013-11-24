@@ -34,14 +34,14 @@ module ActiveRemote
     # ==== Examples
     #
     #   Product.new.cache_key     # => "products/new"
-    #   Product.search(:guid => "derp-5").cache_key # => "products/derp-5" (updated_at not available)
-    #   Person.search(:guid => "derp-5").cache_key  # => "people/derp-5-20071224150000" (updated_at available)
+    #   Person.search(:guid => "derp-5").cache_key  # => "people/derp-5-20071224150000" (include updated_at)
+    #   Product.search(:guid => "derp-5").cache_key # => "products/derp-5"
     #
     def cache_key
       case
       when new_record? then
         "#{self.class.name.underscore}/new"
-      when timestamp = self[:updated_at] then
+      when ::ActiveRemote.config.default_cache_key_updated_at? && (timestamp = self[:updated_at]) then
         timestamp = timestamp.utc.to_s(self.class.cache_timestamp_format)
         "#{self.class.name.underscore}/#{self.to_param}-#{timestamp}"
       else

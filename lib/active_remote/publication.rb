@@ -6,7 +6,7 @@ module ActiveRemote
       keys = _publishable_attributes_or_attribute_keys
 
       attributes_hash = keys.inject({}) do |publishable_hash, key|
-        value = respond_to?(key) ? __send__(key) : @attributes[key]
+        value = respond_to?(key) ? __send__(key) : read_attribute(key)
 
         publishable_hash[key] = case
                                 when value.respond_to?(:map) then

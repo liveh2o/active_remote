@@ -1,5 +1,3 @@
-require 'protobuf_extensions/base_field'
-
 module ActiveRemote
   module Serializers
     module Protobuf
