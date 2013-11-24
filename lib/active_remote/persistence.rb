@@ -75,7 +75,7 @@ module ActiveRemote
       #
       def delete
         raise ReadOnlyRemoteRecord if readonly?
-        execute(:delete, @attributes.slice("guid"))
+        execute(:delete, "guid" => read_attribute("guid"))
 
         return success? ? freeze : false
       end
@@ -98,7 +98,7 @@ module ActiveRemote
       #
       def destroy
         raise ReadOnlyRemoteRecord if readonly?
-        execute(:destroy, @attributes.slice("guid"))
+        execute(:destroy, "guid" => read_attribute("guid"))
 
         return success? ? freeze : false
       end
