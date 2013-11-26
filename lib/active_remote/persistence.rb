@@ -119,11 +119,25 @@ module ActiveRemote
         return respond_to?(:errors) && errors.present?
       end
 
+      # Instantiate a record with the given remote attributes. Generally used
+      # when retrieving records that already exist, so @new_record is set to false.
+      #
+      def instantiate(record)
+        skip_dirty_tracking do
+          assign_attributes(record)
+        end
+
+        run_callbacks :initialize
+
+        @new_record = false
+        self
+      end
+
       # Returns true if the remote record hasn't been saved yet; otherwise,
       # returns false.
       #
       def new_record?
-        return self[:guid].nil?
+        @new_record
       end
 
       # Returns true if the remote record has been saved; otherwise, returns false.
@@ -207,6 +221,7 @@ module ActiveRemote
           assign_attributes(last_response.to_hash)
           add_errors_from_response
 
+          @new_record = has_errors?
           success?
         end
       end

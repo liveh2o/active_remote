@@ -31,9 +31,10 @@ module ActiveRemote
     def serialize_records
       return nil unless last_response.respond_to?(:records)
 
-      last_response.records.map do |record|
-        remote = self.class.new(record.to_hash)
-        remote
+      last_response.records.map do |remote_record|
+        record = self.class.allocate
+        record.instantiate(remote_record.to_hash)
+        record
       end
     end
   end

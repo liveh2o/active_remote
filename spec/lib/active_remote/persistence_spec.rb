@@ -146,7 +146,7 @@ describe ActiveRemote::Persistence do
 
   describe "#new_record?" do
     context "when the record is persisted" do
-      subject { Tag.new(:guid => 'foo') }
+      subject { Tag.allocate.instantiate(:guid => 'foo') }
 
       its(:new_record?) { should be_false }
     end
@@ -159,13 +159,13 @@ describe ActiveRemote::Persistence do
   end
 
   describe "#persisted?" do
-    context "when the record has a guid" do
-      subject { Tag.new(:guid => 'foo') }
+    context "when the record is persisted" do
+      subject { Tag.allocate.instantiate(:guid => 'foo') }
 
       its(:persisted?) { should be_true }
     end
 
-    context "when the record does not have a guid" do
+    context "when the record is not persisted" do
       subject { Tag.new }
 
       its(:persisted?) { should be_false }
@@ -194,7 +194,7 @@ describe ActiveRemote::Persistence do
     context "when the record is not new" do
       let(:attributes) { { 'guid' => 'foo' } }
 
-      subject { Tag.new(attributes) }
+      subject { Tag.allocate.instantiate(attributes) }
 
       it "updates the record" do
         subject.should_receive(:execute).with(:update, attributes)
@@ -204,14 +204,14 @@ describe ActiveRemote::Persistence do
 
     context "when the record is saved" do
       it "returns true" do
-        subject.should_receive(:has_errors?) { false }
+        subject.better_stub(:has_errors?) { false }
         subject.save.should be_true
       end
     end
 
     context "when the record is not saved" do
       it "returns false" do
-        subject.should_receive(:has_errors?) { true }
+        subject.better_stub(:has_errors?) { true }
         subject.save.should be_false
       end
     end
@@ -267,7 +267,7 @@ describe ActiveRemote::Persistence do
     after { Tag.any_instance.unstub(:execute) }
 
     it "runs update callbacks" do
-      tag = Tag.new({:guid => "123"})
+      tag = Tag.allocate.instantiate({:guid => "123"})
       tag.should_receive(:after_update_callback)
       tag.update_attributes({})
     end
