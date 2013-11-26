@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
   ##
   # Development Dependencies
   #
+  s.add_development_dependency "better_receive"
   s.add_development_dependency "rake"
   s.add_development_dependency "rspec"
   s.add_development_dependency "rspec-pride"

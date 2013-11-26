@@ -38,6 +38,7 @@ module ActiveRemote
 
     def initialize(*)
       @attributes ||= {}
+      @new_record = true
 
       skip_dirty_tracking do
         run_callbacks :initialize do
