@@ -9,6 +9,7 @@ class Category < ::ActiveRemote::Base
   attribute :guid
   attribute :name
   attribute :post_id
+  attribute :user_guid
 
   belongs_to :post
 

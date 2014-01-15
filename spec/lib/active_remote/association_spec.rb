@@ -7,6 +7,13 @@ describe ActiveRemote::Association do
   describe ".belongs_to" do
     context "simple association" do
       let(:author_guid) { "AUT-123" }
+      let(:user_guid) { "USR-123" }
+      let(:required_attributes) {
+        {
+          :user_guid => user_guid,
+          :author_guid => author_guid
+        }
+      }
 
       subject { Post.new(:author_guid => author_guid) }
 
@@ -34,6 +41,23 @@ describe ActiveRemote::Association do
         it "returns a nil" do
           Author.should_receive(:search).with(:guid => subject.author_guid).and_return([])
           subject.author.should be_nil
+        end
+      end
+
+      context 'when passing a required field' do
+        subject { Post.new }
+
+        it 'searches with the required field' do
+          Post.should_receive(:search).with(required_attributes).and_return(records)
+          subject.user.should eq(record)
+        end
+
+        context 'when required field is not on object' do
+          before { Post.any_instance.better_stub(:user_guid).and_raise(NoMethodError) }
+
+          it 'should raise an error' do
+            expect { Post.new(required_attributes) }.should raise_error(NoMethodError)
+          end
         end
       end
     end
@@ -66,8 +90,9 @@ describe ActiveRemote::Association do
   describe ".has_many" do
     let(:records) { [ record, record, record ] }
     let(:guid) { "AUT-123" }
+    let(:user_guid) { "USR-123" }
 
-    subject { Author.new(:guid => guid) }
+    subject { Author.new(:guid => guid, :user_guid => user_guid) }
 
     it { should respond_to(:posts) }
 
@@ -111,6 +136,31 @@ describe ActiveRemote::Association do
       it "searches the associated model for multiple record" do
         Post.should_receive(:search).with(:bestseller_guid => subject.guid).and_return(records)
         subject.bestseller_posts.should eq(records)
+      end
+    end
+
+    context 'required field' do
+      it { should respond_to(:user_posts) }
+
+      it "searches the associated model for multiple records" do
+        Post.should_receive(:search).with(:author_guid => subject.guid, :user_guid => subject.user_guid).and_return(records)
+        subject.user_posts.should eq(records)
+      end
+
+      context 'when user_guid doesnt exist on model 'do
+        before { subject.stub(:respond_to?).with("user_guid").and_return(false) }
+
+        it 'raises an error' do
+          expect {subject.user_posts}.to raise_error
+        end
+      end
+
+      context 'when user_guid doesnt exist on associated model 'do
+        before { Post.stub_chain(:public_instance_methods, :include?).with(:user_guid).and_return(false) }
+
+        it 'raises an error' do
+          expect {subject.user_posts}.to raise_error
+        end
       end
     end
   end

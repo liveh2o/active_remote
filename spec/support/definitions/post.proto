@@ -3,12 +3,13 @@ package generic.remote;
 import "support/protobuf/error.proto";
 import "support/protobuf/category.proto";
 
-message Post { 
+message Post {
   optional string guid = 1;
   optional string name = 2;
   optional string author_guid = 3;
   optional Category category = 4;
   repeated Error errors = 5;
+  optional string user_guid = 6;
 }
 
 message Posts {
@@ -19,6 +20,7 @@ message PostRequest {
   repeated string guid = 1;
   repeated string name = 2;
   repeated string author_guid = 3;
+  repeated string user_guid = 4;
 }
 
 service PostService {

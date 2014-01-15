@@ -76,9 +76,16 @@ module ActiveRemote
       #   end
       #
       def has_many(has_many_class, options={})
-        perform_association( has_many_class, options ) do |klass, object|
+        perform_association(has_many_class, options) do |klass, object|
+          validate_required_attributes(klass, object, options) if options.has_key?(:require) || options.has_key?(:scope)
           foreign_key = options.fetch(:foreign_key) { :"#{object.class.name.demodulize.underscore}_guid" }
-          object.guid ? klass.search(foreign_key => object.guid) : []
+
+          search_hash = {}
+          search_hash[foreign_key] = object.guid
+          search_hash[options[:require]] = object.read_attribute(options[:require]) if options.has_key?(:require)
+          search_hash[options[:scope]] = object.read_attribute(options[:scope]) if options.has_key?(:scope)
+
+          object.guid ? klass.search(search_hash) : []
         end
       end
 
@@ -99,8 +106,6 @@ module ActiveRemote
       #
       #   class User
       #     has_one :client
-      #   end
-      #
       # An equivalent code snippet without a `has_one` declaration would be:
       #
       # ====Examples
@@ -132,6 +137,18 @@ module ActiveRemote
           end
 
           return value
+        end
+      end
+
+      # when requiring an attribute on your search, we verify the attribute
+      # exists on both models
+      def validate_required_attributes(klass, object, options)
+        if options.has_key?(:require)
+          fail "Could not find attribute: '#{options[:require]}' on #{klass}" unless klass.public_instance_methods.include?(options[:require])
+        end
+
+        if options.has_key?(:scope)
+          fail "Could not find attribute: '#{options[:scope]}' on #{klass}" unless klass.public_instance_methods.include?(options[:scope])
         end
       end
     end

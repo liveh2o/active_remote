@@ -6,6 +6,7 @@ message Author {
   optional string guid = 1;
   optional string name = 2;
   repeated Error errors = 3;
+  optional string user_guid = 4;
 }
 
 message Authors {
