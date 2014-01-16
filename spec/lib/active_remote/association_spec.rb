@@ -8,14 +8,8 @@ describe ActiveRemote::Association do
     context "simple association" do
       let(:author_guid) { "AUT-123" }
       let(:user_guid) { "USR-123" }
-      let(:required_attributes) {
-        {
-          :user_guid => user_guid,
-          :author_guid => author_guid
-        }
-      }
-
-      subject { Post.new(:author_guid => author_guid) }
+      let(:default_category_guid) { "CAT-123" }
+      subject { Post.new(:author_guid => author_guid, :user_guid => user_guid) }
 
       it { should respond_to(:author) }
 
@@ -44,22 +38,31 @@ describe ActiveRemote::Association do
         end
       end
 
-      context 'when passing a required field' do
-        subject { Post.new }
+      context 'required field' do
+        it { should respond_to(:user) }
 
-        it 'searches with the required field' do
-          Post.should_receive(:search).with(required_attributes).and_return(records)
+        it "searches the associated model for multiple records" do
+          Author.should_receive(:search).with(:guid => subject.author_guid, :user_guid => subject.user_guid).and_return(records)
           subject.user.should eq(record)
         end
 
-        context 'when required field is not on object' do
-          before { Post.any_instance.better_stub(:user_guid).and_raise(NoMethodError) }
+        context 'when user_guid doesnt exist on model 'do
+          before { subject.stub(:respond_to?).with("user_guid").and_return(false) }
 
-          it 'should raise an error' do
-            expect { Post.new(required_attributes) }.should raise_error(NoMethodError)
+          it 'raises an error' do
+            expect {subject.user}.to raise_error
+          end
+        end
+
+        context 'when user_guid doesnt exist on associated model 'do
+          before { Author.stub_chain(:public_instance_methods, :include?).with(:user_guid).and_return(false) }
+
+          it 'raises an error' do
+            expect {subject.user}.to raise_error
           end
         end
       end
+
     end
 
     context "specific association with class name" do
@@ -70,19 +73,19 @@ describe ActiveRemote::Association do
 
       it "searches the associated model for a single record" do
         Author.should_receive(:search).with(:guid => subject.author_guid).and_return(records)
-        subject.author.should eq record
+        subject.coauthor.should eq record
       end
     end
 
     context "specific association with class name and foreign_key" do
       let(:author_guid) { "AUT-456" }
 
-      subject { Post.new(:author_guid => author_guid) }
+      subject { Post.new(:bestseller_guid => author_guid) }
       it { should respond_to(:bestseller) }
 
       it "searches the associated model for a single record" do
         Author.should_receive(:search).with(:guid => subject.bestseller_guid).and_return(records)
-        subject.author.should eq record
+        subject.bestseller.should eq record
       end
     end
   end
@@ -212,6 +215,31 @@ describe ActiveRemote::Association do
       it "searches the associated model for a single record" do
         Category.should_receive(:search).with(:template_post_guid => subject.guid).and_return(records)
         subject.default_category.should eq record
+      end
+    end
+
+    context 'required field' do
+      it { should respond_to(:hidden_category) }
+
+      it "searches the associated model for multiple records" do
+        Category.should_receive(:search).with(:post_guid => subject.guid, :user_guid => subject.user_guid).and_return(record)
+        subject.hidden_category.should eq(record)
+      end
+
+      context 'when user_guid doesnt exist on model 'do
+        before { subject.stub(:respond_to?).with("user_guid").and_return(false) }
+
+        it 'raises an error' do
+          expect {subject.hidden_category}.to raise_error
+        end
+      end
+
+      context 'when user_guid doesnt exist on associated model 'do
+        before { Category.stub_chain(:public_instance_methods, :include?).with(:user_guid).and_return(false) }
+
+        it 'raises an error' do
+          expect {subject.hidden_category}.to raise_error
+        end
       end
     end
   end

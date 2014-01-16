@@ -6,7 +6,9 @@ module ActiveRemote
       name = name.to_s
 
       if respond_to? name
-        attribute(name)
+        attribute = try(:attribute, name)
+        # for aliased attributes
+        attribute ? attribute : __send__(name)
       else
         raise ::ActiveAttr::UnknownAttributeError, "unknown attribute: #{name}"
       end

@@ -39,9 +39,15 @@ module ActiveRemote
       #
       def belongs_to(belongs_to_klass, options={})
         perform_association(belongs_to_klass, options) do |klass, object|
-          foreign_key = options.fetch(:foreign_key) { :"#{belongs_to_klass}_guid" }
-          association_guid = object.read_attribute(foreign_key)
-          klass.search(:guid => association_guid).first if association_guid
+          validate_required_attributes(klass, object, options) if options.has_key?(:require) || options.has_key?(:scope)
+
+          foreign_key = options.fetch(:foreign_key) { :"#{klass.name.demodulize.underscore}_guid" }
+          search_hash = {}
+          search_hash[:guid] = object.read_attribute(foreign_key)
+          search_hash[options[:require]] = object.read_attribute(options[:require]) if options.has_key?(:require)
+          search_hash[options[:scope]] = object.read_attribute(options[:scope]) if options.has_key?(:scope)
+
+          object.read_attribute(foreign_key) ? klass.search(search_hash).first : nil
         end
       end
 
@@ -78,8 +84,8 @@ module ActiveRemote
       def has_many(has_many_class, options={})
         perform_association(has_many_class, options) do |klass, object|
           validate_required_attributes(klass, object, options) if options.has_key?(:require) || options.has_key?(:scope)
-          foreign_key = options.fetch(:foreign_key) { :"#{object.class.name.demodulize.underscore}_guid" }
 
+          foreign_key = options.fetch(:foreign_key) { :"#{object.class.name.demodulize.underscore}_guid" }
           search_hash = {}
           search_hash[foreign_key] = object.guid
           search_hash[options[:require]] = object.read_attribute(options[:require]) if options.has_key?(:require)
@@ -144,11 +150,11 @@ module ActiveRemote
       # exists on both models
       def validate_required_attributes(klass, object, options)
         if options.has_key?(:require)
-          fail "Could not find attribute: '#{options[:require]}' on #{klass}" unless klass.public_instance_methods.include?(options[:require])
+          raise "Could not find attribute: '#{options[:require]}' on #{klass}" unless klass.public_instance_methods.include?(options[:require])
         end
 
         if options.has_key?(:scope)
-          fail "Could not find attribute: '#{options[:scope]}' on #{klass}" unless klass.public_instance_methods.include?(options[:scope])
+          raise "Could not find attribute: '#{options[:scope]}' on #{klass}" unless klass.public_instance_methods.include?(options[:scope])
         end
       end
     end
