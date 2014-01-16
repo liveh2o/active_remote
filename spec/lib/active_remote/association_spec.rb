@@ -170,8 +170,9 @@ describe ActiveRemote::Association do
 
   describe ".has_one" do
     let(:guid) { "PST-123" }
+    let(:user_guid) { "USR-123" }
 
-    subject { Post.new(:guid => guid) }
+    subject { Post.new(:guid => guid, :user_guid => user_guid) }
 
     it { should respond_to(:category) }
 
@@ -222,7 +223,7 @@ describe ActiveRemote::Association do
       it { should respond_to(:hidden_category) }
 
       it "searches the associated model for multiple records" do
-        Category.should_receive(:search).with(:post_guid => subject.guid, :user_guid => subject.user_guid).and_return(record)
+        Category.should_receive(:search).with(:post_guid => subject.guid, :user_guid => subject.user_guid).and_return(records)
         subject.hidden_category.should eq(record)
       end
 

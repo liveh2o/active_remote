@@ -124,8 +124,15 @@ module ActiveRemote
       #
       def has_one(has_one_klass, options={})
         perform_association(has_one_klass, options) do |klass, object|
+          validate_required_attributes(klass, object, options) if options.has_key?(:require) || options.has_key?(:scope)
+
           foreign_key = options.fetch(:foreign_key) { :"#{object.class.name.demodulize.underscore}_guid" }
-          klass.search(foreign_key => object.guid).first if object.guid
+          search_hash = {}
+          search_hash[foreign_key] = object.guid
+          search_hash[options[:require]] = object.read_attribute(options[:require]) if options.has_key?(:require)
+          search_hash[options[:scope]] = object.read_attribute(options[:scope]) if options.has_key?(:scope)
+
+          klass.search(search_hash).first if object.guid
         end
       end
 
