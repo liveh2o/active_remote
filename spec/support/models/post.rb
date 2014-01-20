@@ -10,6 +10,7 @@ class Post < ::ActiveRemote::Base
   attribute :name
   attribute :author_guid
   attribute :user_guid
+  attribute :bestseller_guid
 
   belongs_to :author
   belongs_to :coauthor, :class_name => '::Author'
@@ -20,5 +21,4 @@ class Post < ::ActiveRemote::Base
   has_one :default_category, :class_name => '::Category', :foreign_key => :template_post_guid
   has_one :hidden_category, :class_name => '::Category', :require => :user_guid
 
-  alias_attribute :bestseller_guid, :author_guid
 end
