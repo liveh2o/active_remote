@@ -19,6 +19,6 @@ class Post < ::ActiveRemote::Base
   has_one :category
   has_one :main_category, :class_name => '::Category'
   has_one :default_category, :class_name => '::Category', :foreign_key => :template_post_guid
-  has_one :hidden_category, :class_name => '::Category', :require => :user_guid
+  has_one :hidden_category, :class_name => '::Category', :scope => :user_guid
 
 end

@@ -38,7 +38,7 @@ describe ActiveRemote::Association do
         end
       end
 
-      context 'required field' do
+      context 'scoped field' do
         it { should respond_to(:user) }
 
         it "searches the associated model for multiple records" do
@@ -142,7 +142,7 @@ describe ActiveRemote::Association do
       end
     end
 
-    context 'required field' do
+    context 'scoped field' do
       it { should respond_to(:user_posts) }
 
       it "searches the associated model for multiple records" do
@@ -219,7 +219,7 @@ describe ActiveRemote::Association do
       end
     end
 
-    context 'required field' do
+    context 'scoped field' do
       it { should respond_to(:hidden_category) }
 
       it "searches the associated model for multiple records" do

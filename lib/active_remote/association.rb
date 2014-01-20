@@ -39,12 +39,11 @@ module ActiveRemote
       #
       def belongs_to(belongs_to_klass, options={})
         perform_association(belongs_to_klass, options) do |klass, object|
-          validate_required_attributes(klass, object, options) if options.has_key?(:require) || options.has_key?(:scope)
+          validate_scoped_attributes(klass, object, options) if options.has_key?(:scope)
 
           foreign_key = options.fetch(:foreign_key) { :"#{klass.name.demodulize.underscore}_guid" }
           search_hash = {}
           search_hash[:guid] = object.read_attribute(foreign_key)
-          search_hash[options[:require]] = object.read_attribute(options[:require]) if options.has_key?(:require)
           search_hash[options[:scope]] = object.read_attribute(options[:scope]) if options.has_key?(:scope)
 
           object.read_attribute(foreign_key) ? klass.search(search_hash).first : nil
@@ -83,12 +82,11 @@ module ActiveRemote
       #
       def has_many(has_many_class, options={})
         perform_association(has_many_class, options) do |klass, object|
-          validate_required_attributes(klass, object, options) if options.has_key?(:require) || options.has_key?(:scope)
+          validate_scoped_attributes(klass, object, options) if options.has_key?(:scope)
 
           foreign_key = options.fetch(:foreign_key) { :"#{object.class.name.demodulize.underscore}_guid" }
           search_hash = {}
           search_hash[foreign_key] = object.guid
-          search_hash[options[:require]] = object.read_attribute(options[:require]) if options.has_key?(:require)
           search_hash[options[:scope]] = object.read_attribute(options[:scope]) if options.has_key?(:scope)
 
           object.guid ? klass.search(search_hash) : []
@@ -124,12 +122,11 @@ module ActiveRemote
       #
       def has_one(has_one_klass, options={})
         perform_association(has_one_klass, options) do |klass, object|
-          validate_required_attributes(klass, object, options) if options.has_key?(:require) || options.has_key?(:scope)
+          validate_scoped_attributes(klass, object, options) if options.has_key?(:scope)
 
           foreign_key = options.fetch(:foreign_key) { :"#{object.class.name.demodulize.underscore}_guid" }
           search_hash = {}
           search_hash[foreign_key] = object.guid
-          search_hash[options[:require]] = object.read_attribute(options[:require]) if options.has_key?(:require)
           search_hash[options[:scope]] = object.read_attribute(options[:scope]) if options.has_key?(:scope)
 
           klass.search(search_hash).first if object.guid
@@ -155,11 +152,7 @@ module ActiveRemote
 
       # when requiring an attribute on your search, we verify the attribute
       # exists on both models
-      def validate_required_attributes(klass, object, options)
-        if options.has_key?(:require)
-          raise "Could not find attribute: '#{options[:require]}' on #{klass}" unless klass.public_instance_methods.include?(options[:require])
-        end
-
+      def validate_scoped_attributes(klass, object, options)
         if options.has_key?(:scope)
           raise "Could not find attribute: '#{options[:scope]}' on #{klass}" unless klass.public_instance_methods.include?(options[:scope])
         end
