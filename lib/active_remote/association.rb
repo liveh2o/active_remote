@@ -155,6 +155,7 @@ module ActiveRemote
       def validate_scoped_attributes(klass, object, options)
         if options.has_key?(:scope)
           raise "Could not find attribute: '#{options[:scope]}' on #{klass}" unless klass.public_instance_methods.include?(options[:scope])
+          raise "Could not find attribute: '#{options[:scope]}' on #{object.class}" unless object.read_attribute(options[:scope])
         end
       end
     end
