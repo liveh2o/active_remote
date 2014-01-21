@@ -9,10 +9,12 @@ class Author < ::ActiveRemote::Base
   attribute :guid
   attribute :name
   attribute :user_guid
+  attribute :chielf_editor_guid
 
   has_many :posts
   has_many :user_posts, :class_name => "::Post", :scope => :user_guid
   has_many :flagged_posts, :class_name => "::Post"
   has_many :bestseller_posts, :class_name => "::Post", :foreign_key => :bestseller_guid
 
+  belongs_to :category
 end

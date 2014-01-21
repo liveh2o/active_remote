@@ -2,10 +2,14 @@ package generic.remote;
 
 import "support/protobuf/error.proto";
 
-message Category { 
+message Category {
   optional string guid = 1;
   optional string name = 2;
   repeated Error errors = 3;
+  optional string user_guid = 4;
+  optional string author_guid = 4;
+  optional string chief_editor_guid = 4;
+  optional string editor_guid = 4;
 }
 
 message Categories {

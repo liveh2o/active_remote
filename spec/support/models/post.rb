@@ -16,9 +16,4 @@ class Post < ::ActiveRemote::Base
   belongs_to :coauthor, :class_name => '::Author'
   belongs_to :bestseller, :class_name => '::Author', :foreign_key => :bestseller_guid
   belongs_to :user, :class_name => '::Author', :scope => :user_guid
-  has_one :category
-  has_one :main_category, :class_name => '::Category'
-  has_one :default_category, :class_name => '::Category', :foreign_key => :template_post_guid
-  has_one :hidden_category, :class_name => '::Category', :scope => :user_guid
-
 end

@@ -169,77 +169,91 @@ describe ActiveRemote::Association do
   end
 
   describe ".has_one" do
-    let(:guid) { "PST-123" }
+    let(:guid) { "CAT-123" }
     let(:user_guid) { "USR-123" }
+    let(:author_guid) { "AUT-321" }
+    let(:chief_editor_guid) { "AUT-322" }
+    let(:editor_guid) { "AUT-323" }
+    let(:publisher_guid) { "AUT-325" }
+    let(:category_attributes) {
+      {
+        :guid => guid,
+        :user_guid => user_guid,
+        :chielf_editor_guid => chief_editor_guid,
+        :editor_guid => editor_guid,
+        :publisher_guid => publisher_guid,
+        :author_guid => author_guid
+      }
+    }
 
-    subject { Post.new(:guid => guid, :user_guid => user_guid) }
+    subject { Category.new(category_attributes) }
 
-    it { should respond_to(:category) }
+    it { should respond_to(:author) }
 
     it "searches the associated model for all associated records" do
-      Category.should_receive(:search).with(:post_guid => subject.guid).and_return(records)
-      subject.category.should eq record
+      Author.should_receive(:search).with(:guid => subject.author_guid).and_return(records)
+      subject.author.should eq record
     end
 
     it "memoizes the result record" do
-      Category.should_receive(:search).once.with(:post_guid => subject.guid).and_return(records)
-      3.times { subject.category.should eq record }
+      Author.should_receive(:search).once.with(:guid => subject.author_guid).and_return(records)
+      3.times { subject.author.should eq record }
     end
 
     context "when guid is nil" do
-      subject { Post.new }
+      subject { Category.new }
 
       it "returns nil" do
-        subject.category.should be_nil
+        subject.author.should be_nil
       end
     end
 
     context "when the search is empty" do
       it "returns a nil value" do
-        Category.should_receive(:search).with(:post_guid => subject.guid).and_return([])
-        subject.category.should be_nil
+        Author.should_receive(:search).with(:guid => subject.author_guid).and_return([])
+        subject.author.should be_nil
       end
     end
 
     context "specific association with class name" do
-      it { should respond_to(:main_category) }
+      it { should respond_to(:senior_author) }
 
       it "searches the associated model for a single record" do
-        Category.should_receive(:search).with(:post_guid => subject.guid).and_return(records)
-        subject.main_category.should eq record
+        Author.should_receive(:search).with(:guid => subject.author_guid).and_return(records)
+        subject.senior_author.should eq record
       end
     end
 
     context "specific association with class name and foreign_key" do
-      it { should respond_to(:default_category) }
+      it { should respond_to(:primary_editor) }
 
       it "searches the associated model for a single record" do
-        Category.should_receive(:search).with(:template_post_guid => subject.guid).and_return(records)
-        subject.default_category.should eq record
+        Author.should_receive(:search).with(:guid => subject.editor_guid).and_return(records)
+        subject.primary_editor.should eq record
       end
     end
 
     context 'scoped field' do
-      it { should respond_to(:hidden_category) }
+      it { should respond_to(:chief_editor) }
 
       it "searches the associated model for multiple records" do
-        Category.should_receive(:search).with(:post_guid => subject.guid, :user_guid => subject.user_guid).and_return(records)
-        subject.hidden_category.should eq(record)
+        Author.should_receive(:search).with(:guid => subject.chief_editor_guid, :user_guid => subject.user_guid).and_return(records)
+        subject.chief_editor.should eq(record)
       end
 
       context 'when user_guid doesnt exist on model 'do
         before { subject.stub(:respond_to?).with("user_guid").and_return(false) }
 
         it 'raises an error' do
-          expect {subject.hidden_category}.to raise_error
+          expect {subject.chief_editor}.to raise_error
         end
       end
 
       context 'when user_guid doesnt exist on associated model 'do
-        before { Category.stub_chain(:public_instance_methods, :include?).with(:user_guid).and_return(false) }
+        before { Author.stub_chain(:public_instance_methods, :include?).with(:user_guid).and_return(false) }
 
         it 'raises an error' do
-          expect {subject.hidden_category}.to raise_error
+          expect {subject.chief_editor}.to raise_error
         end
       end
     end
