@@ -171,18 +171,10 @@ describe ActiveRemote::Association do
   describe ".has_one" do
     let(:guid) { "CAT-123" }
     let(:user_guid) { "USR-123" }
-    let(:author_guid) { "AUT-321" }
-    let(:chief_editor_guid) { "AUT-322" }
-    let(:editor_guid) { "AUT-323" }
-    let(:publisher_guid) { "AUT-325" }
     let(:category_attributes) {
       {
         :guid => guid,
-        :user_guid => user_guid,
-        :chielf_editor_guid => chief_editor_guid,
-        :editor_guid => editor_guid,
-        :publisher_guid => publisher_guid,
-        :author_guid => author_guid
+        :user_guid => user_guid
       }
     }
 
@@ -191,12 +183,12 @@ describe ActiveRemote::Association do
     it { should respond_to(:author) }
 
     it "searches the associated model for all associated records" do
-      Author.should_receive(:search).with(:guid => subject.author_guid).and_return(records)
+      Author.should_receive(:search).with(:category_guid => subject.guid).and_return(records)
       subject.author.should eq record
     end
 
     it "memoizes the result record" do
-      Author.should_receive(:search).once.with(:guid => subject.author_guid).and_return(records)
+      Author.should_receive(:search).once.with(:category_guid => subject.guid).and_return(records)
       3.times { subject.author.should eq record }
     end
 
@@ -210,7 +202,7 @@ describe ActiveRemote::Association do
 
     context "when the search is empty" do
       it "returns a nil value" do
-        Author.should_receive(:search).with(:guid => subject.author_guid).and_return([])
+        Author.should_receive(:search).with(:category_guid => subject.guid).and_return([])
         subject.author.should be_nil
       end
     end
@@ -219,7 +211,7 @@ describe ActiveRemote::Association do
       it { should respond_to(:senior_author) }
 
       it "searches the associated model for a single record" do
-        Author.should_receive(:search).with(:guid => subject.author_guid).and_return(records)
+        Author.should_receive(:search).with(:category_guid => subject.guid).and_return(records)
         subject.senior_author.should eq record
       end
     end
@@ -228,7 +220,7 @@ describe ActiveRemote::Association do
       it { should respond_to(:primary_editor) }
 
       it "searches the associated model for a single record" do
-        Author.should_receive(:search).with(:guid => subject.editor_guid).and_return(records)
+        Author.should_receive(:search).with(:editor_guid => subject.guid).and_return(records)
         subject.primary_editor.should eq record
       end
     end
@@ -237,7 +229,7 @@ describe ActiveRemote::Association do
       it { should respond_to(:chief_editor) }
 
       it "searches the associated model for multiple records" do
-        Author.should_receive(:search).with(:guid => subject.chief_editor_guid, :user_guid => subject.user_guid).and_return(records)
+        Author.should_receive(:search).with(:chief_editor_guid => subject.guid, :user_guid => subject.user_guid).and_return(records)
         subject.chief_editor.should eq(record)
       end
 

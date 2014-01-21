@@ -10,6 +10,8 @@ class Author < ::ActiveRemote::Base
   attribute :name
   attribute :user_guid
   attribute :chielf_editor_guid
+  attribute :editor_guid
+  attribute :category_guid
 
   has_many :posts
   has_many :user_posts, :class_name => "::Post", :scope => :user_guid

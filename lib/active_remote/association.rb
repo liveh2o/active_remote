@@ -118,9 +118,9 @@ module ActiveRemote
       #
       def has_one(has_one_klass, options={})
         perform_association(has_one_klass, options) do |klass, object|
-          foreign_key = options.fetch(:foreign_key) { :"#{klass.name.demodulize.underscore}_guid" }
+          foreign_key = options.fetch(:foreign_key) { :"#{object.class.name.demodulize.underscore}_guid" }
           search_hash = {}
-          search_hash[:guid] = object.read_attribute(foreign_key)
+          search_hash[foreign_key] = object.guid
           search_hash[options[:scope]] = object.read_attribute(options[:scope]) if options.has_key?(:scope)
 
           klass.search(search_hash).first if object.guid

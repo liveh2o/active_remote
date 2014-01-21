@@ -8,9 +8,6 @@ class Category < ::ActiveRemote::Base
 
   attribute :guid
   attribute :user_guid
-  attribute :author_guid
-  attribute :chief_editor_guid
-  attribute :editor_guid
 
   has_many :posts
 
