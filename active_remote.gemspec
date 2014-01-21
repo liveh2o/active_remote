@@ -22,7 +22,6 @@ Gem::Specification.new do |s|
   s.add_dependency "active_attr"
   s.add_dependency "activesupport"
   s.add_dependency "protobuf", ">= 2.0"
-  s.add_dependency "ffi-rzmq", "~> 1.0"
 
   ##
   # Development Dependencies
