@@ -9,7 +9,7 @@ class Author < ::ActiveRemote::Base
   attribute :guid
   attribute :name
   attribute :user_guid
-  attribute :chielf_editor_guid
+  attribute :chief_editor_guid
   attribute :editor_guid
   attribute :category_guid
 

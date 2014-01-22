@@ -123,7 +123,7 @@ module ActiveRemote
           search_hash[foreign_key] = object.guid
           search_hash[options[:scope]] = object.read_attribute(options[:scope]) if options.has_key?(:scope)
 
-          klass.search(search_hash).first if object.guid
+          object.guid ? klass.search(search_hash).first : nil
         end
       end
 
