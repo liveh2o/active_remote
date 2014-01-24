@@ -7,10 +7,14 @@ class Category < ::ActiveRemote::Base
   service_class ::Generic::Remote::CategoryService
 
   attribute :guid
-  attribute :name
-  attribute :post_id
+  attribute :user_guid
+  attribute :chief_editor_guid
 
-  belongs_to :post
+  has_many :posts
 
-  alias_method :template_post_guid, :post_id
+  has_one :author
+  has_one :senior_author, :class_name => "::Author"
+  has_one :primary_editor, :class_name => "::Author", :foreign_key => :editor_guid
+  has_one :chief_editor, :class_name => "::Author", :scope => :user_guid, :foreign_key => :chief_editor_guid
+
 end

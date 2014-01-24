@@ -39,9 +39,12 @@ module ActiveRemote
       #
       def belongs_to(belongs_to_klass, options={})
         perform_association(belongs_to_klass, options) do |klass, object|
-          foreign_key = options.fetch(:foreign_key) { :"#{belongs_to_klass}_guid" }
-          association_guid = object.read_attribute(foreign_key)
-          klass.search(:guid => association_guid).first if association_guid
+          foreign_key = options.fetch(:foreign_key) { :"#{klass.name.demodulize.underscore}_guid" }
+          search_hash = {}
+          search_hash[:guid] = object.read_attribute(foreign_key)
+          search_hash[options[:scope]] = object.read_attribute(options[:scope]) if options.has_key?(:scope)
+
+          search_hash.values.any?(&:nil?) ? nil : klass.search(search_hash).first
         end
       end
 
@@ -76,9 +79,13 @@ module ActiveRemote
       #   end
       #
       def has_many(has_many_class, options={})
-        perform_association( has_many_class, options ) do |klass, object|
+        perform_association(has_many_class, options) do |klass, object|
           foreign_key = options.fetch(:foreign_key) { :"#{object.class.name.demodulize.underscore}_guid" }
-          object.guid ? klass.search(foreign_key => object.guid) : []
+          search_hash = {}
+          search_hash[foreign_key] = object.guid
+          search_hash[options[:scope]] = object.read_attribute(options[:scope]) if options.has_key?(:scope)
+
+          search_hash.values.any?(&:nil?) ? [] : klass.search(search_hash)
         end
       end
 
@@ -99,8 +106,6 @@ module ActiveRemote
       #
       #   class User
       #     has_one :client
-      #   end
-      #
       # An equivalent code snippet without a `has_one` declaration would be:
       #
       # ====Examples
@@ -114,19 +119,34 @@ module ActiveRemote
       def has_one(has_one_klass, options={})
         perform_association(has_one_klass, options) do |klass, object|
           foreign_key = options.fetch(:foreign_key) { :"#{object.class.name.demodulize.underscore}_guid" }
-          klass.search(foreign_key => object.guid).first if object.guid
+          search_hash = {}
+          search_hash[foreign_key] = object.guid
+          search_hash[options[:scope]] = object.read_attribute(options[:scope]) if options.has_key?(:scope)
+
+          search_hash.values.any?(&:nil?) ? nil : klass.search(search_hash).first
         end
+      end
+
+      # when requiring an attribute on your search, we verify the attribute
+      # exists on both models
+      def validate_scoped_attributes(associated_class, object_class, options)
+        raise "Could not find attribute: '#{options[:scope]}' on #{object_class}" unless object_class.public_instance_methods.include?(options[:scope])
+        raise "Could not find attribute: '#{options[:scope]}' on #{associated_class}" unless associated_class.public_instance_methods.include?(options[:scope])
       end
 
     private
 
-      def perform_association(associated_klass, optionz={})
+      def perform_association(associated_klass, options={})
+
         define_method(associated_klass) do
+          klass_name = options.fetch(:class_name){ associated_klass }
+          klass = klass_name.to_s.classify.constantize
+
+          self.class.validate_scoped_attributes(klass, self.class, options) if options.has_key?(:scope)
+
           value = instance_variable_get(:"@#{associated_klass}")
 
           unless value
-            klass_name = optionz.fetch(:class_name){ associated_klass }
-            klass = klass_name.to_s.classify.constantize
             value = yield( klass, self )
             instance_variable_set(:"@#{associated_klass}", value)
           end
@@ -134,6 +154,7 @@ module ActiveRemote
           return value
         end
       end
+
     end
   end
 end
