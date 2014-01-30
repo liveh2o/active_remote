@@ -30,7 +30,7 @@ module ActiveRemote
       #
       def find(args)
         remote = self.search(args).first
-        raise RemoteRecordNotFound if remote.nil?
+        raise RemoteRecordNotFound.new("Remote #{self} not found") if remote.nil?
 
         return remote
       end
