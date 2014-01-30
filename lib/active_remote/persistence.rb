@@ -51,6 +51,16 @@ module ActiveRemote
         remote
       end
 
+      # Instantiate a record with the given remote attributes. Generally used
+      # when retrieving records that already exist, so @new_record is set to false.
+      #
+      def instantiate(attributes, options = {})
+        new_object = self.new.instantiate(attributes)
+        new_object.readonly! if options[:readonly]
+
+        new_object
+      end
+
       # Mark the class as readonly. Overrides instance-level readonly, making
       # any instance of this class readonly.
       def readonly!
@@ -144,6 +154,12 @@ module ActiveRemote
       #
       def persisted?
         return ! new_record?
+      end
+
+      # Sets the instance to be a readonly object
+      #
+      def readonly!
+        @readonly = true
       end
 
       # Returns true if the remote class or remote record is readonly; otherwise, returns false.

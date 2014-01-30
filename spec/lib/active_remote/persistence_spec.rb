@@ -130,6 +130,15 @@ describe ActiveRemote::Persistence do
     end
   end
 
+  describe "#readonly?" do
+    context "when the record is created through instantiate with options[:readonly]" do
+      subject { Tag.instantiate({:guid => 'foo'}, :readonly => true) }
+
+      its(:new_record?) { should be_false }
+      its(:readonly?) { should be_true }
+    end
+  end
+
   describe "#has_errors?" do
     context "when errors are not present" do
       before { subject.errors.clear }
@@ -145,6 +154,12 @@ describe ActiveRemote::Persistence do
   end
 
   describe "#new_record?" do
+    context "when the record is created through instantiate" do
+      subject { Tag.instantiate(:guid => 'foo') }
+
+      its(:new_record?) { should be_false }
+    end
+
     context "when the record is persisted" do
       subject { Tag.allocate.instantiate(:guid => 'foo') }
 
