@@ -17,9 +17,14 @@ module ActiveRemote
   class RemoteRecordNotFound < ActiveRemoteError
     attr_accessor :remote_record_class
 
-    def initialize(remote_record_class)
-      self.remote_record_class = remote_record_class.to_s
-      message = "#{remote_record_class} does not exist}"
+    def initialize(class_or_message = "")
+      message = class_or_message
+
+      if class_or_message.is_a?(Class)
+        self.remote_record_class = class_or_message
+        message = "#{remote_record_class} does not exist"
+      end
+
       super(message)
     end
   end
