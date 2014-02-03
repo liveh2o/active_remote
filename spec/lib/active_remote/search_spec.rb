@@ -25,6 +25,10 @@ describe ActiveRemote::Search do
       it "raise an exception" do
         expect { Tag.find(args) }.to raise_error(::ActiveRemote::RemoteRecordNotFound)
       end
+
+      it "gives the class of the remote record not found in the message" do
+        expect { Tag.find(args) }.to raise_error(::ActiveRemote::RemoteRecordNotFound, /Tag/)
+      end
     end
   end
 

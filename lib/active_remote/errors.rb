@@ -15,6 +15,18 @@ module ActiveRemote
   # Raised by ActiveRemove::Base.find when remote record is not found when
   # searching with the given arguments.
   class RemoteRecordNotFound < ActiveRemoteError
+    attr_accessor :remote_record_class
+
+    def initialize(class_or_message = "")
+      message = class_or_message
+
+      if class_or_message.is_a?(Class)
+        self.remote_record_class = class_or_message
+        message = "#{remote_record_class} does not exist"
+      end
+
+      super(message)
+    end
   end
 
   # Raised by ActiveRemove::Base.save! and ActiveRemote::Base.create! methods
