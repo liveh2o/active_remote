@@ -7,9 +7,9 @@ message Category {
   optional string name = 2;
   repeated Error errors = 3;
   optional string user_guid = 4;
-  optional string author_guid = 4;
-  optional string chief_editor_guid = 4;
-  optional string editor_guid = 4;
+  optional string author_guid = 5;
+  optional string chief_editor_guid = 6;
+  optional string editor_guid = 7;
 }
 
 message Categories {

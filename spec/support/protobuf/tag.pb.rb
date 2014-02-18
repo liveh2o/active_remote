@@ -25,8 +25,8 @@ module Generic
     # Message Fields
     #
     class Tag
-      optional ::Protobuf::Field::StringField, :guid, 1
-      optional ::Protobuf::Field::StringField, :name, 2
+      optional :string, :guid, 1
+      optional :string, :name, 2
       repeated ::Generic::Error, :errors, 3
     end
 
@@ -35,8 +35,8 @@ module Generic
     end
 
     class TagRequest
-      repeated ::Protobuf::Field::StringField, :guid, 1
-      repeated ::Protobuf::Field::StringField, :name, 2
+      repeated :string, :guid, 1
+      repeated :string, :name, 2
     end
 
 

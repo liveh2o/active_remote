@@ -26,12 +26,12 @@ module Generic
     # Message Fields
     #
     class Post
-      optional ::Protobuf::Field::StringField, :guid, 1
-      optional ::Protobuf::Field::StringField, :name, 2
-      optional ::Protobuf::Field::StringField, :author_guid, 3
+      optional :string, :guid, 1
+      optional :string, :name, 2
+      optional :string, :author_guid, 3
       optional ::Generic::Remote::Category, :category, 4
       repeated ::Generic::Error, :errors, 5
-      optional ::Protobuf::Field::StringField, :user_guid, 6
+      optional :string, :user_guid, 6
     end
 
     class Posts
@@ -39,10 +39,10 @@ module Generic
     end
 
     class PostRequest
-      repeated ::Protobuf::Field::StringField, :guid, 1
-      repeated ::Protobuf::Field::StringField, :name, 2
-      repeated ::Protobuf::Field::StringField, :author_guid, 3
-      repeated ::Protobuf::Field::StringField, :user_guid, 4
+      repeated :string, :guid, 1
+      repeated :string, :name, 2
+      repeated :string, :author_guid, 3
+      repeated :string, :user_guid, 4
     end
 
 

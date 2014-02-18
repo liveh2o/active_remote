@@ -25,10 +25,10 @@ module Generic
     # Message Fields
     #
     class Author
-      optional ::Protobuf::Field::StringField, :guid, 1
-      optional ::Protobuf::Field::StringField, :name, 2
+      optional :string, :guid, 1
+      optional :string, :name, 2
       repeated ::Generic::Error, :errors, 3
-      optional ::Protobuf::Field::StringField, :user_guid, 4
+      optional :string, :user_guid, 4
     end
 
     class Authors
@@ -36,8 +36,8 @@ module Generic
     end
 
     class AuthorRequest
-      repeated ::Protobuf::Field::StringField, :guid, 1
-      repeated ::Protobuf::Field::StringField, :name, 2
+      repeated :string, :guid, 1
+      repeated :string, :name, 2
     end
 
 
