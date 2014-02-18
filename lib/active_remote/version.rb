@@ -1,3 +1,3 @@
 module ActiveRemote
-  VERSION = "1.8.1"
+  VERSION = "2.0.0.alpha"
 end
