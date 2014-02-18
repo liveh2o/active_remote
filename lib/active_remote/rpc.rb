@@ -1,11 +1,8 @@
-require 'active_remote/serializers/protobuf'
-
 module ActiveRemote
   module RPC
     def self.included(klass)
       klass.class_eval do
         extend ::ActiveRemote::RPC::ClassMethods
-        include ::ActiveRemote::Serializers::Protobuf
       end
     end
 
@@ -23,8 +20,7 @@ module ActiveRemote
       def request(rpc_method, request_args)
         return request_args unless request_args.is_a?(Hash)
 
-        message_class = request_type(rpc_method)
-        build_message(message_class, request_args)
+        request_type(rpc_method).new(request_args)
       end
 
       # Return the class applicable to the request for the given rpc method.

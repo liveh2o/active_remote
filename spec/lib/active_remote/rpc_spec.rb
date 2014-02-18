@@ -22,11 +22,9 @@ describe ActiveRemote::RPC do
 
   describe ".request" do
     let(:attributes) { Hash.new }
-    let(:message) { double(:message) }
 
     it "builds an RPC request" do
-      Tag.should_receive(:build_message).with(Generic::Remote::Tag, attributes)
-      Tag.request(:create, attributes)
+      Tag.request(:create, attributes).should eq Generic::Remote::Tag.new(attributes)
     end
   end
 
