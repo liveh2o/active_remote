@@ -35,7 +35,7 @@ module ActiveRemote
         #
         def build_message(message_class, attributes)
           attributes.inject(message_class.new) do |message, (key, value)|
-            if field = message.get_field_by_name(key) || message.get_ext_field_by_name(key)
+            if field = message_class.get_field(key, true)
 
               # Override the value based on the field type where issues
               # exist in the protobuf gem.
@@ -71,7 +71,7 @@ module ActiveRemote
 
           protobuf_field_type = ::ActiveRemote::Serializers::Protobuf::ATTRIBUTE_TYPES[field.type]
 
-          case 
+          case
           when protobuf_field_type == ::ActiveAttr::Typecasting::Boolean then
             if value == 1
               return true

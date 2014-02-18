@@ -19,9 +19,9 @@ Gem::Specification.new do |s|
   ##
   # Dependencies
   #
-  s.add_dependency "active_attr"
-  s.add_dependency "activesupport"
-  s.add_dependency "protobuf", ">= 2.0"
+  s.add_dependency "active_attr", ">= 0.8"
+  s.add_dependency "activesupport", ">= 3.2"
+  s.add_dependency "protobuf", ">= 3.0.0.alpha"
 
   ##
   # Development Dependencies
