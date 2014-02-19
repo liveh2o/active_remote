@@ -4,12 +4,12 @@ require 'active_model/dirty'
 #
 module ActiveRemote
   module Dirty
-    def self.included(klass)
-      klass.class_eval do
-        include ActiveModel::Dirty
+    extend ActiveSupport::Concern
 
-        attr_accessor :_active_remote_track_changes
-      end
+    included do
+      include ActiveModel::Dirty
+
+      attr_accessor :_active_remote_track_changes
     end
 
     def disable_dirty_tracking

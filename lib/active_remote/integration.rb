@@ -1,17 +1,16 @@
 module ActiveRemote
   module Integration
-    def self.included(klass)
-      klass.class_eval do
-        unless singleton_methods.include?(:cache_timestamp_format)
-          ##
-          # :singleton-method:
-          # Indicates the format used to generate the timestamp format in the cache key.
-          # This is +:number+, by default.
-          #
-          def self.cache_timestamp_format
-            :number
-          end
+    extend ActiveSupport::Concern
 
+    included do
+      unless singleton_methods.include?(:cache_timestamp_format)
+        ##
+        # :singleton-method:
+        # Indicates the format used to generate the timestamp format in the cache key.
+        # This is +:number+, by default.
+        #
+        def self.cache_timestamp_format
+          :number
         end
       end
     end

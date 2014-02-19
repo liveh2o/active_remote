@@ -2,12 +2,7 @@ require 'active_support/inflector'
 
 module ActiveRemote
   module DSL
-    def self.included(klass)
-      klass.class_eval do
-        extend ::ActiveRemote::DSL::ClassMethods
-        include ::ActiveRemote::DSL::InstanceMethods
-      end
-    end
+    extend ActiveSupport::Concern
 
     module ClassMethods
 
@@ -106,23 +101,20 @@ module ActiveRemote
       end
     end
 
-    # Convenience methods for accessing DSL methods in instances.
+  private
+
+    # Private convenience methods for accessing DSL methods in instances
     #
-    module InstanceMethods
+    def _publishable_attributes
+      self.class.publishable_attributes
+    end
 
-    private
+    def _service_name
+      self.class.service_name
+    end
 
-      def _publishable_attributes
-        self.class.publishable_attributes
-      end
-
-      def _service_name
-        self.class.service_name
-      end
-
-      def _service_class
-        self.class.service_class
-      end
+    def _service_class
+      self.class.service_class
     end
   end
 end

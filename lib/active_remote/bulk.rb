@@ -2,16 +2,12 @@ require 'active_remote/persistence'
 
 module ActiveRemote
   module Bulk
-    def self.included(klass)
-      klass.class_eval do
-        extend ::ActiveRemote::Bulk::ClassMethods
-        include ::ActiveRemote::Persistence
-      end
+    extend ActiveSupport::Concern
+
+    included do
+      include Persistence
     end
 
-    ##
-    # Class methods
-    #
     module ClassMethods
 
       # Create multiple records at the same time. Returns a collection of active
@@ -104,7 +100,7 @@ module ActiveRemote
       #
       def parse_records(*records)
         records.flatten!
-        
+
         if records.first.respond_to?(:attributes)
           records.collect!(&:attributes)
         else

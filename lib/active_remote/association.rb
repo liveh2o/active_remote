@@ -1,10 +1,6 @@
 module ActiveRemote
   module Association
-    def self.included(klass)
-      klass.class_eval do
-        extend ::ActiveRemote::Association::ClassMethods
-      end
-    end
+    extend ActiveSupport::Concern
 
     module ClassMethods
       # Create a `belongs_to` association for a given remote resource.
@@ -137,7 +133,6 @@ module ActiveRemote
     private
 
       def perform_association(associated_klass, options={})
-
         define_method(associated_klass) do
           klass_name = options.fetch(:class_name){ associated_klass }
           klass = klass_name.to_s.classify.constantize
@@ -154,7 +149,6 @@ module ActiveRemote
           return value
         end
       end
-
     end
   end
 end

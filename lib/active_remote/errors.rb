@@ -1,9 +1,6 @@
 # TODO: Create more specific errors
 #
 module ActiveRemote
-
-  # = Active Remote Errors
-  #
   # Generic Active Remote exception class.
   class ActiveRemoteError < StandardError
   end

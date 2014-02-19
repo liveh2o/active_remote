@@ -3,14 +3,13 @@ require 'active_remote/rpc'
 
 module ActiveRemote
   module Search
-    def self.included(klass)
-      klass.class_eval do
-        extend ::ActiveRemote::Search::ClassMethods
-        include ::ActiveRemote::Persistence
-        include ::ActiveRemote::RPC
+    extend ActiveSupport::Concern
 
-        define_model_callbacks :search
-      end
+    included do
+      include Persistence
+      include RPC
+
+      define_model_callbacks :search
     end
 
     module ClassMethods

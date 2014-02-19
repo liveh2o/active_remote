@@ -2,10 +2,10 @@ require 'active_remote/serializers/json'
 
 module ActiveRemote
   module Serialization
-    def self.included(klass)
-      klass.class_eval do
-        include ::ActiveRemote::Serializers::JSON
-      end
+    extend ActiveSupport::Concern
+
+    included do
+      include Serializers::JSON
     end
 
     # Examine the given response and add any errors to our internal errors

@@ -1,3 +1,6 @@
+require 'active_model/callbacks'
+require 'active_attr/model'
+
 require 'active_remote/association'
 require 'active_remote/attributes'
 require 'active_remote/bulk'
@@ -13,24 +16,24 @@ require 'active_remote/serialization'
 
 module ActiveRemote
   class Base
-    extend ::ActiveModel::Callbacks
+    extend ActiveModel::Callbacks
 
-    include ::ActiveAttr::Model
+    include ActiveAttr::Model
 
-    include ::ActiveRemote::Association
-    include ::ActiveRemote::Attributes
-    include ::ActiveRemote::Bulk
-    include ::ActiveRemote::DSL
-    include ::ActiveRemote::Integration
-    include ::ActiveRemote::Persistence
-    include ::ActiveRemote::Publication
-    include ::ActiveRemote::RPC
-    include ::ActiveRemote::Search
-    include ::ActiveRemote::Serialization
+    include Association
+    include Attributes
+    include Bulk
+    include DSL
+    include Integration
+    include Persistence
+    include Publication
+    include RPC
+    include Search
+    include Serialization
 
     # Overrides some methods, providing support for dirty tracking,
     # so it needs to be included last.
-    include ::ActiveRemote::Dirty
+    include Dirty
 
     attr_reader :last_request, :last_response
 
@@ -56,5 +59,5 @@ module ActiveRemote
     end
   end
 
-  ::ActiveSupport.run_load_hooks(:active_remote, Base)
+  ActiveSupport.run_load_hooks(:active_remote, Base)
 end

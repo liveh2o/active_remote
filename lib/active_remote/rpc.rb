@@ -1,12 +1,9 @@
 module ActiveRemote
   module RPC
-    def self.included(klass)
-      klass.class_eval do
-        extend ::ActiveRemote::RPC::ClassMethods
-      end
-    end
+    extend ActiveSupport::Concern
 
     module ClassMethods
+
       # Execute an RPC call to the remote service and return the raw response.
       #
       def remote_call(rpc_method, request_args)
