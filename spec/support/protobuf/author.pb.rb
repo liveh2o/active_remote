@@ -8,7 +8,7 @@ require 'protobuf/rpc/service'
 ##
 # Imports
 #
-require 'support/protobuf/error.pb'
+require 'error.pb'
 
 module Generic
   module Remote

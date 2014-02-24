@@ -1,8 +1,8 @@
 package generic.remote;
 
-import "support/protobuf/error.proto";
+import "error.proto";
 
-message Author { 
+message Author {
   optional string guid = 1;
   optional string name = 2;
   repeated Error errors = 3;

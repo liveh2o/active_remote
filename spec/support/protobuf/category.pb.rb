@@ -4,41 +4,48 @@
 require 'protobuf/message'
 require 'protobuf/rpc/service'
 
+
 ##
 # Imports
 #
-require 'support/protobuf/error.pb'
+require 'error.pb'
 
 module Generic
   module Remote
-    
+
     ##
     # Message Classes
     #
     class Category < ::Protobuf::Message; end
     class Categories < ::Protobuf::Message; end
     class CategoryRequest < ::Protobuf::Message; end
-    
+
+
     ##
     # Message Fields
     #
     class Category
-      optional ::Protobuf::Field::StringField, :guid, 1
-      optional ::Protobuf::Field::StringField, :name, 2
+      optional :string, :guid, 1
+      optional :string, :name, 2
       repeated ::Generic::Error, :errors, 3
+      optional :string, :user_guid, 4
+      optional :string, :author_guid, 5
+      optional :string, :chief_editor_guid, 6
+      optional :string, :editor_guid, 7
     end
-    
+
     class Categories
       repeated ::Generic::Remote::Category, :records, 1
     end
-    
+
     class CategoryRequest
-      repeated ::Protobuf::Field::StringField, :guid, 1
-      repeated ::Protobuf::Field::StringField, :name, 2
+      repeated :string, :guid, 1
+      repeated :string, :name, 2
     end
-    
+
+
     ##
-    # Services
+    # Service Classes
     #
     class CategoryService < ::Protobuf::Rpc::Service
       rpc :search, ::Generic::Remote::CategoryRequest, ::Generic::Remote::Categories
@@ -50,5 +57,8 @@ module Generic
       rpc :delete_all, ::Generic::Remote::Categories, ::Generic::Remote::Categories
       rpc :destroy_all, ::Generic::Remote::Categories, ::Generic::Remote::Categories
     end
+
   end
+
 end
+

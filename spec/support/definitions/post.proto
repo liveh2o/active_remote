@@ -1,7 +1,7 @@
 package generic.remote;
 
-import "support/protobuf/error.proto";
-import "support/protobuf/category.proto";
+import "error.proto";
+import "category.proto";
 
 message Post {
   optional string guid = 1;

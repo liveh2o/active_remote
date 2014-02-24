@@ -1,5 +1,3 @@
-require 'support/models'
-
 ##
 # Reset all DSL variables so specs don't interfere with each other.
 #
