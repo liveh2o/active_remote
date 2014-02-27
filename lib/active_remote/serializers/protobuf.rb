@@ -3,6 +3,24 @@ module ActiveRemote
     module Protobuf
       extend ActiveSupport::Concern
 
+      TYPECASTER_MAP = {
+        ::Protobuf::Field::BoolField     => ActiveAttr::Typecasting::BooleanTypecaster,
+        ::Protobuf::Field::BytesField    => ActiveAttr::Typecasting::StringTypecaster,
+        ::Protobuf::Field::DoubleField   => ActiveAttr::Typecasting::FloatTypecaster,
+        ::Protobuf::Field::Fixed32Field  => ActiveAttr::Typecasting::IntegerTypecaster,
+        ::Protobuf::Field::Fixed64Field  => ActiveAttr::Typecasting::IntegerTypecaster,
+        ::Protobuf::Field::FloatField    => ActiveAttr::Typecasting::FloatTypecaster,
+        ::Protobuf::Field::Int32Field    => ActiveAttr::Typecasting::IntegerTypecaster,
+        ::Protobuf::Field::Int64Field    => ActiveAttr::Typecasting::IntegerTypecaster,
+        ::Protobuf::Field::Sfixed32Field => ActiveAttr::Typecasting::IntegerTypecaster,
+        ::Protobuf::Field::Sfixed64Field => ActiveAttr::Typecasting::IntegerTypecaster,
+        ::Protobuf::Field::Sint32Field   => ActiveAttr::Typecasting::IntegerTypecaster,
+        ::Protobuf::Field::Sint64Field   => ActiveAttr::Typecasting::IntegerTypecaster,
+        ::Protobuf::Field::StringField   => ActiveAttr::Typecasting::StringTypecaster,
+        ::Protobuf::Field::Uint32Field   => ActiveAttr::Typecasting::IntegerTypecaster,
+        ::Protobuf::Field::Uint64Field   => ActiveAttr::Typecasting::IntegerTypecaster
+      }
+
       module ClassMethods
         def fields_from_attributes(message_class, attributes)
           Fields.from_attributes(message_class, attributes)
@@ -75,9 +93,9 @@ module ActiveRemote
           when field.message? then
             message_value
           when field.repeated? then
-            repeated_value
+            repeated_value.map { |value| typecast(value) }
           else
-            value
+            typecasted_value
           end
         end
 
@@ -96,6 +114,27 @@ module ActiveRemote
 
         def repeated_value
           value.is_a?(Array) ? value : [ value ]
+        end
+
+        def typecast(value)
+          return value if value.nil?
+
+          typecaster? ? typecaster.call(value) : value
+        end
+
+        def typecasted_value
+          typecast(value)
+        end
+
+        def typecaster
+          @typecaster ||= begin
+            typecaster = TYPECASTER_MAP[field.type_class]
+            typecaster.new if typecaster
+          end
+        end
+
+        def typecaster?
+          typecaster.present?
         end
       end
     end

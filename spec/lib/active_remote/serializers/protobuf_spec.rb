@@ -51,5 +51,38 @@ describe ActiveRemote::Serializers::Protobuf::Field do
         end
       end
     end
+
+    # TODO: Find a better way to write this. It works for now, but it's not
+    # very clear and is hard to track down since failures don't include a
+    # description.
+    #
+    # TODO: Consider adding specific specs for typecasting dates to integers
+    # or strings since that's what prompted the re-introduction of the
+    # typecasting.
+    #
+    context "when typecasting fields" do
+      let(:string_value) { double(:string, :to_s => '') }
+
+      def typecasts(field, conversion)
+        field = Serializer.get_field(field, true)
+        described_class.from_attribute(field, conversion.first[0]).should eq conversion.first[1]
+      end
+
+      it { typecasts(:bool_field, '0' => false) }
+      it { typecasts(:bytes_field, string_value => '') }
+      it { typecasts(:double_field, 0 => 0.0) }
+      it { typecasts(:fixed32_field, '0' => 0) }
+      it { typecasts(:fixed64_field, '0' => 0) }
+      it { typecasts(:float_field, 0 => 0.0) }
+      it { typecasts(:int32_field, '0' => 0) }
+      it { typecasts(:int64_field, '0' => 0) }
+      it { typecasts(:sfixed32_field, '0' => 0) }
+      it { typecasts(:sfixed64_field, '0' => 0) }
+      it { typecasts(:sint32_field, '0' => 0) }
+      it { typecasts(:sint64_field, '0' => 0) }
+      it { typecasts(:string_field, string_value => '') }
+      it { typecasts(:uint32_field, '0' => 0) }
+      it { typecasts(:uint64_field, '0' => 0) }
+    end
   end
 end
