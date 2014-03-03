@@ -8,34 +8,60 @@ module ActiveRemote
       include Serializers::JSON
     end
 
-    # Examine the given response and add any errors to our internal errors
-    # list. If no response is given, use the last response.
-    #
-    def add_errors_from_response(response=self.last_response)
-      return unless response.respond_to?(:errors)
+    module ClassMethods
+      # Serialize the given records into Active Remote objects.
+      #
+      # ====Examples
+      #
+      #   records = [ Generic::Remote::TagRequest.new(:name => 'foo') ]
+      #
+      #   Tag.serialize_records(records) # => [ Tag#{:name => 'foo'} ]
+      #
+      def serialize_records(records)
+        records.map { |record| instantiate(record.to_hash) }
+      end
+    end
 
-      response.errors.each do |error|
+    # Examine the given response and add any errors to our internal errors
+    # list.
+    #
+    # ====Examples
+    #
+    #   response = remote_call(:action_that_returns_errors, { :stuff => 'foo' })
+    #
+    #   add_errors(response.errors)
+    #
+    def add_errors(errors)
+      errors.each do |error|
         if error.respond_to?(:message)
-          errors.add(error.field, error.message)
+          self.errors.add(error.field, error.message)
         elsif error.respond_to?(:messages)
           error.messages.each do |message|
-            errors.add(error.field, message)
+            self.errors.add(error.field, message)
           end
         end
       end
     end
 
-    # Examine the last response and serialize any records returned into Active
-    # Remote objects.
+    # DEPRECATED – Use :add_errors instead
     #
-    def serialize_records
-      return nil unless last_response.respond_to?(:records)
+    def add_errors_from_response(response = nil)
+      warn 'DEPRECATED :add_errors_from_response is deprecated and will be removed in Active Remote 3.0. Use :add_errors instead'
 
-      last_response.records.map do |remote_record|
-        record = self.class.allocate
-        record.instantiate(remote_record.to_hash)
-        record
-      end
+      response ||= last_response
+
+      add_errors(response.errors) if response.respond_to?(:errors)
+    end
+
+    # DEPRECATED – Use the class-level :serialize_errors instead
+    #
+    def serialize_records(records = nil)
+      warn 'DEPRECATED Calling :serialize_records on an instance is deprecated and will be removed in Active Remote 3.0. Use the class-level :serialize_records instead'
+
+      records ||= last_response.records if last_response.respond_to?(:records)
+      return if records.nil?
+
+      self.class.serialize_records(records)
     end
   end
 end
