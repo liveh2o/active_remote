@@ -15,7 +15,6 @@ module ActiveRemote
       def remote_call(rpc_method, request_args)
         remote = self.new
         remote.execute(rpc_method, request_args)
-        remote.last_response
       end
 
       # Return a protobuf request object for the given rpc request.
@@ -52,13 +51,14 @@ module ActiveRemote
           @last_response = response
         end
       end
+
+      @last_response
     end
 
     # Execute an RPC call to the remote service and return the raw response.
     #
     def remote_call(rpc_method, request_args)
       self.execute(rpc_method, request_args)
-      self.last_response
     end
 
   private
