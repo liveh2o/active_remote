@@ -12,6 +12,7 @@ require 'active_remote/persistence'
 require 'active_remote/primary_key'
 require 'active_remote/publication'
 require 'active_remote/rpc'
+require 'active_remote/scope_keys'
 require 'active_remote/search'
 require 'active_remote/serialization'
 
@@ -30,6 +31,7 @@ module ActiveRemote
     include PrimaryKey
     include Publication
     include RPC
+    include ScopeKeys
     include Search
     include Serialization
 
