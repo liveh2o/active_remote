@@ -3,7 +3,8 @@ require 'spec_helper'
 describe ActiveRemote::PrimaryKey do
   let(:tag) { Tag.new(:guid => 'TAG-123', :user_guid => 'USR-123') }
   let(:specified_primary_key) { [:guid, :user_guid] }
-  subject { tag }
+
+  before { Tag.instance_variable_set :@primary_key, nil }
 
   describe ".default_primary_key" do
     it 'returns array of :guid' do
@@ -28,7 +29,6 @@ describe ActiveRemote::PrimaryKey do
   describe "#primary_key" do
     context 'default' do
       let(:default_primary_key_hash) { { :guid => tag.guid } }
-      before { Tag.primary_key }
 
       it 'returns hash with guid' do
         tag.primary_key_hash.should eq(default_primary_key_hash)
