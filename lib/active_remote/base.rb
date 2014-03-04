@@ -9,6 +9,7 @@ require 'active_remote/dirty'
 require 'active_remote/dsl'
 require 'active_remote/integration'
 require 'active_remote/persistence'
+require 'active_remote/primary_key'
 require 'active_remote/publication'
 require 'active_remote/rpc'
 require 'active_remote/search'
@@ -26,6 +27,7 @@ module ActiveRemote
     include DSL
     include Integration
     include Persistence
+    include PrimaryKey
     include Publication
     include RPC
     include Search
