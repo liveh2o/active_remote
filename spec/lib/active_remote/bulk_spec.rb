@@ -5,37 +5,28 @@ describe ActiveRemote::Bulk do
   let(:serialized_records) { double(:serialized_records) }
 
   describe ".create_all" do
-    before {
-      Tag.stub(:parse_records).and_return(records)
-      Tag.any_instance.stub(:serialize_records).and_return(serialized_records)
-    }
+    before { Tag.better_stub(:parse_records).and_return(records) }
 
     it "creates remote records" do
-      Tag.any_instance.should_receive(:execute).with(:create_all, records)
+      Tag.any_instance.better_receive(:execute).with(:create_all, records)
       Tag.create_all(records)
     end
   end
 
   describe ".delete_all" do
-    before {
-      Tag.stub(:parse_records).and_return(records)
-      Tag.any_instance.stub(:serialize_records).and_return(serialized_records)
-    }
+    before { Tag.better_stub(:parse_records).and_return(records) }
 
     it "deletes remote records" do
-      Tag.any_instance.should_receive(:execute).with(:delete_all, records)
+      Tag.any_instance.better_receive(:execute).with(:delete_all, records)
       Tag.delete_all(records)
     end
   end
 
   describe ".destroy_all" do
-    before {
-      Tag.stub(:parse_records).and_return(records)
-      Tag.any_instance.stub(:serialize_records).and_return(serialized_records)
-    }
+    before { Tag.better_stub(:parse_records).and_return(records) }
 
     it "destroys remote records" do
-      Tag.any_instance.should_receive(:execute).with(:destroy_all, records)
+      Tag.any_instance.better_receive(:execute).with(:destroy_all, records)
       Tag.destroy_all(records)
     end
   end
@@ -78,13 +69,10 @@ describe ActiveRemote::Bulk do
   end
 
   describe ".update_all" do
-    before {
-      Tag.stub(:parse_records).and_return(records)
-      Tag.any_instance.stub(:serialize_records).and_return(serialized_records)
-    }
+    before { Tag.stub(:parse_records).and_return(records) }
 
     it "updates remote records" do
-      Tag.any_instance.should_receive(:execute).with(:update_all, records)
+      Tag.any_instance.better_receive(:execute).with(:update_all, records)
       Tag.update_all(records)
     end
   end
