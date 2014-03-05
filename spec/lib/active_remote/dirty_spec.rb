@@ -82,23 +82,18 @@ describe ActiveRemote::Dirty do
     its(:changes) { should be_empty }
   end
 
-  describe "#serialize_records" do
+  describe "#instantiate" do
     let(:post) { Post.new }
     let(:record) { ::Generic::Remote::Post.new(:name => 'foo') }
-    let(:response) { double(:response, :records => [ record ]) }
-
-    before {
-      post.stub(:last_response).and_return(response)
-    }
 
     it "clears previous changes" do
-      records = post.serialize_records
-      records.first.previous_changes.should be_nil
+      new_record = post.instantiate(record.to_hash)
+      new_record.previous_changes.should be_nil
     end
 
     it "clears changes" do
-      records = post.serialize_records
-      records.first.changes.should be_empty
+      new_record = post.instantiate(record.to_hash)
+      new_record.changes.should be_empty
     end
   end
 end
