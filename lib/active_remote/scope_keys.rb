@@ -4,16 +4,15 @@ module ActiveRemote
 
     included do
       include PrimaryKey
-
-      class << self
-        attr_accessor  :_scope_keys
-      end
     end
 
     module ClassMethods
+      def _scope_keys
+        @_scope_keys ||= []
+      end
+
       def scope_key(*keys)
-        self._scope_keys = [] unless _scope_keys
-        self._scope_keys += keys.map(&:to_s)
+        _scope_keys += keys.map(&:to_s)
       end
 
       def scope_keys
