@@ -128,6 +128,10 @@ module ActiveRemote
         assign_attributes(record)
       end
 
+      # TODO: figure out how to safely run after_find/search callbacks here
+      # currently, several functions use this code path, so an alternate path
+      # may need to be added
+
       run_callbacks :initialize
 
       @new_record = false

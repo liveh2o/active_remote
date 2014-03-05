@@ -47,8 +47,7 @@ describe ActiveRemote::Dirty do
     subject { Post.new(:name => 'foo') }
 
     before {
-      subject.stub(:last_response).and_return({})
-      subject.stub(:execute)
+      Post.stub(:find).and_return({})
       subject.reload
     }
 
