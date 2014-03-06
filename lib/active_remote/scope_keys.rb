@@ -1,4 +1,4 @@
-require 'active_support/core_ext/module'
+require 'active_support/core_ext/class'
 
 module ActiveRemote
   module ScopeKeys
@@ -6,12 +6,12 @@ module ActiveRemote
 
     included do
       include PrimaryKey
+
+      class_attribute :_scope_keys
+      self._scope_keys = []
     end
 
     module ClassMethods
-      mattr_accessor :_scope_keys
-      self._scope_keys = []
-
       def scope_key(*keys)
         self._scope_keys += keys.map(&:to_s)
       end
