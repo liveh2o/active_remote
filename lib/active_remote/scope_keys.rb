@@ -1,3 +1,5 @@
+require 'active_support/core_ext/module'
+
 module ActiveRemote
   module ScopeKeys
     extend ActiveSupport::Concern
@@ -7,12 +9,11 @@ module ActiveRemote
     end
 
     module ClassMethods
-      def _scope_keys
-        @_scope_keys ||= []
-      end
+      mattr_accessor :_scope_keys
+      self._scope_keys = []
 
       def scope_key(*keys)
-        _scope_keys += keys.map(&:to_s)
+        self._scope_keys += keys.map(&:to_s)
       end
 
       def scope_keys
