@@ -90,7 +90,7 @@ describe ActiveRemote::Search do
     }
 
     it "reloads the record" do
-      subject.should_receive(:_active_remote_search).with(args)
+      subject.better_receive(:_active_remote_search).with(subject.scope_key_hash)
       subject.reload
     end
 

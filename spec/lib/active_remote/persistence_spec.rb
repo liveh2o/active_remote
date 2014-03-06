@@ -49,7 +49,7 @@ describe ActiveRemote::Persistence do
     after { subject.unstub(:execute) }
 
     it "deletes a remote record" do
-      subject.should_receive(:execute).with(:delete, subject.attributes.slice("guid"))
+      subject.should_receive(:execute).with(:delete, subject.scope_key_hash)
       subject.delete
     end
 
@@ -74,7 +74,7 @@ describe ActiveRemote::Persistence do
     after { subject.unstub(:execute) }
 
     it "deletes a remote record" do
-      subject.should_receive(:execute).with(:delete, subject.attributes.slice("guid"))
+      subject.should_receive(:execute).with(:delete, subject.scope_key_hash)
       subject.delete!
     end
 
@@ -92,7 +92,7 @@ describe ActiveRemote::Persistence do
     after { subject.unstub(:execute) }
 
     it "destroys a remote record" do
-      subject.should_receive(:execute).with(:destroy, subject.attributes.slice("guid"))
+      subject.should_receive(:execute).with(:destroy, subject.scope_key_hash)
       subject.destroy
     end
 
@@ -277,13 +277,18 @@ describe ActiveRemote::Persistence do
 
   describe "#update_attributes" do
     let(:attributes) { HashWithIndifferentAccess.new(:name => 'bar') }
+    let(:tag) { Tag.allocate.instantiate({:guid => "123"}) }
 
     before { Tag.any_instance.stub(:execute) }
     after { Tag.any_instance.unstub(:execute) }
 
     it "runs update callbacks" do
-      tag = Tag.allocate.instantiate({:guid => "123"})
       tag.should_receive(:after_update_callback)
+      tag.update_attributes({})
+    end
+
+    it "updates a remote record" do
+      tag.should_receive(:execute).with(:update, tag.scope_key_hash)
       tag.update_attributes({})
     end
 
