@@ -1,5 +1,3 @@
-require 'active_support/core_ext/class'
-
 module ActiveRemote
   module ScopeKeys
     extend ActiveSupport::Concern
