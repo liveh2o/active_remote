@@ -80,7 +80,7 @@ describe ActiveRemote::Search do
 
   describe "#reload" do
     let(:args) { { :guid => 'foo' } }
-    let(:attributes) { HashWithIndifferentAccess.new(:guid => 'foo', :name => 'bar', :updated_at => nil) }
+    let(:attributes) { HashWithIndifferentAccess.new(:guid => 'foo', :name => 'bar', :updated_at => nil, :user_guid => 'baz') }
 
     subject { Tag.new(args) }
 
