@@ -123,7 +123,7 @@ module ActiveRemote
     # Reload this record from the remote service.
     #
     def reload
-      _active_remote_search(:guid => self.guid)
+      _active_remote_search(scope_key_hash)
 
       fresh_object = self.class.new(last_response.to_hash)
       @attributes.update(fresh_object.instance_variable_get('@attributes'))

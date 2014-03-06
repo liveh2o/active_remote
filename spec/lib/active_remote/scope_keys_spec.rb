@@ -9,6 +9,8 @@ describe ActiveRemote::ScopeKeys do
   context '.scope_key' do
     let(:key) { :user_guid }
 
+    after { Tag._scope_keys = [] }
+
     it 'adds scope_key to _scope_keys' do
       Tag.scope_key(key)
       Tag._scope_keys.should eq(_scope_keys)
