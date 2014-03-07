@@ -107,7 +107,7 @@ module ActiveRemote
           records.collect!(&:to_hash)
         end
 
-        return records.first if records.first.has_key?(:records)
+        return records.first if records.first && records.first.has_key?(:records)
 
         # If we made it this far, build a bulk-formatted hash.
         return { :records => records }

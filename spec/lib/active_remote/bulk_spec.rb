@@ -42,12 +42,17 @@ describe ActiveRemote::Bulk do
 
   describe ".parse_records" do
     let(:records) { [ Hash.new ] }
+    let(:empty_records) { [] }
     let(:attribute_record) {
       record = double(Hash)
       record.stub(:attributes) { {} }
       record
     }
-    let(:records) { [ Hash.new ] }
+
+    it "returns an empty array when given empty records" do
+      parsed_records = { :records => [] }
+      Tag.parse_records(empty_records).should eq(parsed_records)
+    end
 
     it "preps records to be built into a bulk request" do
       parsed_records = { :records => records }
