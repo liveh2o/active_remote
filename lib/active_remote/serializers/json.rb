@@ -5,7 +5,7 @@ module ActiveRemote
       #
       def as_json(options = {})
         options ||= {}
-        
+
         default_options = { :only => _publishable_json_attributes, :methods => _publishable_json_methods }
         default_options.merge!(options)
 

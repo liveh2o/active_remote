@@ -76,7 +76,7 @@ module ActiveRemote
     #
     def delete
       raise ReadOnlyRemoteRecord if readonly?
-      execute(:delete, "guid" => read_attribute("guid"))
+      execute(:delete, scope_key_hash)
 
       return success? ? freeze : false
     end
@@ -99,7 +99,7 @@ module ActiveRemote
     #
     def destroy
       raise ReadOnlyRemoteRecord if readonly?
-      execute(:destroy, "guid" => read_attribute("guid"))
+      execute(:destroy, scope_key_hash)
 
       return success? ? freeze : false
     end
@@ -221,7 +221,7 @@ module ActiveRemote
       run_callbacks :create do
         # Use the getter here so we get the type casting.
         new_attributes = attributes
-        new_attributes.delete("guid")
+        new_attributes.delete(primary_key.to_s)
 
         execute(:create, new_attributes)
 
@@ -251,7 +251,7 @@ module ActiveRemote
         # Use the getter here so we get the type casting.
         updated_attributes = attributes
         updated_attributes.slice!(*attribute_names)
-        updated_attributes.merge!("guid" => self[:guid])
+        updated_attributes.merge!(scope_key_hash)
 
         execute(:update, updated_attributes)
 

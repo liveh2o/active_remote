@@ -9,6 +9,7 @@ class Tag < ::ActiveRemote::Base
   attribute :guid
   attribute :name
   attribute :updated_at
+  attribute :user_guid
 
   after_update :after_update_callback
   after_create :after_create_callback

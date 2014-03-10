@@ -79,8 +79,8 @@ describe ActiveRemote::Search do
   end
 
   describe "#reload" do
-    let(:args) { { :guid => 'foo' } }
-    let(:attributes) { HashWithIndifferentAccess.new(:guid => 'foo', :name => 'bar', :updated_at => nil) }
+    let(:args) { { 'guid' => 'foo' } }
+    let(:attributes) { HashWithIndifferentAccess.new(:guid => 'foo', :name => 'bar', :updated_at => nil, :user_guid => 'baz') }
 
     subject { Tag.new(args) }
 
@@ -90,7 +90,7 @@ describe ActiveRemote::Search do
     }
 
     it "reloads the record" do
-      subject.should_receive(:_active_remote_search).with(args)
+      subject.better_receive(:_active_remote_search).with(subject.scope_key_hash)
       subject.reload
     end
 
