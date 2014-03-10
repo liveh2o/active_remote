@@ -8,7 +8,7 @@ describe ActiveRemote::Bulk do
     before { Tag.better_stub(:parse_records).and_return(records) }
 
     it "creates remote records" do
-      Tag.any_instance.better_receive(:execute).with(:create_all, records)
+      Tag.rpc.better_receive(:execute).with(:create_all, records)
       Tag.create_all(records)
     end
   end
@@ -17,7 +17,7 @@ describe ActiveRemote::Bulk do
     before { Tag.better_stub(:parse_records).and_return(records) }
 
     it "deletes remote records" do
-      Tag.any_instance.better_receive(:execute).with(:delete_all, records)
+      Tag.rpc.better_receive(:execute).with(:delete_all, records)
       Tag.delete_all(records)
     end
   end
@@ -26,7 +26,7 @@ describe ActiveRemote::Bulk do
     before { Tag.better_stub(:parse_records).and_return(records) }
 
     it "destroys remote records" do
-      Tag.any_instance.better_receive(:execute).with(:destroy_all, records)
+      Tag.rpc.better_receive(:execute).with(:destroy_all, records)
       Tag.destroy_all(records)
     end
   end
@@ -72,7 +72,7 @@ describe ActiveRemote::Bulk do
     before { Tag.stub(:parse_records).and_return(records) }
 
     it "updates remote records" do
-      Tag.any_instance.better_receive(:execute).with(:update_all, records)
+      Tag.rpc.better_receive(:execute).with(:update_all, records)
       Tag.update_all(records)
     end
   end

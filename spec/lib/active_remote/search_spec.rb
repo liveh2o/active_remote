@@ -42,10 +42,10 @@ describe ActiveRemote::Search do
     context "given args that respond to :to_hash" do
       let(:args) { Hash.new }
 
-      before { Tag.any_instance.stub(:execute).and_return(response) }
+      before { Tag.rpc.stub(:execute).and_return(response) }
 
       it "searches with the given args" do
-        Tag.any_instance.should_receive(:execute).with(:search, args)
+        Tag.rpc.should_receive(:execute).with(:search, args)
         Tag.search(args)
       end
 

@@ -7,15 +7,15 @@ describe ActiveRemote::RPC do
     let(:args) { double(:args) }
     let(:response) { double(:response) }
 
-    before { Tag.any_instance.stub(:execute) }
+    before { Tag.rpc.stub(:execute) }
 
     it "calls the given RPC method" do
-      Tag.any_instance.should_receive(:execute).with(:remote_method, args)
+      Tag.rpc.should_receive(:execute).with(:remote_method, args)
       Tag.remote_call(:remote_method, args)
     end
 
     it "returns the response" do
-      Tag.any_instance.stub(:execute).and_return(response)
+      Tag.rpc.stub(:execute).and_return(response)
       Tag.remote_call(:remote_method, args).should eq response
     end
   end
