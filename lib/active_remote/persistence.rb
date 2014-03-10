@@ -79,7 +79,7 @@ module ActiveRemote
       response = rpc.execute(:delete, scope_key_hash)
 
       # TODO: add errors here so success? actually does something...
-      # add_errors(response)
+      # add_errors(response.errors)
 
       return success? ? freeze : false
     end
@@ -105,7 +105,7 @@ module ActiveRemote
       response = execute(:destroy, scope_key_hash)
 
       # TODO: add errors here so success? actually does something...
-      # add_errors(response)
+      # add_errors(response.errors)
 
       return success? ? freeze : false
     end
@@ -236,7 +236,7 @@ module ActiveRemote
         response = rpc.execute(:create, new_attributes)
 
         assign_attributes(response.to_hash)
-        add_errors(response)
+        add_errors(response.errors)
 
         @new_record = has_errors?
         success?
@@ -266,7 +266,7 @@ module ActiveRemote
         response = rpc.execute(:update, updated_attributes)
 
         assign_attributes(response.to_hash)
-        add_errors(response)
+        add_errors(response.errors)
 
         success?
       end

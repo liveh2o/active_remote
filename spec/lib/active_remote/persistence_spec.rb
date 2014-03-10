@@ -7,6 +7,7 @@ describe ActiveRemote::Persistence do
 
   before {
     rpc.better_stub(:execute).and_return(HashWithIndifferentAccess.new)
+    HashWithIndifferentAccess.any_instance.stub(:errors).and_return([])
     Tag.better_stub(:rpc).and_return(rpc)
   }
   after { Tag.unstub(:rpc) }
