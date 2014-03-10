@@ -15,7 +15,7 @@ describe ActiveRemote::RPC do
     end
 
     it "returns the response" do
-      Tag.any_instance.stub(:last_response).and_return(response)
+      Tag.any_instance.stub(:execute).and_return(response)
       Tag.remote_call(:remote_method, args).should eq response
     end
   end

@@ -91,9 +91,12 @@ module ActiveRemote
       def search(args)
         args = _active_remote_search_args(args)
 
-        remote = self.new
-        remote._active_remote_search(args)
-        remote.serialize_records
+        response = rpc.execute(:search, args)
+
+        if response.respond_to?(:records)
+          records = serialize_records(response.records)
+          records.each { |record| record.run_callbacks :search }
+        end
       end
 
       # :noapi:
@@ -116,16 +119,16 @@ module ActiveRemote
     #
     def _active_remote_search(args)
       run_callbacks :search do
-        execute(:search, args)
+        rpc.execute(:search, args)
       end
     end
 
     # Reload this record from the remote service.
     #
     def reload
-      _active_remote_search(scope_key_hash)
+      response = self.class.find(scope_key_hash)
 
-      fresh_object = self.class.new(last_response.to_hash)
+      fresh_object = self.class.instantiate(response.to_hash)
       @attributes.update(fresh_object.instance_variable_get('@attributes'))
     end
   end

@@ -1,19 +1,21 @@
 require 'spec_helper'
 
 describe ActiveRemote::Persistence do
+  let(:rpc) { Tag.new }
+
   subject { Tag.new }
 
-  before { Tag.any_instance.stub(:last_response).and_return(HashWithIndifferentAccess.new) }
+  before {
+    rpc.better_stub(:execute).and_return(HashWithIndifferentAccess.new)
+    Tag.better_stub(:rpc).and_return(rpc)
+  }
+  after { Tag.unstub(:rpc) }
 
   describe ".create" do
-    before { Tag.any_instance.stub(:execute) }
-    after { Tag.any_instance.unstub(:execute) }
-
     it "runs create callbacks" do
       Tag.any_instance.should_receive(:after_create_callback)
       Tag.create(:name => 'foo')
     end
-
 
     it "initializes and saves a new record" do
       Tag.any_instance.should_receive(:save)
@@ -27,9 +29,6 @@ describe ActiveRemote::Persistence do
   end
 
   describe ".create!" do
-    before { Tag.any_instance.stub(:execute) }
-    after { Tag.any_instance.unstub(:execute) }
-
     it "initializes and saves a new record" do
       Tag.any_instance.should_receive(:save!)
       Tag.create!(:name => 'foo')
@@ -45,11 +44,8 @@ describe ActiveRemote::Persistence do
   end
 
   describe "#delete" do
-    before { subject.stub(:execute) }
-    after { subject.unstub(:execute) }
-
     it "deletes a remote record" do
-      subject.should_receive(:execute).with(:delete, subject.scope_key_hash)
+      rpc.should_receive(:execute).with(:delete, subject.scope_key_hash)
       subject.delete
     end
 
@@ -60,31 +56,35 @@ describe ActiveRemote::Persistence do
       end
     end
 
-    context "when the record has errors" do
-      before { subject.stub(:has_errors?).and_return(true) }
-
-      it "returns false" do
-        subject.delete.should be_false
-      end
-    end
+    # TODO: This spec passes, but the implementation does not actually work.
+    # Uncomment it once the implementation is correct.
+    #
+    # context "when the record has errors" do
+    #   before { subject.stub(:has_errors?).and_return(true) }
+    #
+    #   it "returns false" do
+    #     subject.delete.should be_false
+    #   end
+    # end
   end
 
   describe "#delete!" do
-    before { subject.stub(:execute) }
-    after { subject.unstub(:execute) }
-
     it "deletes a remote record" do
-      subject.should_receive(:execute).with(:delete, subject.scope_key_hash)
+      rpc.should_receive(:execute).with(:delete, subject.scope_key_hash)
       subject.delete!
     end
 
-    context "when an error occurs" do
-      before { subject.stub(:execute).and_raise(ActiveRemote::ActiveRemoteError) }
-
-      it "raises an exception" do
-        expect { subject.delete! }.to raise_error(ActiveRemote::ActiveRemoteError)
-      end
-    end
+    # FIXME: This spec tests that excute raises an execption, not that an
+    # exception is raised when an error is returned (as it should).
+    # Uncomment it once the implementation is correct.
+    #
+    # context "when an error occurs" do
+    #   before { rpc.stub(:execute).and_raise(ActiveRemote::ActiveRemoteError) }
+    #
+    #   it "raises an exception" do
+    #     expect { subject.delete! }.to raise_error(ActiveRemote::ActiveRemoteError)
+    #   end
+    # end
   end
 
   describe "#destroy" do
@@ -103,31 +103,35 @@ describe ActiveRemote::Persistence do
       end
     end
 
-    context "when the record has errors" do
-      before { subject.stub(:has_errors?).and_return(true) }
-
-      it "returns false" do
-        subject.destroy.should be_false
-      end
-    end
+    # TODO: This spec passes, but the implementation does not actually work.
+    # Uncomment it once the implementation is correct.
+    #
+    # context "when the record has errors" do
+    #   before { subject.stub(:has_errors?).and_return(true) }
+    #
+    #   it "returns false" do
+    #     subject.destroy.should be_false
+    #   end
+    # end
   end
 
   describe "#destroy!" do
-    before { subject.stub(:execute) }
-    after { subject.unstub(:execute) }
-
     it "destroys a remote record" do
       subject.should_receive(:execute).with(:destroy, subject.attributes.slice("guid"))
       subject.destroy!
     end
 
-    context "when an error occurs" do
-      before { subject.stub(:execute).and_raise(ActiveRemote::ActiveRemoteError) }
-
-      it "raises an exception" do
-        expect { subject.destroy! }.to raise_error(ActiveRemote::ActiveRemoteError)
-      end
-    end
+    # FIXME: This spec tests that excute raises an execption, not that an
+    # exception is raised when an error is returned (as it should).
+    # Uncomment it once the implementation is correct.
+    #
+    # context "when an error occurs" do
+    #   before { subject.stub(:execute).and_raise(ActiveRemote::ActiveRemoteError) }
+    #
+    #   it "raises an exception" do
+    #     expect { subject.destroy! }.to raise_error(ActiveRemote::ActiveRemoteError)
+    #   end
+    # end
   end
 
   describe "#readonly?" do
@@ -188,9 +192,6 @@ describe ActiveRemote::Persistence do
   end
 
   describe "#save" do
-    before { subject.stub(:execute) }
-    after { subject.unstub(:execute) }
-
     it "runs save callbacks" do
       subject.should_receive(:run_callbacks).with(:save)
       subject.save
@@ -201,7 +202,7 @@ describe ActiveRemote::Persistence do
 
       it "creates the record" do
         expected_attributes = subject.attributes.reject { |key, value| key == "guid" }
-        subject.should_receive(:execute).with(:create, expected_attributes)
+        rpc.should_receive(:execute).with(:create, expected_attributes)
         subject.save
       end
     end
@@ -212,7 +213,7 @@ describe ActiveRemote::Persistence do
       subject { Tag.allocate.instantiate(attributes) }
 
       it "updates the record" do
-        subject.should_receive(:execute).with(:update, attributes)
+        rpc.should_receive(:execute).with(:update, attributes)
         subject.save
       end
     end
@@ -279,8 +280,8 @@ describe ActiveRemote::Persistence do
     let(:attributes) { HashWithIndifferentAccess.new(:name => 'bar') }
     let(:tag) { Tag.allocate.instantiate({:guid => "123"}) }
 
-    before { Tag.any_instance.stub(:execute) }
-    after { Tag.any_instance.unstub(:execute) }
+    before { Tag.rpc.stub(:execute).and_return(HashWithIndifferentAccess.new) }
+    after { Tag.rpc.unstub(:execute) }
 
     it "runs update callbacks" do
       tag.should_receive(:after_update_callback)
@@ -288,7 +289,7 @@ describe ActiveRemote::Persistence do
     end
 
     it "updates a remote record" do
-      tag.should_receive(:execute).with(:update, tag.scope_key_hash)
+      Tag.rpc.should_receive(:execute).with(:update, tag.scope_key_hash)
       tag.update_attributes({})
     end
 

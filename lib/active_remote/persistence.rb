@@ -76,7 +76,10 @@ module ActiveRemote
     #
     def delete
       raise ReadOnlyRemoteRecord if readonly?
-      execute(:delete, scope_key_hash)
+      response = rpc.execute(:delete, scope_key_hash)
+
+      # TODO: add errors here so success? actually does something...
+      # add_errors(response)
 
       return success? ? freeze : false
     end
@@ -99,7 +102,10 @@ module ActiveRemote
     #
     def destroy
       raise ReadOnlyRemoteRecord if readonly?
-      execute(:destroy, scope_key_hash)
+      response = execute(:destroy, scope_key_hash)
+
+      # TODO: add errors here so success? actually does something...
+      # add_errors(response)
 
       return success? ? freeze : false
     end
@@ -127,6 +133,10 @@ module ActiveRemote
       skip_dirty_tracking do
         assign_attributes(record)
       end
+
+      # TODO: figure out how to safely run after_find/search callbacks here
+      # currently, several functions use this code path, so an alternate path
+      # may need to be added
 
       run_callbacks :initialize
 
@@ -223,10 +233,10 @@ module ActiveRemote
         new_attributes = attributes
         new_attributes.delete(primary_key.to_s)
 
-        execute(:create, new_attributes)
+        response = rpc.execute(:create, new_attributes)
 
-        assign_attributes(last_response.to_hash)
-        add_errors_from_response
+        assign_attributes(response.to_hash)
+        add_errors(response)
 
         @new_record = has_errors?
         success?
@@ -253,10 +263,10 @@ module ActiveRemote
         updated_attributes.slice!(*attribute_names)
         updated_attributes.merge!(scope_key_hash)
 
-        execute(:update, updated_attributes)
+        response = rpc.execute(:update, updated_attributes)
 
-        assign_attributes(last_response.to_hash)
-        add_errors_from_response
+        assign_attributes(response.to_hash)
+        add_errors(response)
 
         success?
       end

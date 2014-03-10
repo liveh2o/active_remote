@@ -13,9 +13,7 @@ module ActiveRemote
       # Execute an RPC call to the remote service and return the raw response.
       #
       def remote_call(rpc_method, request_args)
-        remote = self.new
-        remote.execute(rpc_method, request_args)
-        remote.last_response
+        rpc.execute(rpc_method, request_args)
       end
 
       # Return a protobuf request object for the given rpc request.
@@ -32,6 +30,12 @@ module ActiveRemote
       #
       def request_type(rpc_method)
         service_class.rpcs[rpc_method].request_type
+      end
+
+      # TODO: Make this a first class citizen instead of embedding it inside
+      # the remote class
+      def rpc
+        self.new
       end
     end
 
@@ -52,13 +56,18 @@ module ActiveRemote
           @last_response = response
         end
       end
+
+      @last_response
     end
 
     # Execute an RPC call to the remote service and return the raw response.
     #
     def remote_call(rpc_method, request_args)
-      self.execute(rpc_method, request_args)
-      self.last_response
+      rpc.execute(rpc_method, request_args)
+    end
+
+    def rpc
+      self.class.rpc
     end
 
   private

@@ -32,9 +32,8 @@ module ActiveRemote
       #   Tag.create_all(Generic::Remote::Tags.new(:records => [ Generic::Remote::Tag.new(:name => 'foo') ])
       #
       def create_all(*records)
-        remote = self.new
-        remote.execute(:create_all, parse_records(records))
-        remote.serialize_records
+        response = rpc.execute(:create_all, parse_records(records))
+        serialize_records(response.records) if response.respond_to?(:records)
       end
 
       # Delete multiple records at the same time. Returns a collection of active
@@ -59,9 +58,8 @@ module ActiveRemote
       #   Tag.delete_all(Generic::Remote::Tags.new(:records => [ Generic::Remote::Tag.new(:guid => 'foo') ])
       #
       def delete_all(*records)
-        remote = self.new
-        remote.execute(:delete_all, parse_records(records))
-        remote.serialize_records
+        response = rpc.execute(:delete_all, parse_records(records))
+        serialize_records(response.records) if response.respond_to?(:records)
       end
 
       # Destroy multiple records at the same time. Returns a collection of active
@@ -86,9 +84,8 @@ module ActiveRemote
       #   Tag.destroy_all(Generic::Remote::Tags.new(:records => [ Generic::Remote::Tag.new(:guid => 'foo') ])
       #
       def destroy_all(*records)
-        remote = self.new
-        remote.execute(:destroy_all, parse_records(records))
-        remote.serialize_records
+        response = rpc.execute(:destroy_all, parse_records(records))
+        serialize_records(response.records) if response.respond_to?(:records)
       end
 
       # Parse given records to get them ready to be built into a request.
@@ -135,9 +132,8 @@ module ActiveRemote
       #   Tag.update_all(Generic::Remote::Tags.new(:records => [ Generic::Remote::Tag.new(:guid => 'foo', :name => 'baz') ])
       #
       def update_all(*records)
-        remote = self.new
-        remote.execute(:update_all, parse_records(records))
-        remote.serialize_records
+        response = rpc.execute(:update_all, parse_records(records))
+        serialize_records(response.records) if response.respond_to?(:records)
       end
     end
   end

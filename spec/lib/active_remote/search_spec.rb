@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe ActiveRemote::Search do
+  let(:records) { [ Generic::Remote::Tag.new ] }
+  let(:response) { Generic::Remote::Tags.new(:records => records) }
+  let(:rpc) { double(:rpc) }
+
   describe ".find" do
     let(:args) { Hash.new }
     let(:record) { double(:record) }
@@ -33,23 +37,20 @@ describe ActiveRemote::Search do
   end
 
   describe ".search" do
+    let(:serialized_records) { [ Tag.new ] }
+
     context "given args that respond to :to_hash" do
       let(:args) { Hash.new }
 
-      before {
-        Tag.any_instance.stub(:_active_remote_search)
-      }
+      before { Tag.any_instance.stub(:execute).and_return(response) }
 
       it "searches with the given args" do
-        Tag.any_instance.should_receive(:_active_remote_search).with(args)
+        Tag.any_instance.should_receive(:execute).with(:search, args)
         Tag.search(args)
       end
 
       it "returns records" do
-        records = double(:records)
-
-        Tag.any_instance.stub(:serialize_records).and_return(records)
-        Tag.search(args).should eq records
+        Tag.search(args).should eq serialized_records
       end
     end
 
@@ -67,30 +68,32 @@ describe ActiveRemote::Search do
 
     subject { Tag.new }
 
+    before {
+      rpc.stub(:execute).and_return(response)
+      Tag.better_stub(:rpc).and_return(rpc)
+    }
+
     it "runs callbacks" do
       subject.should_receive(:run_callbacks).with(:search)
       subject._active_remote_search(args)
     end
 
     it "executes the search" do
-      subject.should_receive(:execute).with(:search, args)
+      rpc.should_receive(:execute).with(:search, args)
       subject._active_remote_search(args)
     end
   end
 
   describe "#reload" do
-    let(:args) { { 'guid' => 'foo' } }
+    let(:args) { attributes.slice('guid', 'user_guid') }
     let(:attributes) { HashWithIndifferentAccess.new(:guid => 'foo', :name => 'bar', :updated_at => nil, :user_guid => 'baz') }
 
     subject { Tag.new(args) }
 
-    before {
-      subject.stub(:_active_remote_search)
-      subject.stub(:last_response).and_return(attributes)
-    }
+    before { Tag.better_stub(:find).and_return(attributes) }
 
     it "reloads the record" do
-      subject.better_receive(:_active_remote_search).with(subject.scope_key_hash)
+      Tag.better_receive(:find).with(subject.scope_key_hash)
       subject.reload
     end
 
