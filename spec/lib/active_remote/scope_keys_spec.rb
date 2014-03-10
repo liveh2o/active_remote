@@ -1,14 +1,13 @@
 require 'spec_helper'
 
 describe ActiveRemote::ScopeKeys do
-  let(:_scope_keys) { ['user_guid'] }
-  let(:scope_keys) { ['guid'] + ['user_guid'] }
-  let(:tag_hash) { { :guid => 'TAG-123', :user_guid => 'USR-123', :name => 'teh tag' } }
+  let(:key) { :user_guid }
+  let(:_scope_keys) { [ 'user_guid' ] }
+  let(:scope_keys) { [ 'guid' ] + _scope_keys }
   let(:tag) { Tag.new(tag_hash) }
+  let(:tag_hash) { { :guid => 'TAG-123', :user_guid => 'USR-123', :name => 'teh tag' } }
 
-  context '.scope_key' do
-    let(:key) { :user_guid }
-
+  describe ".scope_key" do
     after { Tag._scope_keys = [] }
 
     it 'adds scope_key to _scope_keys' do
@@ -17,26 +16,26 @@ describe ActiveRemote::ScopeKeys do
     end
   end
 
-  context '.scope_keys' do
+  describe ".scope_keys" do
     before { Tag.better_stub(:_scope_keys).and_return(_scope_keys) }
 
-    it 'combines primary key with _scope_keys' do
+    it "combines primary key with _scope_keys" do
       Tag.scope_keys.should eq(['guid'] + _scope_keys)
     end
   end
 
-  context '#scope_keys' do
-    it 'should call class method' do
-      Tag.better_receive(:scope_keys)
-      Tag.new.scope_keys
+  describe "#scope_keys" do
+    it "returns the scope keys for the class" do
+      Tag.new.scope_keys.should eq Tag.scope_keys
     end
   end
 
-  context '#scope_key_hash' do
+  describe "#scope_key_hash" do
     let(:scope_key_hash) { { 'guid' => 'TAG-123', 'user_guid' => 'USR-123' } }
+
     before { tag.better_stub(:scope_keys).and_return(scope_keys) }
 
-    it 'returns a attribute hash of scope_keys' do
+    it "returns a attribute hash of scope_keys" do
       tag.scope_key_hash.should eq(scope_key_hash)
     end
   end
