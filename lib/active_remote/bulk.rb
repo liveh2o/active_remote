@@ -111,7 +111,7 @@ module ActiveRemote
       # Returns +{ :records => records }+.
       #
       def parse_records(*records)
-        warn "DEPRECATED :parse_records is deprecated. It will be removed in Active Remove 3.0"
+        warn "DEPRECATED Model.parse_records is deprecated. It will be removed in Active Remove 3.0"
 
         _parse_records(*records)
       end

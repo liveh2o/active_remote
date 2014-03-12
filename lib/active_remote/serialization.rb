@@ -46,7 +46,7 @@ module ActiveRemote
     # DEPRECATED – Use :add_errors instead
     #
     def add_errors_from_response(response = nil)
-      warn 'DEPRECATED :add_errors_from_response is deprecated and will be removed in Active Remote 3.0. Use :add_errors instead'
+      warn 'DEPRECATED Model#add_errors_from_response is deprecated and will be removed in Active Remote 3.0. Use Model#add_errors instead'
 
       response ||= last_response
 
@@ -56,7 +56,7 @@ module ActiveRemote
     # DEPRECATED – Use the class-level :serialize_errors instead
     #
     def serialize_records(records = nil)
-      warn 'DEPRECATED Calling :serialize_records on an instance is deprecated and will be removed in Active Remote 3.0. Use the class-level :serialize_records instead'
+      warn 'DEPRECATED Calling Model#serialize_records is deprecated and will be removed in Active Remote 3.0. Use Model.serialize_records instead'
 
       records ||= last_response.records if last_response.respond_to?(:records)
       return if records.nil?
