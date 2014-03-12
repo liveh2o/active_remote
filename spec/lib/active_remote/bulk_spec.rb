@@ -1,79 +1,69 @@
 require 'spec_helper'
 
 describe ActiveRemote::Bulk do
-  let(:records) { double(:records, :to_hash => {}) }
-  let(:serialized_records) { double(:serialized_records) }
-
-  describe ".create_all" do
-    before { Tag.better_stub(:parse_records).and_return(records) }
-
-    it "creates remote records" do
-      Tag.rpc.better_receive(:execute).with(:create_all, records)
-      Tag.create_all(records)
-    end
-  end
-
-  describe ".delete_all" do
-    before { Tag.better_stub(:parse_records).and_return(records) }
-
-    it "deletes remote records" do
-      Tag.rpc.better_receive(:execute).with(:delete_all, records)
-      Tag.delete_all(records)
-    end
-  end
-
-  describe ".destroy_all" do
-    before { Tag.better_stub(:parse_records).and_return(records) }
-
-    it "destroys remote records" do
-      Tag.rpc.better_receive(:execute).with(:destroy_all, records)
-      Tag.destroy_all(records)
-    end
-  end
-
-  describe ".parse_records" do
+  shared_examples_for "a bulk method" do |bulk_method|
     let(:records) { [ Hash.new ] }
-    let(:empty_records) { [] }
-    let(:attribute_record) {
-      record = double(Hash)
-      record.stub(:attributes) { {} }
-      record
-    }
+    let(:response) { double(:response, :records => []) }
 
-    it "returns an empty array when given empty records" do
-      parsed_records = { :records => [] }
-      Tag.parse_records(empty_records).should eq(parsed_records)
+    before { Tag.rpc.better_stub(:execute).and_return(response) }
+
+    context "given an empty array" do
+      let(:parsed_records) { { :records => records } }
+      let(:records) { [] }
+
+      it "calls #{bulk_method} with parsed records" do
+        Tag.rpc.better_receive(:execute).with(bulk_method, parsed_records)
+        Tag.__send__(bulk_method, records)
+      end
     end
 
-    it "preps records to be built into a bulk request" do
-      parsed_records = { :records => records }
-      Tag.parse_records(records).should eq parsed_records
+    context "given an array of record hashes" do
+      let(:hash_record){ double(:record, :to_hash => {}) }
+      let(:parsed_records) { { :records => records.map(&:to_hash) } }
+      let(:records) { [ hash_record ] }
+
+      it "calls #{bulk_method} with parsed records" do
+        Tag.rpc.better_receive(:execute).with(bulk_method, parsed_records)
+        Tag.__send__(bulk_method, records)
+      end
     end
 
-    it "preps records to be built into a bulk request (prioritizing :attributes over :to_hash)" do
-      attribute_record.should_receive(:attributes)
-      parsed_records = { :records => [ {} ] }
-      Tag.parse_records([ attribute_record ]).should eq parsed_records
+    context "given an array of remote records" do
+      let(:parsed_records) { { :records => records.map(&:attributes) } }
+      let(:records) { [ remote_record ] }
+      let(:remote_record) { double(:remote, :attributes => {}) }
+
+      it "calls #{bulk_method} with parsed records" do
+        Tag.rpc.better_receive(:execute).with(bulk_method, parsed_records)
+        Tag.__send__(bulk_method, records)
+      end
     end
 
-    context "when given a bulk message" do
-      let(:records) { [ tag.to_hash ] }
+    context "given a bulk message" do
+      let(:parsed_records) { { :records => records.map(&:to_hash) } }
       let(:tag) { Generic::Remote::Tag.new }
       let(:tags) { Generic::Remote::Tags.new(:records => [ tag ]) }
 
-      it "preps records to be built into a bulk request" do
-        parsed_records = { :records => records }
-        Tag.parse_records(tags).should eq parsed_records
+      it "calls #{bulk_method} with parsed records" do
+        Tag.rpc.better_receive(:execute).with(bulk_method, parsed_records)
+        Tag.__send__(bulk_method, tags)
       end
     end
   end
 
-  describe ".update_all" do
-    before { Tag.stub(:parse_records).and_return(records) }
+  describe ".create_all" do
+    it_behaves_like "a bulk method", :create_all
+  end
 
-    it "updates remote records" do
-      Tag.rpc.better_receive(:execute).with(:update_all, records)
-      Tag.update_all(records)
-    end
+  describe ".delete_all" do
+    it_behaves_like "a bulk method", :delete_all
+  end
+
+  describe ".destroy_all" do
+    it_behaves_like "a bulk method", :destroy_all
+  end
+
+  describe ".update_all" do
+    it_behaves_like "a bulk method", :update_all
   end
 end

@@ -32,8 +32,13 @@ module ActiveRemote
       #   Tag.create_all(Generic::Remote::Tags.new(:records => [ Generic::Remote::Tag.new(:name => 'foo') ])
       #
       def create_all(*records)
-        response = rpc.execute(:create_all, parse_records(records))
-        serialize_records(response.records) if response.respond_to?(:records)
+        response = rpc.execute(:create_all, _parse_records(records))
+
+        if response.respond_to?(:records)
+          serialize_records(response.records)
+        else
+          warn "DEPRECATED responses to bulk methods must respond to :records. In Active Remote 3.0, bulk responses that don't respond to :records will raise an exception"
+        end
       end
 
       # Delete multiple records at the same time. Returns a collection of active
@@ -58,8 +63,13 @@ module ActiveRemote
       #   Tag.delete_all(Generic::Remote::Tags.new(:records => [ Generic::Remote::Tag.new(:guid => 'foo') ])
       #
       def delete_all(*records)
-        response = rpc.execute(:delete_all, parse_records(records))
-        serialize_records(response.records) if response.respond_to?(:records)
+        response = rpc.execute(:delete_all, _parse_records(records))
+
+        if response.respond_to?(:records)
+          serialize_records(response.records)
+        else
+          warn "DEPRECATED responses to bulk methods must respond to :records. In Active Remote 3.0, bulk responses that don't respond to :records will raise an exception"
+        end
       end
 
       # Destroy multiple records at the same time. Returns a collection of active
@@ -84,8 +94,13 @@ module ActiveRemote
       #   Tag.destroy_all(Generic::Remote::Tags.new(:records => [ Generic::Remote::Tag.new(:guid => 'foo') ])
       #
       def destroy_all(*records)
-        response = rpc.execute(:destroy_all, parse_records(records))
-        serialize_records(response.records) if response.respond_to?(:records)
+        response = rpc.execute(:destroy_all, _parse_records(records))
+
+        if response.respond_to?(:records)
+          serialize_records(response.records)
+        else
+          warn "DEPRECATED responses to bulk methods must respond to :records. In Active Remote 3.0, bulk responses that don't respond to :records will raise an exception"
+        end
       end
 
       # Parse given records to get them ready to be built into a request.
@@ -96,18 +111,9 @@ module ActiveRemote
       # Returns +{ :records => records }+.
       #
       def parse_records(*records)
-        records.flatten!
+        warn "DEPRECATED :parse_records is deprecated. It will be removed in Active Remove 3.0"
 
-        if records.first.respond_to?(:attributes)
-          records.collect!(&:attributes)
-        else
-          records.collect!(&:to_hash)
-        end
-
-        return records.first if records.first && records.first.has_key?(:records)
-
-        # If we made it this far, build a bulk-formatted hash.
-        return { :records => records }
+        _parse_records(*records)
       end
 
       # Update multiple records at the same time. Returns a collection of active
@@ -132,8 +138,30 @@ module ActiveRemote
       #   Tag.update_all(Generic::Remote::Tags.new(:records => [ Generic::Remote::Tag.new(:guid => 'foo', :name => 'baz') ])
       #
       def update_all(*records)
-        response = rpc.execute(:update_all, parse_records(records))
-        serialize_records(response.records) if response.respond_to?(:records)
+        response = rpc.execute(:update_all, _parse_records(records))
+
+        if response.respond_to?(:records)
+          serialize_records(response.records)
+        else
+          warn "DEPRECATED responses to bulk methods must respond to :records. In Active Remote 3.0, bulk responses that don't respond to :records will raise an exception"
+        end
+      end
+
+      private
+
+      def _parse_records(*records)
+        records.flatten!
+
+        if records.first.respond_to?(:attributes)
+          records.collect!(&:attributes)
+        else
+          records.collect!(&:to_hash)
+        end
+
+        return records.first if records.first && records.first.has_key?(:records)
+
+        # If we made it this far, build a bulk-formatted hash.
+        return { :records => records }
       end
     end
   end
