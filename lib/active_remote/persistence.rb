@@ -102,7 +102,7 @@ module ActiveRemote
     #
     def destroy
       raise ReadOnlyRemoteRecord if readonly?
-      response = execute(:destroy, scope_key_hash)
+      response = rpc.execute(:destroy, scope_key_hash)
 
       # TODO: add errors here so success? actually does something...
       # add_errors(response.errors)

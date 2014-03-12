@@ -89,11 +89,8 @@ describe ActiveRemote::Persistence do
   end
 
   describe "#destroy" do
-    before { subject.stub(:execute) }
-    after { subject.unstub(:execute) }
-
     it "destroys a remote record" do
-      subject.should_receive(:execute).with(:destroy, subject.scope_key_hash)
+      rpc.should_receive(:execute).with(:destroy, subject.scope_key_hash)
       subject.destroy
     end
 
@@ -118,7 +115,7 @@ describe ActiveRemote::Persistence do
 
   describe "#destroy!" do
     it "destroys a remote record" do
-      subject.should_receive(:execute).with(:destroy, subject.attributes.slice("guid"))
+      rpc.should_receive(:execute).with(:destroy, subject.scope_key_hash)
       subject.destroy!
     end
 
