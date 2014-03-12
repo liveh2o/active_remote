@@ -57,16 +57,21 @@ describe ActiveRemote::Persistence do
       end
     end
 
-    # TODO: This spec passes, but the implementation does not actually work.
-    # Uncomment it once the implementation is correct.
-    #
-    # context "when the record has errors" do
-    #   before { subject.stub(:has_errors?).and_return(true) }
-    #
-    #   it "returns false" do
-    #     subject.delete.should be_false
-    #   end
-    # end
+    context "when the response has errors" do
+      let(:error) { Generic::Error.new(:field => 'name', :message => 'Boom!') }
+      let(:response) { Generic::Remote::Tag.new(:errors => [ error ]) }
+
+      before { rpc.better_stub(:execute).and_return(response) }
+
+      it "adds the errors to the record" do
+        subject.delete
+        subject.has_errors?.should be_true
+      end
+
+      it "returns false" do
+        subject.delete.should be_false
+      end
+    end
   end
 
   describe "#delete!" do
@@ -75,17 +80,16 @@ describe ActiveRemote::Persistence do
       subject.delete!
     end
 
-    # FIXME: This spec tests that excute raises an execption, not that an
-    # exception is raised when an error is returned (as it should).
-    # Uncomment it once the implementation is correct.
-    #
-    # context "when an error occurs" do
-    #   before { rpc.stub(:execute).and_raise(ActiveRemote::ActiveRemoteError) }
-    #
-    #   it "raises an exception" do
-    #     expect { subject.delete! }.to raise_error(ActiveRemote::ActiveRemoteError)
-    #   end
-    # end
+    context "when an error occurs" do
+      let(:error) { Generic::Error.new(:field => 'name', :message => 'Boom!') }
+      let(:response) { Generic::Remote::Tag.new(:errors => [ error ]) }
+
+      before { rpc.better_stub(:execute).and_return(response) }
+
+      it "raises an exception" do
+        expect { subject.delete! }.to raise_error(ActiveRemote::ActiveRemoteError)
+      end
+    end
   end
 
   describe "#destroy" do
@@ -101,16 +105,21 @@ describe ActiveRemote::Persistence do
       end
     end
 
-    # TODO: This spec passes, but the implementation does not actually work.
-    # Uncomment it once the implementation is correct.
-    #
-    # context "when the record has errors" do
-    #   before { subject.stub(:has_errors?).and_return(true) }
-    #
-    #   it "returns false" do
-    #     subject.destroy.should be_false
-    #   end
-    # end
+    context "when the response has errors" do
+      let(:error) { Generic::Error.new(:field => 'name', :message => 'Boom!') }
+      let(:response) { Generic::Remote::Tag.new(:errors => [ error ]) }
+
+      before { rpc.better_stub(:execute).and_return(response) }
+
+      it "adds the errors to the record" do
+        subject.destroy
+        subject.has_errors?.should be_true
+      end
+
+      it "returns false" do
+        subject.destroy.should be_false
+      end
+    end
   end
 
   describe "#destroy!" do
@@ -119,17 +128,16 @@ describe ActiveRemote::Persistence do
       subject.destroy!
     end
 
-    # FIXME: This spec tests that excute raises an execption, not that an
-    # exception is raised when an error is returned (as it should).
-    # Uncomment it once the implementation is correct.
-    #
-    # context "when an error occurs" do
-    #   before { subject.stub(:execute).and_raise(ActiveRemote::ActiveRemoteError) }
-    #
-    #   it "raises an exception" do
-    #     expect { subject.destroy! }.to raise_error(ActiveRemote::ActiveRemoteError)
-    #   end
-    # end
+    context "when an error occurs" do
+      let(:error) { Generic::Error.new(:field => 'name', :message => 'Boom!') }
+      let(:response) { Generic::Remote::Tag.new(:errors => [ error ]) }
+
+      before { rpc.better_stub(:execute).and_return(response) }
+
+      it "raises an exception" do
+        expect { subject.destroy! }.to raise_error(ActiveRemote::ActiveRemoteError)
+      end
+    end
   end
 
   describe "#readonly?" do

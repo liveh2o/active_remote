@@ -78,8 +78,7 @@ module ActiveRemote
       raise ReadOnlyRemoteRecord if readonly?
       response = rpc.execute(:delete, scope_key_hash)
 
-      # TODO: add errors here so success? actually does something...
-      # add_errors(response.errors)
+      add_errors(response.errors)
 
       return success? ? freeze : false
     end
@@ -104,8 +103,7 @@ module ActiveRemote
       raise ReadOnlyRemoteRecord if readonly?
       response = rpc.execute(:destroy, scope_key_hash)
 
-      # TODO: add errors here so success? actually does something...
-      # add_errors(response.errors)
+      add_errors(response.errors)
 
       return success? ? freeze : false
     end
