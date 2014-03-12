@@ -14,6 +14,13 @@ module ActiveRemote
 
     module ClassMethods
 
+      # :noapi:
+      def _active_remote_search_args(args)
+        warn "DEPRECATED Model._active_remote_search_args is depracted and will be remoted in Active Remote 3.0."
+
+        validate_search_args!(args)
+      end
+
       # Tries to load the first record; if it fails, an exception is raised.
       #
       # ====Examples
@@ -89,7 +96,7 @@ module ActiveRemote
       #   Tag.search(Generic::Remote::TagRequest.new(:name => 'foo'))
       #
       def search(args)
-        args = _active_remote_search_args(args)
+        args = validate_search_args!(args)
 
         response = rpc.execute(:search, args)
 
@@ -99,13 +106,15 @@ module ActiveRemote
         end
       end
 
-      # :noapi:
-      def _active_remote_search_args(args)
+      # Validates the given args to ensure they are compatible
+      # Search args must be a hash or respond to to_hash
+      #
+      def validate_search_args!(args)
         unless args.is_a?(Hash)
           if args.respond_to?(:to_hash)
             args = args.to_hash
           else
-            raise "Invalid parameter: #{args}. First parameter must respond to :to_hash."
+            raise "Invalid parameter: #{args}. Search args must respond to :to_hash."
           end
         end
 
@@ -113,11 +122,10 @@ module ActiveRemote
       end
     end
 
-    # Search for the given resource. Auto-paginates (i.e. continues searching
-    # for records matching the given search args until all records have been
-    # retrieved) if no pagination options are given.
-    #
+    # :noapi:
     def _active_remote_search(args)
+      warn "DEPRECATED Model#_active_remote_search is depracted and will be remoted in Active Remote 3.0."
+
       run_callbacks :search do
         rpc.execute(:search, args)
       end
