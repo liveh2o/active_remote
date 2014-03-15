@@ -22,8 +22,7 @@ module ActiveRemote
       end
     end
 
-    # Examine the given response and add any errors to our internal errors
-    # list.
+    # Add the given errors to our internal errors list
     #
     # ====Examples
     #
@@ -43,12 +42,20 @@ module ActiveRemote
       end
     end
 
-    # DEPRECATED – Use :add_errors instead
+    # Examine the given response and add any errors to our internal errors
+    # list.
+    #
+    # ====Examples
+    #
+    #   response = remote_call(:action_that_returns_errors, { :stuff => 'foo' })
+    #
+    #   add_errors_from_response(response)
     #
     def add_errors_from_response(response = nil)
-      warn 'DEPRECATED Model#add_errors_from_response is deprecated and will be removed in Active Remote 3.0. Use Model#add_errors instead'
-
-      response ||= last_response
+      unless response
+        warn 'DEPRECATED calling Model#add_errors_from_response without args is deprecated and will be removed in Active Remote 3.0.'
+        response = last_response
+      end
 
       add_errors(response.errors) if response.respond_to?(:errors)
     end
