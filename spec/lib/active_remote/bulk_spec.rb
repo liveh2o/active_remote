@@ -4,15 +4,17 @@ describe ActiveRemote::Bulk do
   shared_examples_for "a bulk method" do |bulk_method|
     let(:records) { [ Hash.new ] }
     let(:response) { double(:response, :records => []) }
+    let(:rpc) { ::ActiveRemote::RPCAdapters::ProtobufAdapter.new(::Tag.service_class) }
 
-    before { Tag.rpc.better_stub(:execute).and_return(response) }
+    before { rpc.better_stub(:execute).and_return(response) }
+    before { ::Tag.better_stub(:rpc).and_return(rpc) }
 
     context "given an empty array" do
       let(:parsed_records) { { :records => records } }
       let(:records) { [] }
 
       it "calls #{bulk_method} with parsed records" do
-        Tag.rpc.better_receive(:execute).with(bulk_method, parsed_records)
+        rpc.better_receive(:execute).with(bulk_method, parsed_records)
         Tag.__send__(bulk_method, records)
       end
     end
@@ -23,7 +25,7 @@ describe ActiveRemote::Bulk do
       let(:records) { [ hash_record ] }
 
       it "calls #{bulk_method} with parsed records" do
-        Tag.rpc.better_receive(:execute).with(bulk_method, parsed_records)
+        rpc.better_receive(:execute).with(bulk_method, parsed_records)
         Tag.__send__(bulk_method, records)
       end
     end
@@ -34,7 +36,7 @@ describe ActiveRemote::Bulk do
       let(:remote_record) { double(:remote, :attributes => {}) }
 
       it "calls #{bulk_method} with parsed records" do
-        Tag.rpc.better_receive(:execute).with(bulk_method, parsed_records)
+        rpc.better_receive(:execute).with(bulk_method, parsed_records)
         Tag.__send__(bulk_method, records)
       end
     end
@@ -45,7 +47,7 @@ describe ActiveRemote::Bulk do
       let(:tags) { Generic::Remote::Tags.new(:records => [ tag ]) }
 
       it "calls #{bulk_method} with parsed records" do
-        Tag.rpc.better_receive(:execute).with(bulk_method, parsed_records)
+        rpc.better_receive(:execute).with(bulk_method, parsed_records)
         Tag.__send__(bulk_method, tags)
       end
     end

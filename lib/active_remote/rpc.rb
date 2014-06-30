@@ -84,7 +84,7 @@ module ActiveRemote
       end
 
       def rpc
-        @rpc ||= rpc_adapter.new(service_class)
+        rpc_adapter.new(service_class)
       end
 
       def rpc_adapter
