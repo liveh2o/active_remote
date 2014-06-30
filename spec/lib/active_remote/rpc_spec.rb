@@ -7,7 +7,10 @@ describe ActiveRemote::RPC do
     let(:args) { double(:args) }
     let(:response) { double(:response) }
 
-    before { Tag.rpc.stub(:execute) }
+    let(:rpc) { ::ActiveRemote::RPCAdapters::ProtobufAdapter.new(::Tag.service_class) }
+
+    before { rpc.better_stub(:execute).and_return(response) }
+    before { ::Tag.better_stub(:rpc).and_return(rpc) }
 
     it "calls the given RPC method" do
       Tag.rpc.should_receive(:execute).with(:remote_method, args)
