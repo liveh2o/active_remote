@@ -88,7 +88,7 @@ describe ActiveRemote::Dirty do
 
     it "clears previous changes" do
       new_record = post.instantiate(record.to_hash)
-      new_record.previous_changes.should be_nil
+      new_record.previous_changes.should eq({})
     end
 
     it "clears changes" do
