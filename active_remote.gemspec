@@ -30,7 +30,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rake"
   s.add_development_dependency "rspec"
   s.add_development_dependency "rspec-pride"
-  s.add_development_dependency "pry-nav"
+  s.add_development_dependency "pry"
   s.add_development_dependency "protobuf-rspec", ">= 1.0"
   s.add_development_dependency "simplecov"
 end
