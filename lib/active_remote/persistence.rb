@@ -176,9 +176,9 @@ module ActiveRemote
     #
     # Also runs any before/after save callbacks that are defined.
     #
-    def save
+    def save(*args)
       run_callbacks :save do
-        create_or_update
+        create_or_update(*args)
       end
     end
 
@@ -192,8 +192,8 @@ module ActiveRemote
     #
     # Also runs any before/after save callbacks that are defined.
     #
-    def save!
-      save || raise(RemoteRecordNotSaved)
+    def save!(*args)
+      save(*args) || raise(RemoteRecordNotSaved)
     end
 
     # Returns true if the record doesn't have errors; otherwise, returns false.
@@ -245,9 +245,9 @@ module ActiveRemote
     # are created, existing records are updated. If the record is marked as
     # readonly, an ActiveRemote::ReadOnlyRemoteRecord is raised.
     #
-    def create_or_update
+    def create_or_update(*args)
       raise ReadOnlyRemoteRecord if readonly?
-      new_record? ? create : update
+      new_record? ? create : update(*args)
     end
 
     # Handles updating a remote object and serializing it's attributes and

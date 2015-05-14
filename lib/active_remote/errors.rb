@@ -9,6 +9,17 @@ module ActiveRemote
   class ReadOnlyRemoteRecord < ActiveRemoteError
   end
 
+  # Raised by ActiveRemote::Validations when save is called on an invalid record.
+  class RemoteRecordInvalid < ActiveRemoteError
+    attr_reader :record
+
+    def initialize(record)
+      @record = record
+      errors = @record.errors.full_messages.join(', ')
+      super(errors)
+    end
+  end
+
   # Raised by ActiveRemove::Base.find when remote record is not found when
   # searching with the given arguments.
   class RemoteRecordNotFound < ActiveRemoteError

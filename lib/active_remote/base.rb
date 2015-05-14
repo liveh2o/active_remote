@@ -15,6 +15,7 @@ require 'active_remote/rpc'
 require 'active_remote/scope_keys'
 require 'active_remote/search'
 require 'active_remote/serialization'
+require 'active_remote/validations'
 
 module ActiveRemote
   class Base
@@ -38,6 +39,10 @@ module ActiveRemote
     # Overrides some methods, providing support for dirty tracking,
     # so it needs to be included last.
     include Dirty
+
+    # Overrides persistence methods, so it must included after
+    include Validations
+    include ActiveModel::Validations::Callbacks
 
     attr_reader :last_request, :last_response
 
