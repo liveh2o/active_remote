@@ -29,6 +29,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "better_receive"
   s.add_development_dependency "rake"
   s.add_development_dependency "rspec"
+  s.add_development_dependency "rspec-its"
   s.add_development_dependency "rspec-pride"
   s.add_development_dependency "pry"
   s.add_development_dependency "protobuf-rspec", ">= 1.0"
