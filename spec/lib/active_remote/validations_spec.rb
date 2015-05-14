@@ -4,21 +4,21 @@ describe ActiveRemote::Validations do
   let(:invalid_record) { ::Post.new }
   let(:valid_record) { ::Post.new(:name => 'test') }
 
-  before { valid_record.stub(:create_or_update).and_return(true) }
-  before { invalid_record.stub(:create_or_update).and_return(true) }
+  before { allow(valid_record).to receive(:create_or_update).and_return(true) }
+  before { allow(invalid_record).to receive(:create_or_update).and_return(true) }
 
   describe 'save' do
     context 'valid record' do
       it 'returns true' do
         result = valid_record.save
-        result.should be true
+        expect(result).to be true
       end
     end
 
     context 'invalid record' do
       it 'returns false' do
         result = invalid_record.save
-        result.should be false
+        expect(result).to be false
       end
     end
   end
@@ -27,7 +27,7 @@ describe ActiveRemote::Validations do
     context 'valid record' do
       it 'returns true' do
         result = valid_record.save!
-        result.should be true
+        expect(result).to be true
       end
     end
 
@@ -42,14 +42,14 @@ describe ActiveRemote::Validations do
     context 'valid record' do
       it 'returns true' do
         result = valid_record.valid?
-        result.should be true
+        expect(result).to be true
       end
     end
 
     context 'invalid record' do
       it 'returns false' do
         result = invalid_record.valid?
-        result.should be false
+        expect(result).to be false
       end
     end
   end

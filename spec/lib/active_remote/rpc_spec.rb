@@ -13,13 +13,13 @@ describe ActiveRemote::RPC do
     before { ::Tag.better_stub(:rpc).and_return(rpc) }
 
     it "calls the given RPC method" do
-      Tag.rpc.should_receive(:execute).with(:remote_method, args)
+      expect(Tag.rpc).to receive(:execute).with(:remote_method, args)
       Tag.remote_call(:remote_method, args)
     end
 
     it "returns the response" do
-      Tag.rpc.stub(:execute).and_return(response)
-      Tag.remote_call(:remote_method, args).should eq response
+      allow(Tag.rpc).to receive(:execute).and_return(response)
+      expect(Tag.remote_call(:remote_method, args)).to eq response
     end
   end
 
@@ -27,13 +27,13 @@ describe ActiveRemote::RPC do
     let(:attributes) { Hash.new }
 
     it "builds an RPC request" do
-      Tag.request(:create, attributes).should eq Generic::Remote::Tag.new(attributes)
+      expect(Tag.request(:create, attributes)).to eq Generic::Remote::Tag.new(attributes)
     end
   end
 
   describe ".request_type" do
     it "fetches the request type for the given RPC method" do
-      Tag.request_type(:search).should eq Generic::Remote::TagRequest
+      expect(Tag.request_type(:search)).to eq Generic::Remote::TagRequest
     end
   end
 
@@ -49,7 +49,7 @@ describe ActiveRemote::RPC do
       mock_remote_service(Tag.service_class, :create, :response => double(:to_hash => {}))
 
       subject.execute(:create, request)
-      subject.last_request.should eq(request)
+      expect(subject.last_request).to eq(request)
     end
 
     context "when request args is a hash" do
@@ -57,12 +57,12 @@ describe ActiveRemote::RPC do
       let(:request) { double(:request) }
 
       before {
-        subject.stub(:request).and_return(request)
+        allow(subject).to receive(:request).and_return(request)
         mock_remote_service(Tag.service_class, :create, :response => double(:to_hash => {}))
       }
 
       it "creates a request" do
-        subject.should_receive(:request).with(:create, args)
+        expect(subject).to receive(:request).with(:create, args)
         subject.execute(:create, args)
       end
     end
@@ -76,7 +76,7 @@ describe ActiveRemote::RPC do
 
       it "sets the last response" do
         subject.execute(:create, request)
-        subject.last_response.should eq(success_response)
+        expect(subject.last_response).to eq(success_response)
       end
     end
 

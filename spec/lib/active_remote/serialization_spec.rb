@@ -8,7 +8,7 @@ describe ActiveRemote::Serialization do
 
     it "serializes records into active remote objects" do
       Tag.serialize_records(records).each do |record|
-        record.should be_a Tag
+        expect(record).to be_a Tag
       end
     end
   end
@@ -26,7 +26,7 @@ describe ActiveRemote::Serialization do
     context "when the response has errors" do
       it "adds the errors to the active remote object" do
         subject.add_errors(response.errors)
-        subject.errors[:name].should =~ ['Boom!']
+        expect(subject.errors[:name]).to match_array(['Boom!'])
       end
     end
   end

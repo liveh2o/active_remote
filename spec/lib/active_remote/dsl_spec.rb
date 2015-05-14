@@ -17,7 +17,7 @@ describe ActiveRemote::DSL do
       Tag.attr_publishable :guid
       Tag.attr_publishable :name
 
-      Tag.publishable_attributes.should =~ [ :guid, :name ]
+      expect(Tag.publishable_attributes).to match_array([ :guid, :name ])
     end
   end
 
@@ -25,7 +25,7 @@ describe ActiveRemote::DSL do
     context "when given a value" do
       it "sets @namespace to the value" do
         Tag.namespace :foo
-        Tag.namespace.should eq :foo
+        expect(Tag.namespace).to eq :foo
       end
     end
   end
@@ -35,14 +35,14 @@ describe ActiveRemote::DSL do
       it "determines the service class" do
         Tag.namespace :another
 
-        Tag.service_class.should eq Another::TagService
+        expect(Tag.service_class).to eq Another::TagService
       end
     end
 
     context "when given a value" do
       it "sets @service_class to the value" do
         Tag.service_class Generic::Remote::TagService
-        Tag.service_class.should eq Generic::Remote::TagService
+        expect(Tag.service_class).to eq Generic::Remote::TagService
       end
     end
   end
@@ -50,14 +50,14 @@ describe ActiveRemote::DSL do
   describe ".service_name" do
     context "when nil" do
       it "determines the service name" do
-        Tag.service_name.should eq :tag_service
+        expect(Tag.service_name).to eq :tag_service
       end
     end
 
     context "when given a value" do
       it "sets @service_name to the value" do
         Tag.service_name :foo
-        Tag.service_name.should eq :foo
+        expect(Tag.service_name).to eq :foo
       end
     end
   end

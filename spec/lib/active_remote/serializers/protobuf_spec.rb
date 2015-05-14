@@ -6,7 +6,7 @@ describe ActiveRemote::Serializers::Protobuf::Fields do
     let(:value) { { :records => { :name => 'Cool Post', :errors => { :message => 'Boom!' } } } }
 
     it "gets protobuf-ready fields from attributes" do
-      described_class.from_attributes(Generic::Remote::Posts, value).should eq ready_value
+      expect(described_class.from_attributes(Generic::Remote::Posts, value)).to eq ready_value
     end
   end
 end
@@ -21,7 +21,7 @@ describe ActiveRemote::Serializers::Protobuf::Field do
         let(:value) { { :name => 'Cool Post', :errors => { :message => 'Boom!' } } }
 
         it "gets protobuf-ready fields from the value" do
-          described_class.from_attribute(field, value).should eq ready_value
+          expect(described_class.from_attribute(field, value)).to eq ready_value
         end
       end
     end
@@ -34,7 +34,7 @@ describe ActiveRemote::Serializers::Protobuf::Field do
         let(:value) { { :name => 'Film', :errors => { :message => 'Boom!' } } }
 
         it "gets protobuf-ready fields from the value" do
-          described_class.from_attribute(field, value).should eq ready_value
+          expect(described_class.from_attribute(field, value)).to eq ready_value
         end
       end
     end
@@ -47,7 +47,7 @@ describe ActiveRemote::Serializers::Protobuf::Field do
         let(:value) { 'Cool Post' }
 
         it "gets protobuf-ready fields from the value" do
-          described_class.from_attribute(field, value).should eq ready_value
+          expect(described_class.from_attribute(field, value)).to eq ready_value
         end
       end
     end
@@ -65,7 +65,7 @@ describe ActiveRemote::Serializers::Protobuf::Field do
 
       def typecasts(field, conversion)
         field = Serializer.get_field(field, true)
-        described_class.from_attribute(field, conversion.first[0]).should eq conversion.first[1]
+        expect(described_class.from_attribute(field, conversion.first[0])).to eq conversion.first[1]
       end
 
       it { typecasts(:bool_field, '0' => false) }

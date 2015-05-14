@@ -10,12 +10,12 @@ describe ActiveRemote::Serializers::JSON do
     context "with roots in json" do
       context "when options are nil" do
         it "substitutes an empty hash" do
-          subject.as_json(nil).should eq serializable_attributes
+          expect(subject.as_json(nil)).to eq serializable_attributes
         end
       end
 
       it "accepts standard JSON options" do
-        subject.as_json(:root => false).should eq attributes.stringify_keys
+        expect(subject.as_json(:root => false)).to eq attributes.stringify_keys
       end
 
       context "with publishable attributes defined" do
@@ -25,7 +25,7 @@ describe ActiveRemote::Serializers::JSON do
         after { reset_publishable_attributes(Tag) }
 
         it "serializes to JSON with only the publishable attributes" do
-          subject.to_json.should eq expected_json
+          expect(subject.to_json).to eq expected_json
         end
       end
 
@@ -33,7 +33,7 @@ describe ActiveRemote::Serializers::JSON do
         let(:expected_json) { { :tag => attributes }.to_json }
 
         it "serializes to JSON" do
-          subject.to_json.should eq expected_json
+          expect(subject.to_json).to eq expected_json
         end
       end
     end
@@ -51,7 +51,7 @@ describe ActiveRemote::Serializers::JSON do
 
       context "when options are nil" do
         it "substitutes an empty hash" do
-          subject.as_json(nil).should eq serializable_attributes
+          expect(subject.as_json(nil)).to eq serializable_attributes
         end
       end
 
@@ -62,7 +62,7 @@ describe ActiveRemote::Serializers::JSON do
         after { reset_publishable_attributes(Tag) }
 
         it "serializes to JSON with only the publishable attributes" do
-          subject.to_json.should eq expected_json
+          expect(subject.to_json).to eq expected_json
         end
       end
 
@@ -70,7 +70,7 @@ describe ActiveRemote::Serializers::JSON do
         let(:expected_json) { attributes.to_json }
 
         it "serializes to JSON" do
-          subject.to_json.should eq expected_json
+          expect(subject.to_json).to eq expected_json
         end
       end
     end

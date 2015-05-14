@@ -10,21 +10,21 @@ describe ActiveRemote::Search do
     let(:record) { double(:record) }
     let(:records) { [ record ] }
 
-    before { Tag.stub(:search).and_return(records) }
+    before { allow(Tag).to receive(:search).and_return(records) }
 
     it "searches with the given args" do
-      Tag.should_receive(:search).with(args)
+      expect(Tag).to receive(:search).with(args)
       Tag.find(args)
     end
 
     context "when records are returned" do
       it "returns the first record" do
-        Tag.find(args).should eq record
+        expect(Tag.find(args)).to eq record
       end
     end
 
     context "when no records are returned" do
-      before { Tag.stub(:search).and_return([]) }
+      before { allow(Tag).to receive(:search).and_return([]) }
 
       it "raise an exception" do
         expect { Tag.find(args) }.to raise_error(::ActiveRemote::RemoteRecordNotFound)
@@ -47,12 +47,12 @@ describe ActiveRemote::Search do
       before { ::Tag.better_stub(:rpc).and_return(rpc) }
 
       it "searches with the given args" do
-        Tag.rpc.should_receive(:execute).with(:search, args)
+        expect(Tag.rpc).to receive(:execute).with(:search, args)
         Tag.search(args)
       end
 
       it "returns records" do
-        Tag.search(args).should eq serialized_records
+        expect(Tag.search(args)).to eq serialized_records
       end
     end
 
@@ -71,17 +71,17 @@ describe ActiveRemote::Search do
     subject { Tag.new }
 
     before {
-      rpc.stub(:execute).and_return(response)
+      allow(rpc).to receive(:execute).and_return(response)
       Tag.better_stub(:rpc).and_return(rpc)
     }
 
     it "runs callbacks" do
-      subject.should_receive(:run_callbacks).with(:search)
+      expect(subject).to receive(:run_callbacks).with(:search)
       subject._active_remote_search(args)
     end
 
     it "executes the search" do
-      rpc.should_receive(:execute).with(:search, args)
+      expect(rpc).to receive(:execute).with(:search, args)
       subject._active_remote_search(args)
     end
   end
@@ -101,7 +101,7 @@ describe ActiveRemote::Search do
 
     it "assigns new attributes" do
       subject.reload
-      subject.attributes.should eq attributes
+      expect(subject.attributes).to eq attributes
     end
   end
 end

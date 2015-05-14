@@ -7,14 +7,14 @@ describe ActiveRemote::PrimaryKey do
 
   describe ".default_primary_key" do
     it 'returns array of :guid' do
-      Tag.default_primary_key.should eq(:guid)
+      expect(Tag.default_primary_key).to eq(:guid)
     end
   end
 
   describe "primary_key" do
     context "when no arguments are passed" do
       it "returns default primary key" do
-        Tag.primary_key.should eq(:guid)
+        expect(Tag.primary_key).to eq(:guid)
       end
     end
 
@@ -22,14 +22,14 @@ describe ActiveRemote::PrimaryKey do
       let(:specified_primary_key) { :name }
 
       it "returns the given primary key" do
-        Tag.primary_key(specified_primary_key).should eq(specified_primary_key)
+        expect(Tag.primary_key(specified_primary_key)).to eq(specified_primary_key)
       end
     end
   end
 
   describe "#primary_key" do
     it "returns the primary key for the class" do
-      Tag.new.primary_key.should eq Tag.primary_key
+      expect(Tag.new.primary_key).to eq Tag.primary_key
     end
   end
 end

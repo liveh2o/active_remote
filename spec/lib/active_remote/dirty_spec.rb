@@ -12,13 +12,13 @@ describe ActiveRemote::Dirty do
     context "when the value changes" do
       before { subject.name = 'bar' }
 
-      its(:name_changed?) { should be_true }
+      its(:name_changed?) { should be_truthy }
     end
 
     context "when the value doesn't change" do
       before { subject.name = 'foo' }
 
-      its(:name_changed?) { should be_false }
+      its(:name_changed?) { should be_falsey }
     end
   end
 
@@ -33,13 +33,13 @@ describe ActiveRemote::Dirty do
     context "when the value changes" do
       before { subject[:name] = 'bar' }
 
-      its(:name_changed?) { should be_true }
+      its(:name_changed?) { should be_truthy }
     end
 
     context "when the value doesn't change" do
       before { subject[:name] = 'foo' }
 
-      its(:name_changed?) { should be_false }
+      its(:name_changed?) { should be_falsey }
     end
   end
 
@@ -47,7 +47,7 @@ describe ActiveRemote::Dirty do
     subject { Post.new(:name => 'foo') }
 
     before {
-      Post.stub(:find).and_return({})
+      allow(Post).to receive(:find).and_return({})
       subject.reload
     }
 
@@ -60,7 +60,7 @@ describe ActiveRemote::Dirty do
     subject { Post.new(:name => 'foo') }
 
     before {
-      subject.stub(:create_or_update).and_return(true)
+      allow(subject).to receive(:create_or_update).and_return(true)
       subject.save
     }
 
@@ -74,7 +74,7 @@ describe ActiveRemote::Dirty do
     subject { Post.new(:name => 'foo') }
 
     before {
-      subject.stub(:save).and_return(true)
+      allow(subject).to receive(:save).and_return(true)
       subject.save!
     }
 
@@ -88,12 +88,12 @@ describe ActiveRemote::Dirty do
 
     it "clears previous changes" do
       new_record = post.instantiate(record.to_hash)
-      new_record.previous_changes.should eq({})
+      expect(new_record.previous_changes).to eq({})
     end
 
     it "clears changes" do
       new_record = post.instantiate(record.to_hash)
-      new_record.changes.should be_empty
+      expect(new_record.changes).to be_empty
     end
   end
 end

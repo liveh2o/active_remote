@@ -12,7 +12,7 @@ describe ActiveRemote::Publication do
     after { reset_publishable_attributes(Tag) }
 
     it "serializes to a hash with only the publishable attributes" do
-      subject.publishable_hash.should eq expected_hash
+      expect(subject.publishable_hash).to eq expected_hash
     end
   end
 end

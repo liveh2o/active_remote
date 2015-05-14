@@ -12,7 +12,7 @@ describe ActiveRemote::ScopeKeys do
 
     it 'adds scope_key to _scope_keys' do
       Tag.scope_key(key)
-      Tag._scope_keys.should eq(_scope_keys)
+      expect(Tag._scope_keys).to eq(_scope_keys)
     end
   end
 
@@ -20,13 +20,13 @@ describe ActiveRemote::ScopeKeys do
     before { Tag.better_stub(:_scope_keys).and_return(_scope_keys) }
 
     it "combines primary key with _scope_keys" do
-      Tag.scope_keys.should eq(['guid'] + _scope_keys)
+      expect(Tag.scope_keys).to eq(['guid'] + _scope_keys)
     end
   end
 
   describe "#scope_keys" do
     it "returns the scope keys for the class" do
-      Tag.new.scope_keys.should eq Tag.scope_keys
+      expect(Tag.new.scope_keys).to eq Tag.scope_keys
     end
   end
 
@@ -36,7 +36,7 @@ describe ActiveRemote::ScopeKeys do
     before { tag.better_stub(:scope_keys).and_return(scope_keys) }
 
     it "returns a attribute hash of scope_keys" do
-      tag.scope_key_hash.should eq(scope_key_hash)
+      expect(tag.scope_key_hash).to eq(scope_key_hash)
     end
   end
 end

@@ -7,36 +7,36 @@ describe ActiveRemote::Persistence do
 
   before {
     rpc.better_stub(:execute).and_return(HashWithIndifferentAccess.new)
-    HashWithIndifferentAccess.any_instance.stub(:errors).and_return([])
+    allow_any_instance_of(HashWithIndifferentAccess).to receive(:errors).and_return([])
     Tag.better_stub(:rpc).and_return(rpc)
   }
-  after { Tag.unstub(:rpc) }
+  after { allow(Tag).to receive(:rpc).and_call_original }
 
   describe ".create" do
     it "runs create callbacks" do
-      Tag.any_instance.should_receive(:after_create_callback)
+      expect_any_instance_of(Tag).to receive(:after_create_callback)
       Tag.create(:name => 'foo')
     end
 
     it "initializes and saves a new record" do
-      Tag.any_instance.should_receive(:save)
+      expect_any_instance_of(Tag).to receive(:save)
       Tag.create(:name => 'foo')
     end
 
     it "returns a new record" do
       value = Tag.create(:name => 'foo')
-      value.should be_a(Tag)
+      expect(value).to be_a(Tag)
     end
   end
 
   describe ".create!" do
     it "initializes and saves a new record" do
-      Tag.any_instance.should_receive(:save!)
+      expect_any_instance_of(Tag).to receive(:save!)
       Tag.create!(:name => 'foo')
     end
 
     context "when the record has errors" do
-      before { Tag.any_instance.stub(:save!).and_raise(ActiveRemote::ActiveRemoteError) }
+      before { allow_any_instance_of(Tag).to receive(:save!).and_raise(ActiveRemote::ActiveRemoteError) }
 
       it "raises an exception" do
         expect { Tag.create!(:name => 'foo') }.to raise_error(ActiveRemote::ActiveRemoteError)
@@ -46,14 +46,14 @@ describe ActiveRemote::Persistence do
 
   describe "#delete" do
     it "deletes a remote record" do
-      rpc.should_receive(:execute).with(:delete, subject.scope_key_hash)
+      expect(rpc).to receive(:execute).with(:delete, subject.scope_key_hash)
       subject.delete
     end
 
     context "when the record doesn't have errors" do
       it "freezes the record" do
         subject.delete
-        subject.frozen?.should be_true
+        expect(subject.frozen?).to be_truthy
       end
     end
 
@@ -65,18 +65,18 @@ describe ActiveRemote::Persistence do
 
       it "adds the errors to the record" do
         subject.delete
-        subject.has_errors?.should be_true
+        expect(subject.has_errors?).to be_truthy
       end
 
       it "returns false" do
-        subject.delete.should be_false
+        expect(subject.delete).to be_falsey
       end
     end
   end
 
   describe "#delete!" do
     it "deletes a remote record" do
-      rpc.should_receive(:execute).with(:delete, subject.scope_key_hash)
+      expect(rpc).to receive(:execute).with(:delete, subject.scope_key_hash)
       subject.delete!
     end
 
@@ -94,14 +94,14 @@ describe ActiveRemote::Persistence do
 
   describe "#destroy" do
     it "destroys a remote record" do
-      rpc.should_receive(:execute).with(:destroy, subject.scope_key_hash)
+      expect(rpc).to receive(:execute).with(:destroy, subject.scope_key_hash)
       subject.destroy
     end
 
     context "when the record doesn't have errors" do
       it "freezes the record" do
         subject.destroy
-        subject.frozen?.should be_true
+        expect(subject.frozen?).to be_truthy
       end
     end
 
@@ -113,18 +113,18 @@ describe ActiveRemote::Persistence do
 
       it "adds the errors to the record" do
         subject.destroy
-        subject.has_errors?.should be_true
+        expect(subject.has_errors?).to be_truthy
       end
 
       it "returns false" do
-        subject.destroy.should be_false
+        expect(subject.destroy).to be_falsey
       end
     end
   end
 
   describe "#destroy!" do
     it "destroys a remote record" do
-      rpc.should_receive(:execute).with(:destroy, subject.scope_key_hash)
+      expect(rpc).to receive(:execute).with(:destroy, subject.scope_key_hash)
       subject.destroy!
     end
 
@@ -144,8 +144,8 @@ describe ActiveRemote::Persistence do
     context "when the record is created through instantiate with options[:readonly]" do
       subject { Tag.instantiate({:guid => 'foo'}, :readonly => true) }
 
-      its(:new_record?) { should be_false }
-      its(:readonly?) { should be_true }
+      its(:new_record?) { should be_falsey }
+      its(:readonly?) { should be_truthy }
     end
   end
 
@@ -153,13 +153,13 @@ describe ActiveRemote::Persistence do
     context "when errors are not present" do
       before { subject.errors.clear }
 
-      its(:has_errors?) { should be_false }
+      its(:has_errors?) { should be_falsey }
     end
 
     context "when errors are present" do
       before { subject.errors[:base] << "Boom!" }
 
-      its(:has_errors?) { should be_true }
+      its(:has_errors?) { should be_truthy }
     end
   end
 
@@ -167,19 +167,19 @@ describe ActiveRemote::Persistence do
     context "when the record is created through instantiate" do
       subject { Tag.instantiate(:guid => 'foo') }
 
-      its(:new_record?) { should be_false }
+      its(:new_record?) { should be_falsey }
     end
 
     context "when the record is persisted" do
       subject { Tag.allocate.instantiate(:guid => 'foo') }
 
-      its(:new_record?) { should be_false }
+      its(:new_record?) { should be_falsey }
     end
 
     context "when the record is not persisted" do
       subject { Tag.new }
 
-      its(:new_record?) { should be_true }
+      its(:new_record?) { should be_truthy }
     end
   end
 
@@ -187,19 +187,19 @@ describe ActiveRemote::Persistence do
     context "when the record is persisted" do
       subject { Tag.allocate.instantiate(:guid => 'foo') }
 
-      its(:persisted?) { should be_true }
+      its(:persisted?) { should be_truthy }
     end
 
     context "when the record is not persisted" do
       subject { Tag.new }
 
-      its(:persisted?) { should be_false }
+      its(:persisted?) { should be_falsey }
     end
   end
 
   describe "#save" do
     it "runs save callbacks" do
-      subject.should_receive(:run_callbacks).with(:save)
+      expect(subject).to receive(:run_callbacks).with(:save)
       subject.save
     end
 
@@ -208,7 +208,7 @@ describe ActiveRemote::Persistence do
 
       it "creates the record" do
         expected_attributes = subject.attributes.reject { |key, value| key == "guid" }
-        rpc.should_receive(:execute).with(:create, expected_attributes)
+        expect(rpc).to receive(:execute).with(:create, expected_attributes)
         subject.save
       end
     end
@@ -219,7 +219,7 @@ describe ActiveRemote::Persistence do
       subject { Tag.allocate.instantiate(attributes) }
 
       it "updates the record" do
-        rpc.should_receive(:execute).with(:update, attributes)
+        expect(rpc).to receive(:execute).with(:update, attributes)
         subject.save
       end
     end
@@ -227,14 +227,14 @@ describe ActiveRemote::Persistence do
     context "when the record is saved" do
       it "returns true" do
         subject.better_stub(:has_errors?) { false }
-        subject.save.should be_true
+        expect(subject.save).to be_truthy
       end
     end
 
     context "when the record is not saved" do
       it "returns false" do
         subject.better_stub(:has_errors?) { true }
-        subject.save.should be_false
+        expect(subject.save).to be_falsey
       end
     end
 
@@ -242,27 +242,27 @@ describe ActiveRemote::Persistence do
       before { subject.errors[:base] << "Boom!" }
 
       it "clears the errors before the save" do
-        subject.errors.should_not be_empty
-        subject.save.should be_true
-        subject.errors.should be_empty
+        expect(subject.errors).not_to be_empty
+        expect(subject.save).to be_truthy
+        expect(subject.errors).to be_empty
       end
     end
   end
 
   describe "#save!" do
-    before { subject.stub(:execute) }
-    after { subject.unstub(:execute) }
+    before { allow(subject).to receive(:execute) }
+    after { allow(subject).to receive(:execute).and_call_original }
 
     context "when the record is saved" do
       it "returns true" do
-        subject.stub(:save).and_return(true)
-        subject.save!.should be_true
+        allow(subject).to receive(:save).and_return(true)
+        expect(subject.save!).to be_truthy
       end
     end
 
     context "when the record is not saved" do
       it "raises an exception" do
-        subject.stub(:save).and_return(false)
+        allow(subject).to receive(:save).and_return(false)
         expect { subject.save! }.to raise_error(ActiveRemote::RemoteRecordNotSaved)
       end
     end
@@ -272,13 +272,13 @@ describe ActiveRemote::Persistence do
     context "when errors are present" do
       before { subject.errors[:base] << "Boom!" }
 
-      its(:success?) { should be_false }
+      its(:success?) { should be_falsey }
     end
 
     context "when errors are not present" do
       before { subject.errors.clear }
 
-      its(:success?) { should be_true }
+      its(:success?) { should be_truthy }
     end
   end
 
@@ -286,29 +286,29 @@ describe ActiveRemote::Persistence do
     let(:attributes) { HashWithIndifferentAccess.new(:name => 'bar') }
     let(:tag) { Tag.allocate.instantiate({:guid => "123"}) }
 
-    before { Tag.rpc.stub(:execute).and_return(HashWithIndifferentAccess.new) }
-    after { Tag.rpc.unstub(:execute) }
+    before { allow(Tag.rpc).to receive(:execute).and_return(HashWithIndifferentAccess.new) }
+    after { allow(Tag.rpc).to receive(:execute).and_call_original }
 
     it "runs update callbacks" do
-      tag.should_receive(:after_update_callback)
+      expect(tag).to receive(:after_update_callback)
       tag.update_attributes({})
     end
 
     it "updates a remote record" do
-      Tag.rpc.should_receive(:execute).with(:update, tag.scope_key_hash)
+      expect(Tag.rpc).to receive(:execute).with(:update, tag.scope_key_hash)
       tag.update_attributes({})
     end
 
-    before { subject.stub(:save) }
-    after { subject.unstub(:save) }
+    before { allow(subject).to receive(:save) }
+    after { allow(subject).to receive(:save).and_call_original }
 
     it "assigns new attributes" do
-      subject.should_receive(:assign_attributes).with(attributes)
+      expect(subject).to receive(:assign_attributes).with(attributes)
       subject.update_attributes(attributes)
     end
 
     it "saves the record" do
-      subject.should_receive(:save)
+      expect(subject).to receive(:save)
       subject.update_attributes(attributes)
     end
   end
@@ -316,16 +316,16 @@ describe ActiveRemote::Persistence do
   describe "#update_attributes!" do
     let(:attributes) { HashWithIndifferentAccess.new(:name => 'bar') }
 
-    before { subject.stub(:save!) }
-    after { subject.unstub(:save!) }
+    before { allow(subject).to receive(:save!) }
+    after { allow(subject).to receive(:save!).and_call_original }
 
     it "assigns new attributes" do
-      subject.should_receive(:assign_attributes).with(attributes)
+      expect(subject).to receive(:assign_attributes).with(attributes)
       subject.update_attributes!(attributes)
     end
 
     it "saves! the record" do
-      subject.should_receive(:save!)
+      expect(subject).to receive(:save!)
       subject.update_attributes!(attributes)
     end
   end

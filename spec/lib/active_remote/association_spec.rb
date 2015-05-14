@@ -11,43 +11,43 @@ describe ActiveRemote::Association do
       let(:default_category_guid) { "CAT-123" }
       subject { Post.new(:author_guid => author_guid, :user_guid => user_guid) }
 
-      it { should respond_to(:author) }
+      it { is_expected.to respond_to(:author) }
 
       it "searches the associated model for a single record" do
-        Author.should_receive(:search).with(:guid => subject.author_guid).and_return(records)
-        subject.author.should eq record
+        expect(Author).to receive(:search).with(:guid => subject.author_guid).and_return(records)
+        expect(subject.author).to eq record
       end
 
       it "memoizes the result record" do
-        Author.should_receive(:search).once.with(:guid => subject.author_guid).and_return(records)
-        3.times { subject.author.should eq record }
+        expect(Author).to receive(:search).once.with(:guid => subject.author_guid).and_return(records)
+        3.times { expect(subject.author).to eq record }
       end
 
       context "when guid is nil" do
         subject { Post.new }
 
         it "returns nil" do
-          subject.author.should be_nil
+          expect(subject.author).to be_nil
         end
       end
 
       context "when the search is empty" do
         it "returns a nil" do
-          Author.should_receive(:search).with(:guid => subject.author_guid).and_return([])
-          subject.author.should be_nil
+          expect(Author).to receive(:search).with(:guid => subject.author_guid).and_return([])
+          expect(subject.author).to be_nil
         end
       end
 
       context 'scoped field' do
-        it { should respond_to(:user) }
+        it { is_expected.to respond_to(:user) }
 
         it "searches the associated model for multiple records" do
-          Author.should_receive(:search).with(:guid => subject.author_guid, :user_guid => subject.user_guid).and_return(records)
-          subject.user.should eq(record)
+          expect(Author).to receive(:search).with(:guid => subject.author_guid, :user_guid => subject.user_guid).and_return(records)
+          expect(subject.user).to eq(record)
         end
 
         context 'when user_guid doesnt exist on model 'do
-          before { subject.stub(:respond_to?).with("user_guid").and_return(false) }
+          before { allow(subject).to receive(:respond_to?).with("user_guid").and_return(false) }
 
           it 'raises an error' do
             expect {subject.user}.to raise_error
@@ -69,11 +69,11 @@ describe ActiveRemote::Association do
       let(:author_guid) { "AUT-456" }
 
       subject { Post.new(:author_guid => author_guid) }
-      it { should respond_to(:coauthor) }
+      it { is_expected.to respond_to(:coauthor) }
 
       it "searches the associated model for a single record" do
-        Author.should_receive(:search).with(:guid => subject.author_guid).and_return(records)
-        subject.coauthor.should eq record
+        expect(Author).to receive(:search).with(:guid => subject.author_guid).and_return(records)
+        expect(subject.coauthor).to eq record
       end
     end
 
@@ -81,11 +81,11 @@ describe ActiveRemote::Association do
       let(:author_guid) { "AUT-456" }
 
       subject { Post.new(:bestseller_guid => author_guid) }
-      it { should respond_to(:bestseller) }
+      it { is_expected.to respond_to(:bestseller) }
 
       it "searches the associated model for a single record" do
-        Author.should_receive(:search).with(:guid => subject.bestseller_guid).and_return(records)
-        subject.bestseller.should eq record
+        expect(Author).to receive(:search).with(:guid => subject.bestseller_guid).and_return(records)
+        expect(subject.bestseller).to eq record
       end
     end
   end
@@ -97,61 +97,61 @@ describe ActiveRemote::Association do
 
     subject { Author.new(:guid => guid, :user_guid => user_guid) }
 
-    it { should respond_to(:posts) }
+    it { is_expected.to respond_to(:posts) }
 
     it "searches the associated model for all associated records" do
-      Post.should_receive(:search).with(:author_guid => subject.guid).and_return(records)
-      subject.posts.should eq records
+      expect(Post).to receive(:search).with(:author_guid => subject.guid).and_return(records)
+      expect(subject.posts).to eq records
     end
 
     it "memoizes the result record" do
-      Post.should_receive(:search).once.with(:author_guid => subject.guid).and_return(records)
-      3.times { subject.posts.should eq records }
+      expect(Post).to receive(:search).once.with(:author_guid => subject.guid).and_return(records)
+      3.times { expect(subject.posts).to eq records }
     end
 
     context "when guid is nil" do
       subject { Author.new }
 
       it "returns []" do
-        subject.posts.should eq []
+        expect(subject.posts).to eq []
       end
     end
 
     context "when the search is empty" do
       it "returns the empty set" do
-        Post.should_receive(:search).with(:author_guid => subject.guid).and_return([])
-        subject.posts.should be_empty
+        expect(Post).to receive(:search).with(:author_guid => subject.guid).and_return([])
+        expect(subject.posts).to be_empty
       end
     end
 
     context "specific association with class name" do
-      it { should respond_to(:flagged_posts) }
+      it { is_expected.to respond_to(:flagged_posts) }
 
       it "searches the associated model for a single record" do
-        Post.should_receive(:search).with(:author_guid => subject.guid).and_return([])
-        subject.flagged_posts.should be_empty
+        expect(Post).to receive(:search).with(:author_guid => subject.guid).and_return([])
+        expect(subject.flagged_posts).to be_empty
       end
     end
 
     context "specific association with class name and foreign_key" do
-      it { should respond_to(:bestseller_posts) }
+      it { is_expected.to respond_to(:bestseller_posts) }
 
       it "searches the associated model for multiple record" do
-        Post.should_receive(:search).with(:bestseller_guid => subject.guid).and_return(records)
-        subject.bestseller_posts.should eq(records)
+        expect(Post).to receive(:search).with(:bestseller_guid => subject.guid).and_return(records)
+        expect(subject.bestseller_posts).to eq(records)
       end
     end
 
     context 'scoped field' do
-      it { should respond_to(:user_posts) }
+      it { is_expected.to respond_to(:user_posts) }
 
       it "searches the associated model for multiple records" do
-        Post.should_receive(:search).with(:author_guid => subject.guid, :user_guid => subject.user_guid).and_return(records)
-        subject.user_posts.should eq(records)
+        expect(Post).to receive(:search).with(:author_guid => subject.guid, :user_guid => subject.user_guid).and_return(records)
+        expect(subject.user_posts).to eq(records)
       end
 
       context 'when user_guid doesnt exist on model 'do
-        before { subject.stub(:respond_to?).with("user_guid").and_return(false) }
+        before { allow(subject).to receive(:respond_to?).with("user_guid").and_return(false) }
 
         it 'raises an error' do
           expect {subject.user_posts}.to raise_error
@@ -180,61 +180,61 @@ describe ActiveRemote::Association do
 
     subject { Category.new(category_attributes) }
 
-    it { should respond_to(:author) }
+    it { is_expected.to respond_to(:author) }
 
     it "searches the associated model for all associated records" do
-      Author.should_receive(:search).with(:category_guid => subject.guid).and_return(records)
-      subject.author.should eq record
+      expect(Author).to receive(:search).with(:category_guid => subject.guid).and_return(records)
+      expect(subject.author).to eq record
     end
 
     it "memoizes the result record" do
-      Author.should_receive(:search).once.with(:category_guid => subject.guid).and_return(records)
-      3.times { subject.author.should eq record }
+      expect(Author).to receive(:search).once.with(:category_guid => subject.guid).and_return(records)
+      3.times { expect(subject.author).to eq record }
     end
 
     context "when guid is nil" do
       subject { Category.new }
 
       it "returns nil" do
-        subject.author.should be_nil
+        expect(subject.author).to be_nil
       end
     end
 
     context "when the search is empty" do
       it "returns a nil value" do
-        Author.should_receive(:search).with(:category_guid => subject.guid).and_return([])
-        subject.author.should be_nil
+        expect(Author).to receive(:search).with(:category_guid => subject.guid).and_return([])
+        expect(subject.author).to be_nil
       end
     end
 
     context "specific association with class name" do
-      it { should respond_to(:senior_author) }
+      it { is_expected.to respond_to(:senior_author) }
 
       it "searches the associated model for a single record" do
-        Author.should_receive(:search).with(:category_guid => subject.guid).and_return(records)
-        subject.senior_author.should eq record
+        expect(Author).to receive(:search).with(:category_guid => subject.guid).and_return(records)
+        expect(subject.senior_author).to eq record
       end
     end
 
     context "specific association with class name and foreign_key" do
-      it { should respond_to(:primary_editor) }
+      it { is_expected.to respond_to(:primary_editor) }
 
       it "searches the associated model for a single record" do
-        Author.should_receive(:search).with(:editor_guid => subject.guid).and_return(records)
-        subject.primary_editor.should eq record
+        expect(Author).to receive(:search).with(:editor_guid => subject.guid).and_return(records)
+        expect(subject.primary_editor).to eq record
       end
     end
 
     context 'scoped field' do
-      it { should respond_to(:chief_editor) }
+      it { is_expected.to respond_to(:chief_editor) }
 
       it "searches the associated model for multiple records" do
-        Author.should_receive(:search).with(:chief_editor_guid => subject.guid, :user_guid => subject.user_guid).and_return(records)
-        subject.chief_editor.should eq(record)
+        expect(Author).to receive(:search).with(:chief_editor_guid => subject.guid, :user_guid => subject.user_guid).and_return(records)
+        expect(subject.chief_editor).to eq(record)
       end
 
       context 'when user_guid doesnt exist on model 'do
-        before { subject.stub(:respond_to?).with("user_guid").and_return(false) }
+        before { allow(subject).to receive(:respond_to?).with("user_guid").and_return(false) }
 
         it 'raises an error' do
           expect {subject.chief_editor}.to raise_error
