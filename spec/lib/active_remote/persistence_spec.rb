@@ -199,6 +199,7 @@ describe ActiveRemote::Persistence do
 
   describe "#save" do
     it "runs save callbacks" do
+      allow(subject).to receive(:run_callbacks).with(:validation).and_return(true)
       expect(subject).to receive(:run_callbacks).with(:save)
       subject.save
     end
