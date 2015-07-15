@@ -47,7 +47,7 @@ describe ActiveRemote::Dirty do
     subject { Post.new(:name => 'foo') }
 
     before {
-      allow(Post).to receive(:find).and_return({})
+      allow(Post).to receive(:find).and_return(Post.new(:name => 'foo'))
       subject.reload
     }
 
