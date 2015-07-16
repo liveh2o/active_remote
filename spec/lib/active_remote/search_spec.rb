@@ -60,7 +60,7 @@ describe ActiveRemote::Search do
       let(:request) { double(:request) }
 
       it "raises an exception" do
-        expect { described_class.search(request) }.to raise_exception
+        expect { Tag.search(request) }.to raise_error(::RuntimeError, /Invalid parameter/)
       end
     end
   end
