@@ -26,11 +26,10 @@ Gem::Specification.new do |s|
   ##
   # Development Dependencies
   #
-  s.add_development_dependency "better_receive"
   s.add_development_dependency "rake"
-  s.add_development_dependency "rspec"
+  s.add_development_dependency "rspec", ">= 3.3.0"
   s.add_development_dependency "rspec-its"
-  s.add_development_dependency "rspec-pride"
+  s.add_development_dependency "rspec-pride", ">= 3.1.0"
   s.add_development_dependency "pry"
   s.add_development_dependency "protobuf-rspec", ">= 1.0"
   s.add_development_dependency "simplecov"
