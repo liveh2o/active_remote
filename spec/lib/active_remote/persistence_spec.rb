@@ -2,13 +2,13 @@ require 'spec_helper'
 
 describe ActiveRemote::Persistence do
   let(:rpc) { Tag.new }
+  let(:response_without_errors) { HashWithIndifferentAccess.new(:errors => []) }
 
   subject { Tag.new }
 
   before {
-    rpc.better_stub(:execute).and_return(HashWithIndifferentAccess.new)
-    allow_any_instance_of(HashWithIndifferentAccess).to receive(:errors).and_return([])
-    Tag.better_stub(:rpc).and_return(rpc)
+    allow(rpc).to receive(:execute).and_return(response_without_errors)
+    allow(Tag).to receive(:rpc).and_return(rpc)
   }
   after { allow(Tag).to receive(:rpc).and_call_original }
 
@@ -61,7 +61,7 @@ describe ActiveRemote::Persistence do
       let(:error) { Generic::Error.new(:field => 'name', :message => 'Boom!') }
       let(:response) { Generic::Remote::Tag.new(:errors => [ error ]) }
 
-      before { rpc.better_stub(:execute).and_return(response) }
+      before { allow(rpc).to receive(:execute).and_return(response) }
 
       it "adds the errors to the record" do
         subject.delete
@@ -84,7 +84,7 @@ describe ActiveRemote::Persistence do
       let(:error) { Generic::Error.new(:field => 'name', :message => 'Boom!') }
       let(:response) { Generic::Remote::Tag.new(:errors => [ error ]) }
 
-      before { rpc.better_stub(:execute).and_return(response) }
+      before { allow(rpc).to receive(:execute).and_return(response) }
 
       it "raises an exception" do
         expect { subject.delete! }.to raise_error(ActiveRemote::ActiveRemoteError)
@@ -109,7 +109,7 @@ describe ActiveRemote::Persistence do
       let(:error) { Generic::Error.new(:field => 'name', :message => 'Boom!') }
       let(:response) { Generic::Remote::Tag.new(:errors => [ error ]) }
 
-      before { rpc.better_stub(:execute).and_return(response) }
+      before { allow(rpc).to receive(:execute).and_return(response) }
 
       it "adds the errors to the record" do
         subject.destroy
@@ -132,7 +132,7 @@ describe ActiveRemote::Persistence do
       let(:error) { Generic::Error.new(:field => 'name', :message => 'Boom!') }
       let(:response) { Generic::Remote::Tag.new(:errors => [ error ]) }
 
-      before { rpc.better_stub(:execute).and_return(response) }
+      before { allow(rpc).to receive(:execute).and_return(response) }
 
       it "raises an exception" do
         expect { subject.destroy! }.to raise_error(ActiveRemote::ActiveRemoteError)
@@ -227,14 +227,14 @@ describe ActiveRemote::Persistence do
 
     context "when the record is saved" do
       it "returns true" do
-        subject.better_stub(:has_errors?) { false }
+        allow(subject).to receive(:has_errors?) { false }
         expect(subject.save).to be_truthy
       end
     end
 
     context "when the record is not saved" do
       it "returns false" do
-        subject.better_stub(:has_errors?) { true }
+        allow(subject).to receive(:has_errors?) { true }
         expect(subject.save).to be_falsey
       end
     end

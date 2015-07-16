@@ -43,8 +43,8 @@ describe ActiveRemote::Search do
       let(:args) { Hash.new }
       let(:rpc) { ::ActiveRemote::RPCAdapters::ProtobufAdapter.new(::Tag.service_class) }
 
-      before { rpc.better_stub(:execute).and_return(response) }
-      before { ::Tag.better_stub(:rpc).and_return(rpc) }
+      before { allow(rpc).to receive(:execute).and_return(response) }
+      before { allow(::Tag).to receive(:rpc).and_return(rpc) }
 
       it "searches with the given args" do
         expect(Tag.rpc).to receive(:execute).with(:search, args)
@@ -72,7 +72,7 @@ describe ActiveRemote::Search do
 
     before {
       allow(rpc).to receive(:execute).and_return(response)
-      Tag.better_stub(:rpc).and_return(rpc)
+      allow(Tag).to receive(:rpc).and_return(rpc)
     }
 
     it "runs callbacks" do
@@ -92,10 +92,10 @@ describe ActiveRemote::Search do
 
     subject { Tag.new(args) }
 
-    before { Tag.better_stub(:find).and_return(Tag.new(attributes)) }
+    before { allow(Tag).to receive(:find).and_return(Tag.new(attributes)) }
 
     it "reloads the record" do
-      Tag.better_receive(:find).with(subject.scope_key_hash)
+      expect(Tag).to receive(:find).with(subject.scope_key_hash)
       subject.reload
     end
 
