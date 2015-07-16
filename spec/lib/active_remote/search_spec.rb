@@ -92,7 +92,7 @@ describe ActiveRemote::Search do
 
     subject { Tag.new(args) }
 
-    before { Tag.better_stub(:find).and_return(attributes) }
+    before { Tag.better_stub(:find).and_return(Tag.new(attributes)) }
 
     it "reloads the record" do
       Tag.better_receive(:find).with(subject.scope_key_hash)

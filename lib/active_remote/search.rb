@@ -134,9 +134,7 @@ module ActiveRemote
     # Reload this record from the remote service.
     #
     def reload
-      response = self.class.find(scope_key_hash)
-
-      fresh_object = self.class.instantiate(response.to_hash)
+      fresh_object = self.class.find(scope_key_hash)
       @attributes.update(fresh_object.instance_variable_get('@attributes'))
     end
   end
