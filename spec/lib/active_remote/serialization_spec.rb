@@ -39,7 +39,7 @@ describe ActiveRemote::Serialization do
       let(:response) { Generic::Remote::Tag.new(:errors => [ error ]) }
 
       it "adds errors to the active remote object" do
-        subject.better_receive(:add_errors).with(response.errors)
+        expect(subject).to receive(:add_errors).with(response.errors)
         subject.add_errors_from_response(response)
       end
     end
@@ -48,7 +48,7 @@ describe ActiveRemote::Serialization do
       let(:response_without_errors) { double(:response_without_errors) }
 
       it "does not add errors" do
-        subject.better_not_receive(:add_errors)
+        expect(subject).to_not receive(:add_errors)
         subject.add_errors_from_response(response_without_errors)
       end
     end

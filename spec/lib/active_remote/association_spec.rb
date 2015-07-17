@@ -47,18 +47,18 @@ describe ActiveRemote::Association do
         end
 
         context 'when user_guid doesnt exist on model 'do
-          before { allow(subject).to receive(:respond_to?).with("user_guid").and_return(false) }
+          before { allow(subject.class).to receive_message_chain(:public_instance_methods, :include?).with(:user_guid).and_return(false) }
 
           it 'raises an error' do
-            expect {subject.user}.to raise_error
+            expect {subject.user}.to raise_error(::RuntimeError, /Could not find attribute/)
           end
         end
 
         context 'when user_guid doesnt exist on associated model 'do
-          before { Author.stub_chain(:public_instance_methods, :include?).with(:user_guid).and_return(false) }
+          before { allow(Author).to receive_message_chain(:public_instance_methods, :include?).with(:user_guid).and_return(false) }
 
           it 'raises an error' do
-            expect {subject.user}.to raise_error
+            expect {subject.user}.to raise_error(::RuntimeError, /Could not find attribute/)
           end
         end
       end
@@ -154,15 +154,15 @@ describe ActiveRemote::Association do
         before { allow(subject).to receive(:respond_to?).with("user_guid").and_return(false) }
 
         it 'raises an error' do
-          expect {subject.user_posts}.to raise_error
+          expect {subject.user_posts}.to raise_error(::ActiveAttr::UnknownAttributeError)
         end
       end
 
       context 'when user_guid doesnt exist on associated model 'do
-        before { Post.stub_chain(:public_instance_methods, :include?).with(:user_guid).and_return(false) }
+        before { allow(Post).to receive_message_chain(:public_instance_methods, :include?).with(:user_guid).and_return(false) }
 
         it 'raises an error' do
-          expect {subject.user_posts}.to raise_error
+          expect {subject.user_posts}.to raise_error(::RuntimeError, /Could not find attribute/)
         end
       end
     end
@@ -237,15 +237,15 @@ describe ActiveRemote::Association do
         before { allow(subject).to receive(:respond_to?).with("user_guid").and_return(false) }
 
         it 'raises an error' do
-          expect {subject.chief_editor}.to raise_error
+          expect {subject.chief_editor}.to raise_error(::ActiveAttr::UnknownAttributeError)
         end
       end
 
       context 'when user_guid doesnt exist on associated model 'do
-        before { Author.stub_chain(:public_instance_methods, :include?).with(:user_guid).and_return(false) }
+        before { allow(Author).to receive_message_chain(:public_instance_methods, :include?).with(:user_guid).and_return(false) }
 
         it 'raises an error' do
-          expect {subject.chief_editor}.to raise_error
+          expect {subject.chief_editor}.to raise_error(::RuntimeError, /Could not find attribute/)
         end
       end
     end

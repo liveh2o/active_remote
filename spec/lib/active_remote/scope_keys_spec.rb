@@ -17,7 +17,7 @@ describe ActiveRemote::ScopeKeys do
   end
 
   describe ".scope_keys" do
-    before { Tag.better_stub(:_scope_keys).and_return(_scope_keys) }
+    before { allow(Tag).to receive(:_scope_keys).and_return(_scope_keys) }
 
     it "combines primary key with _scope_keys" do
       expect(Tag.scope_keys).to eq(['guid'] + _scope_keys)
@@ -33,7 +33,7 @@ describe ActiveRemote::ScopeKeys do
   describe "#scope_key_hash" do
     let(:scope_key_hash) { { 'guid' => 'TAG-123', 'user_guid' => 'USR-123' } }
 
-    before { tag.better_stub(:scope_keys).and_return(scope_keys) }
+    before { allow(tag).to receive(:scope_keys).and_return(scope_keys) }
 
     it "returns a attribute hash of scope_keys" do
       expect(tag.scope_key_hash).to eq(scope_key_hash)

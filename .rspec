@@ -1,2 +1,3 @@
 --order rand
---format RSpec::Pride
+--require rspec/pride
+--format PrideFormatter
