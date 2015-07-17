@@ -210,6 +210,7 @@ module ActiveRemote
       assign_attributes(attributes)
       save
     end
+    alias_method :update, :update_attributes
 
     # Updates the attributes of the remote record from the passed-in hash and
     # saves the remote record. If the object is invalid, an
@@ -219,13 +220,14 @@ module ActiveRemote
       assign_attributes(attributes)
       save!
     end
+    alias_method :update!, :update_attributes!
 
   private
 
     # Handles creating a remote object and serializing it's attributes and
     # errors from the response.
     #
-    def create
+    def remote_create
       run_callbacks :create do
         # Use the getter here so we get the type casting.
         new_attributes = attributes
@@ -247,14 +249,14 @@ module ActiveRemote
     #
     def create_or_update(*args)
       raise ReadOnlyRemoteRecord if readonly?
-      new_record? ? create : update(*args)
+      new_record? ? remote_create : remote_update(*args)
     end
 
     # Handles updating a remote object and serializing it's attributes and
     # errors from the response. Only attributes with the given attribute names
     # (plus :guid) will be updated. Defaults to all attributes.
     #
-    def update(attribute_names = @attributes.keys)
+    def remote_update(attribute_names = @attributes.keys)
       run_callbacks :update do
         # Use the getter here so we get the type casting.
         updated_attributes = attributes
