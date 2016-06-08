@@ -202,6 +202,22 @@ module ActiveRemote
       return ! has_errors?
     end
 
+    # Updates a single attribute and saves the record.
+    # This is especially useful for boolean flags on existing records. Also note that
+    #
+    # * Validation is skipped.
+    # * Callbacks are invoked.
+    # * Updates all the attributes that are dirty in this object.
+    #
+    # This method raises an ActiveRemote::ReadOnlyRemoteRecord  if the
+    # attribute is marked as readonly.
+    def update_attribute(name, value)
+      raise ReadOnlyRemoteRecord if readonly?
+      name = name.to_s
+      send("#{name}=", value)
+      save(:validate => false)
+    end
+
     # Updates the attributes of the remote record from the passed-in hash and
     # saves the remote record. If the object is invalid, it will have error
     # messages and false will be returned.

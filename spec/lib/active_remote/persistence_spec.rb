@@ -283,6 +283,36 @@ describe ActiveRemote::Persistence do
     end
   end
 
+  describe "#update_attribute" do
+    let(:tag) { Tag.allocate.instantiate({:guid => "123"}) }
+
+    before { allow(Tag.rpc).to receive(:execute).and_return(HashWithIndifferentAccess.new) }
+    after { allow(Tag.rpc).to receive(:execute).and_call_original }
+
+    it "runs update callbacks" do
+      expect(tag).to receive(:after_update_callback)
+      tag.update_attribute(:name, "foo")
+    end
+
+    it "updates a remote record" do
+      expect(Tag.rpc).to receive(:execute).with(:update, tag.scope_key_hash)
+      tag.update_attribute(:name, "foo")
+    end
+
+    before { allow(subject).to receive(:save) }
+    after { allow(subject).to receive(:save).and_call_original }
+
+    it "assigns new attributes" do
+      expect(subject).to receive(:name=).with("foo")
+      subject.update_attribute(:name, "foo")
+    end
+
+    it "saves the record" do
+      expect(subject).to receive(:save)
+      subject.update_attribute(:name, "foo")
+    end
+  end
+
   describe "#update_attributes" do
     let(:attributes) { HashWithIndifferentAccess.new(:name => 'bar') }
     let(:tag) { Tag.allocate.instantiate({:guid => "123"}) }
