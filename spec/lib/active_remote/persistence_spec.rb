@@ -295,7 +295,7 @@ describe ActiveRemote::Persistence do
     end
 
     it "updates a remote record" do
-      expect(Tag.rpc).to receive(:execute).with(:update, tag.scope_key_hash)
+      expect(Tag.rpc).to receive(:execute).with(:update, {"name" => "foo", "guid" => "123"})
       tag.update_attribute(:name, "foo")
     end
 
