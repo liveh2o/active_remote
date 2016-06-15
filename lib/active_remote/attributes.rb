@@ -33,17 +33,5 @@ module ActiveRemote
       end
     end
     alias_method :[]=, :write_attribute
-
-    private
-
-    def attribute(name)
-      @attributes ||= {}
-      @attributes[name]
-    end
-
-    def attribute=(name, value)
-      @attributes ||= {}
-      @attributes[name] = value
-    end
   end
 end
