@@ -15,6 +15,7 @@ require 'active_remote/rpc'
 require 'active_remote/scope_keys'
 require 'active_remote/search'
 require 'active_remote/serialization'
+require 'active_remote/typecasting'
 require 'active_remote/validations'
 
 module ActiveRemote
@@ -39,6 +40,7 @@ module ActiveRemote
     include ScopeKeys
     include Search
     include Serialization
+    include Typecasting
 
     # Overrides some methods, providing support for dirty tracking,
     # so it needs to be included last.
