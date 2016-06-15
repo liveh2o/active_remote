@@ -24,7 +24,9 @@ module ActiveRemote
 
     include ActiveAttr::BasicModel
     include ActiveAttr::BlockInitialization
+    include ActiveAttr::Logger
     include ActiveAttr::MassAssignment
+    include ActiveAttr::AttributeDefaults
     include ActiveAttr::QueryAttributes
     include ActiveAttr::Serialization
 
