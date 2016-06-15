@@ -21,7 +21,11 @@ module ActiveRemote
   class Base
     extend ActiveModel::Callbacks
 
-    include ActiveAttr::Model
+    include ActiveAttr::BasicModel
+    include ActiveAttr::BlockInitialization
+    include ActiveAttr::MassAssignment
+    include ActiveAttr::QueryAttributes
+    include ActiveAttr::Serialization
 
     include Association
     include Attributes
@@ -49,7 +53,11 @@ module ActiveRemote
     define_model_callbacks :initialize, :only => :after
 
     def initialize(*)
-      @attributes ||= {}
+      @attributes ||= begin
+        attribute_names = self.class.attribute_names
+        Hash[attribute_names.map { |key| [key, send(key)] }]
+      end
+
       @new_record = true
 
       skip_dirty_tracking do
