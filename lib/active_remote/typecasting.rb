@@ -1,6 +1,27 @@
+require "active_remote/typecasting/big_decimal_typecaster"
+require "active_remote/typecasting/boolean"
+require "active_remote/typecasting/boolean_typecaster"
+require "active_remote/typecasting/date_time_typecaster"
+require "active_remote/typecasting/date_typecaster"
+require "active_remote/typecasting/float_typecaster"
+require "active_remote/typecasting/integer_typecaster"
+require "active_remote/typecasting/object_typecaster"
+require "active_remote/typecasting/string_typecaster"
+
 module ActiveRemote
   module Typecasting
     extend ActiveSupport::Concern
+
+    TYPECASTER_MAP = {
+      BigDecimal => ::ActiveRemote::Typecasting::BigDecimalTypecaster,
+      Boolean => ::ActiveRemote::Typecasting::BooleanTypecaster,
+      Date => ::ActiveRemote::Typecasting::DateTypecaster,
+      DateTime => ::ActiveRemote::Typecasting::DateTimeTypecaster,
+      Float => ::ActiveRemote::Typecasting::FloatTypecaster,
+      Integer => ::ActiveRemote::Typecasting::IntegerTypecaster,
+      Object => ::ActiveRemote::Typecasting::ObjectTypecaster,
+      String => ::ActiveRemote::Typecasting::StringTypecaster
+    }.freeze
 
     private
 
@@ -14,7 +35,14 @@ module ActiveRemote
     end
 
     def _attribute_typecaster(attribute_name)
-      self.class.attributes[attribute_name][:typecaster]
+      self.class.attributes[attribute_name][:typecaster] || _typecaster_for(attribute_name)
+    end
+
+    def _typecaster_for(attribute_name)
+      type = self.class.attributes[attribute_name][:type]
+      return nil unless type
+
+      TYPECASTER_MAP[type]
     end
   end
 end
