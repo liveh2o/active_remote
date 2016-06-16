@@ -1,24 +1,26 @@
+require "active_remote/typecasting"
+
 module ActiveRemote
   module Serializers
     module Protobuf
       extend ActiveSupport::Concern
 
       TYPECASTER_MAP = {
-        ::Protobuf::Field::BoolField     => ActiveAttr::Typecasting::BooleanTypecaster,
-        ::Protobuf::Field::BytesField    => ActiveAttr::Typecasting::StringTypecaster,
-        ::Protobuf::Field::DoubleField   => ActiveAttr::Typecasting::FloatTypecaster,
-        ::Protobuf::Field::Fixed32Field  => ActiveAttr::Typecasting::IntegerTypecaster,
-        ::Protobuf::Field::Fixed64Field  => ActiveAttr::Typecasting::IntegerTypecaster,
-        ::Protobuf::Field::FloatField    => ActiveAttr::Typecasting::FloatTypecaster,
-        ::Protobuf::Field::Int32Field    => ActiveAttr::Typecasting::IntegerTypecaster,
-        ::Protobuf::Field::Int64Field    => ActiveAttr::Typecasting::IntegerTypecaster,
-        ::Protobuf::Field::Sfixed32Field => ActiveAttr::Typecasting::IntegerTypecaster,
-        ::Protobuf::Field::Sfixed64Field => ActiveAttr::Typecasting::IntegerTypecaster,
-        ::Protobuf::Field::Sint32Field   => ActiveAttr::Typecasting::IntegerTypecaster,
-        ::Protobuf::Field::Sint64Field   => ActiveAttr::Typecasting::IntegerTypecaster,
-        ::Protobuf::Field::StringField   => ActiveAttr::Typecasting::StringTypecaster,
-        ::Protobuf::Field::Uint32Field   => ActiveAttr::Typecasting::IntegerTypecaster,
-        ::Protobuf::Field::Uint64Field   => ActiveAttr::Typecasting::IntegerTypecaster
+        ::Protobuf::Field::BoolField     => ActiveRemote::Typecasting::BooleanTypecaster,
+        ::Protobuf::Field::BytesField    => ActiveRemote::Typecasting::StringTypecaster,
+        ::Protobuf::Field::DoubleField   => ActiveRemote::Typecasting::FloatTypecaster,
+        ::Protobuf::Field::Fixed32Field  => ActiveRemote::Typecasting::IntegerTypecaster,
+        ::Protobuf::Field::Fixed64Field  => ActiveRemote::Typecasting::IntegerTypecaster,
+        ::Protobuf::Field::FloatField    => ActiveRemote::Typecasting::FloatTypecaster,
+        ::Protobuf::Field::Int32Field    => ActiveRemote::Typecasting::IntegerTypecaster,
+        ::Protobuf::Field::Int64Field    => ActiveRemote::Typecasting::IntegerTypecaster,
+        ::Protobuf::Field::Sfixed32Field => ActiveRemote::Typecasting::IntegerTypecaster,
+        ::Protobuf::Field::Sfixed64Field => ActiveRemote::Typecasting::IntegerTypecaster,
+        ::Protobuf::Field::Sint32Field   => ActiveRemote::Typecasting::IntegerTypecaster,
+        ::Protobuf::Field::Sint64Field   => ActiveRemote::Typecasting::IntegerTypecaster,
+        ::Protobuf::Field::StringField   => ActiveRemote::Typecasting::StringTypecaster,
+        ::Protobuf::Field::Uint32Field   => ActiveRemote::Typecasting::IntegerTypecaster,
+        ::Protobuf::Field::Uint64Field   => ActiveRemote::Typecasting::IntegerTypecaster
       }
 
       module ClassMethods
@@ -127,10 +129,7 @@ module ActiveRemote
         end
 
         def typecaster
-          @typecaster ||= begin
-            typecaster = TYPECASTER_MAP[field.type_class]
-            typecaster.new if typecaster
-          end
+          @typecaster ||= TYPECASTER_MAP[field.type_class]
         end
 
         def typecaster?
