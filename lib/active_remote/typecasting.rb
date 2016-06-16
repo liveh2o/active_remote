@@ -44,5 +44,17 @@ module ActiveRemote
 
       TYPECASTER_MAP[type]
     end
+
+    module ClassMethods
+      def inspect
+        inspected_attributes = attribute_names.sort.map { |name| "#{name}: #{_attribute_type(name)}" }
+        attributes_list = "(#{inspected_attributes.join(", ")})" unless inspected_attributes.empty?
+        "#{name}#{attributes_list}"
+      end
+
+      def _attribute_type(attribute_name)
+        attributes[attribute_name][:type] || Object
+      end
+    end
   end
 end
