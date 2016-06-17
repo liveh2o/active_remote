@@ -1,5 +1,13 @@
 module ActiveRemote
   module Attributes
+    def attributes
+      @attributes ||= begin
+        attribute_names = self.class.attribute_names
+        Hash[attribute_names.map { |key| [key, send(key)] }]
+      end
+      @attributes.dup
+    end
+
     # Read attribute from the attributes hash
     #
     def read_attribute(name)

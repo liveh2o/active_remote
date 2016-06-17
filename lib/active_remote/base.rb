@@ -15,13 +15,20 @@ require 'active_remote/rpc'
 require 'active_remote/scope_keys'
 require 'active_remote/search'
 require 'active_remote/serialization'
+require 'active_remote/typecasting'
 require 'active_remote/validations'
 
 module ActiveRemote
   class Base
     extend ActiveModel::Callbacks
 
-    include ActiveAttr::Model
+    include ActiveAttr::BasicModel
+    include ActiveAttr::BlockInitialization
+    include ActiveAttr::Logger
+    include ActiveAttr::MassAssignment
+    include ActiveAttr::AttributeDefaults
+    include ActiveAttr::QueryAttributes
+    include ActiveAttr::Serialization
 
     include Association
     include Attributes
@@ -35,6 +42,7 @@ module ActiveRemote
     include ScopeKeys
     include Search
     include Serialization
+    include Typecasting
 
     # Overrides some methods, providing support for dirty tracking,
     # so it needs to be included last.
@@ -49,7 +57,11 @@ module ActiveRemote
     define_model_callbacks :initialize, :only => :after
 
     def initialize(*)
-      @attributes ||= {}
+      @attributes ||= begin
+        attribute_names = self.class.attribute_names
+        Hash[attribute_names.map { |key| [key, send(key)] }]
+      end
+
       @new_record = true
 
       skip_dirty_tracking do
