@@ -2,6 +2,7 @@ require 'active_model/callbacks'
 require 'active_attr/model'
 
 require 'active_remote/association'
+require 'active_remote/attribute_defaults'
 require 'active_remote/attributes'
 require 'active_remote/bulk'
 require 'active_remote/config'
@@ -23,7 +24,9 @@ module ActiveRemote
     extend ActiveModel::Callbacks
 
     include ActiveAttr::BasicModel
+    include ActiveAttr::Attributes
     include ActiveAttr::BlockInitialization
+    include ActiveAttr::ChainableInitialization
     include ActiveAttr::Logger
     include ActiveAttr::MassAssignment
     include ActiveAttr::AttributeDefaults
@@ -31,6 +34,7 @@ module ActiveRemote
     include ActiveAttr::Serialization
 
     include Association
+    include AttributeDefaults
     include Attributes
     include Bulk
     include DSL
