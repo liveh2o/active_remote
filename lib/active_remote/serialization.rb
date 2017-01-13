@@ -18,7 +18,11 @@ module ActiveRemote
       #   Tag.serialize_records(records) # => [ Tag#{:name => 'foo'} ]
       #
       def serialize_records(records)
-        records.map { |record| instantiate(record.to_hash) }
+        records.map do |record|
+          model = instantiate(record.to_hash)
+          model.add_errors(record.errors) if record.respond_to?(:errors)
+          model
+        end
       end
     end
 

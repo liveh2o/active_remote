@@ -51,6 +51,18 @@ describe ActiveRemote::Bulk do
         Tag.__send__(bulk_method, tags)
       end
     end
+
+    context "response with errors" do
+      let(:record_with_errors) { double(:record, :errors => [double(:error, :messages => ["whine"], :field => "wat")], :to_hash => {}) }
+      let(:response) { double(:response, :records => [record_with_errors]) }
+      let(:tag) { Generic::Remote::Tag.new }
+      let(:tags) { Generic::Remote::Tags.new(:records => [ tag ]) }
+
+      it "sets the errors on the inflated ActiveRemote objects" do
+        records = Tag.__send__(bulk_method, tags)
+        expect(records.first.errors["wat"]).to eq(["whine"])
+      end
+    end
   end
 
   describe ".create_all" do
