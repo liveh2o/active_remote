@@ -12,7 +12,6 @@ describe ::ActiveRemote::Typecasting do
   describe "datetime" do
     it "casts to datetime" do
       record = test_class.new(:birthday => "2016-01-01")
-      binding.pry
       expect(record.birthday).to eq(DateTime.parse("2016-01-01"))
     end
   end
