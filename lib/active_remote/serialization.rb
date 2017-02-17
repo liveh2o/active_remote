@@ -5,6 +5,7 @@ module ActiveRemote
     extend ActiveSupport::Concern
 
     included do
+      include ::ActiveModel::Serializers::JSON
       include Serializers::JSON
     end
 
