@@ -12,6 +12,7 @@ describe ActiveRemote::Association do
       subject { Post.new(:author_guid => author_guid, :user_guid => user_guid) }
 
       it { is_expected.to respond_to(:author) }
+      it { is_expected.to respond_to(:author=) }
 
       it "searches the associated model for a single record" do
         expect(Author).to receive(:search).with(:guid => subject.author_guid).and_return(records)
@@ -62,7 +63,6 @@ describe ActiveRemote::Association do
           end
         end
       end
-
     end
 
     context "specific association with class name" do
@@ -74,6 +74,10 @@ describe ActiveRemote::Association do
       it "searches the associated model for a single record" do
         expect(Author).to receive(:search).with(:guid => subject.author_guid).and_return(records)
         expect(subject.coauthor).to eq record
+      end
+
+      it "should create a setter method" do
+        expect(subject).to respond_to(:coauthor=)
       end
     end
 
@@ -181,6 +185,7 @@ describe ActiveRemote::Association do
     subject { Category.new(category_attributes) }
 
     it { is_expected.to respond_to(:author) }
+    it { is_expected.to respond_to(:author=) }
 
     it "searches the associated model for all associated records" do
       expect(Author).to receive(:search).with(:category_guid => subject.guid).and_return(records)
@@ -213,6 +218,10 @@ describe ActiveRemote::Association do
       it "searches the associated model for a single record" do
         expect(Author).to receive(:search).with(:category_guid => subject.guid).and_return(records)
         expect(subject.senior_author).to eq record
+      end
+
+      it "should create a setter method" do
+        expect(subject).to respond_to(:senior_author=)
       end
     end
 

@@ -42,6 +42,7 @@ module ActiveRemote
 
           search_hash.values.any?(&:nil?) ? nil : klass.search(search_hash).first
         end
+        create_setter_method(belongs_to_klass, options)
       end
 
       # Create a `has_many` association for a given remote resource.
@@ -121,6 +122,7 @@ module ActiveRemote
 
           search_hash.values.any?(&:nil?) ? nil : klass.search(search_hash).first
         end
+        create_setter_method(has_one_klass, options)
       end
 
       # when requiring an attribute on your search, we verify the attribute
@@ -132,11 +134,22 @@ module ActiveRemote
 
     private
 
+      def create_setter_method(associated_klass, options={})
+        writer_method = "#{associated_klass}=".to_sym
+        define_method(writer_method) do |new_value|
+          klass_name = options.fetch(:class_name){ associated_klass }
+          klass = klass_name.to_s.classify.constantize
+
+          instance_variable_set(:"@#{new_value.class.name.demodulize.underscore}", new_value)
+          new_value
+        end
+      end
+
       def perform_association(associated_klass, options={})
         define_method(associated_klass) do
           klass_name = options.fetch(:class_name){ associated_klass }
           klass = klass_name.to_s.classify.constantize
-
+          
           self.class.validate_scoped_attributes(klass, self.class, options) if options.has_key?(:scope)
 
           value = instance_variable_get(:"@#{associated_klass}")
