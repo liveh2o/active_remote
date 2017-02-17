@@ -73,7 +73,10 @@ module ActiveRemote
     #   Person.new.attribute_defaults #=> {"first_name"=>"John"}
     #
     def attribute_defaults
-      attributes_map { |name| _attribute_default name }
+      self.class.attribute_names.inject({}) do |defaults, name|
+        defaults[name] = _attribute_default(name)
+        defaults
+      end
     end
 
     # Applies attribute default values
