@@ -12,7 +12,6 @@ module ActiveRemote
       attribute_method_suffix "="
     end
 
-
     # Performs equality checking on the result of attributes and its type.
     #
     # @example Compare for equality.
@@ -115,7 +114,7 @@ module ActiveRemote
       # @since 0.2.0
       def attribute(name, options={})
         if dangerous_attribute_method_name = dangerous_attribute?(name)
-          raise DangerousAttributeError, %{an attribute method named "#{dangerous_attribute_method_name}" would conflict with an existing method}
+          raise ::ActiveRemote::DangerousAttributeError, %{an attribute method named "#{dangerous_attribute_method_name}" would conflict with an existing method}
         else
           attribute! name, options
         end
@@ -138,7 +137,7 @@ module ActiveRemote
       #
       # @since 0.6.0
       def attribute!(name, options={})
-        AttributeDefinition.new(name, options).tap do |attribute_definition|
+        ::ActiveRemote::AttributeDefinition.new(name, options).tap do |attribute_definition|
           attribute_name = attribute_definition.name.to_s
           # Force active model to generate attribute methods
           remove_instance_variable("@attribute_methods_generated") if instance_variable_defined?("@attribute_methods_generated")
@@ -152,9 +151,6 @@ module ActiveRemote
       # @example Get attribute names
       #   Person.attribute_names
       #
-      # @return [Array<String>] The attribute names
-      #
-      # @since 0.5.0
       def attribute_names
         attributes.keys
       end
@@ -164,12 +160,8 @@ module ActiveRemote
       # @example Get attribute definitions
       #   Person.attributes
       #
-      # @return [ActiveSupport::HashWithIndifferentAccess{String => ActiveAttr::AttributeDefinition}]
-      #   The Hash of AttributeDefinition instances
-      #
-      # @since 0.2.0
       def attributes
-        @attributes ||= ActiveSupport::HashWithIndifferentAccess.new
+        @attributes ||= ::ActiveSupport::HashWithIndifferentAccess.new
       end
 
       # Determine if a given attribute name is dangerous
@@ -183,13 +175,8 @@ module ActiveRemote
       #   Person.dangerous_attribute? :name #=> false
       #
       # @example Testing a dangerous attribute
-      #   Person.dangerous_attribute? :nil #=> "nil?"
+      #   Person.dangerous_attribute? :timeout #=> "timeout"
       #
-      # @param name Attribute name
-      #
-      # @return [false, String] False or the conflicting method name
-      #
-      # @since 0.6.0
       def dangerous_attribute?(name)
         attribute_methods(name).detect do |method_name|
           !DEPRECATED_OBJECT_METHODS.include?(method_name.to_s) && allocate.respond_to?(method_name, true)
@@ -203,7 +190,6 @@ module ActiveRemote
       #
       # @return [String] Human-readable presentation of the attributes
       #
-      # @since 0.2.0
       def inspect
         inspected_attributes = attribute_names.sort
         attributes_list = "(#{inspected_attributes.join(", ")})" unless inspected_attributes.empty?
