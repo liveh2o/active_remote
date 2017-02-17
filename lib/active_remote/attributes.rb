@@ -60,7 +60,7 @@ module ActiveRemote
       if respond_to? name
         attribute(name)
       else
-        raise ActiveAttr::UnknownAttributeError, "unknown attribute: #{name}"
+        raise ::ActiveRemote::UnknownAttributeError, "unknown attribute: #{name}"
       end
     end
     alias_method :[], :read_attribute
@@ -73,7 +73,7 @@ module ActiveRemote
       if respond_to? "#{name}="
         __send__("attribute=", name, value)
       else
-        raise ActiveAttr::UnknownAttributeError, "unknown attribute: #{name}"
+        raise ::ActiveRemote::UnknownAttributeError, "unknown attribute: #{name}"
       end
     end
     alias_method :[]=, :write_attribute

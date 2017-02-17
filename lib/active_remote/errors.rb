@@ -41,4 +41,7 @@ module ActiveRemote
   # when remote record cannot be saved because it is invalid.
   class RemoteRecordNotSaved < ActiveRemoteError
   end
+
+  class UnknownAttributeError < ActiveRemoteError
+  end
 end
