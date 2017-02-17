@@ -1,5 +1,4 @@
 require 'active_model/callbacks'
-require 'active_attr/model'
 
 require 'active_remote/association'
 require 'active_remote/attribute_defaults'
@@ -27,19 +26,9 @@ module ActiveRemote
   class Base
     extend ActiveModel::Callbacks
 
-    # include ActiveAttr::BasicModel
     extend ::ActiveModel::Naming
     include ActiveModel::Conversion
     include ActiveModel::Validations
-
-    # include ActiveAttr::Attributes
-    # include ActiveAttr::BlockInitialization
-    # include ActiveAttr::ChainableInitialization
-    # include ActiveAttr::Logger
-    # include ActiveAttr::MassAssignment
-    # include ActiveAttr::AttributeDefaults
-    # include ActiveAttr::QueryAttributes
-    # include ActiveAttr::Serialization
 
     include Association
     include AttributeDefaults
