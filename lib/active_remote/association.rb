@@ -132,6 +132,17 @@ module ActiveRemote
 
     private
 
+      def create_setter_method(associated_klass, options={})
+        writer_method = "#{associated_klass}=".to_sym
+        define_method(writer_method) do |new_value|
+          klass_name = options.fetch(:class_name){ associated_klass }
+          klass = klass_name.to_s.classify.constantize
+
+          instance_variable_set(:"@#{new_value.class.name.demodulize.underscore}", new_value)
+          new_value
+        end
+      end
+
       def perform_association(associated_klass, options={})
         define_method(associated_klass) do
           klass_name = options.fetch(:class_name){ associated_klass }
@@ -148,6 +159,8 @@ module ActiveRemote
 
           return value
         end
+
+        create_setter_method(associated_klass, options)
       end
     end
   end
