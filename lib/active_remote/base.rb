@@ -24,37 +24,37 @@ require 'active_remote/validations'
 
 module ActiveRemote
   class Base
-    extend ActiveModel::Callbacks
-
+    extend ::ActiveModel::Callbacks
     extend ::ActiveModel::Naming
-    include ActiveModel::Conversion
-    include ActiveModel::Validations
 
-    include Association
-    include AttributeDefaults
-    include Attributes
-    include Bulk
-    include BlockInitialization
-    include ChainableInitialization
-    include DSL
-    include Integration
-    include MassAssignment
-    include Persistence
-    include PrimaryKey
-    include Publication
-    include RPC
-    include ScopeKeys
-    include Search
-    include Serialization
-    include Typecasting
+    include ::ActiveModel::Conversion
+    include ::ActiveModel::Validations
+
+    include ::ActiveRemote::Association
+    include ::ActiveRemote::AttributeDefaults
+    include ::ActiveRemote::Attributes
+    include ::ActiveRemote::Bulk
+    include ::ActiveRemote::BlockInitialization
+    include ::ActiveRemote::ChainableInitialization
+    include ::ActiveRemote::DSL
+    include ::ActiveRemote::Integration
+    include ::ActiveRemote::MassAssignment
+    include ::ActiveRemote::Persistence
+    include ::ActiveRemote::PrimaryKey
+    include ::ActiveRemote::Publication
+    include ::ActiveRemote::RPC
+    include ::ActiveRemote::ScopeKeys
+    include ::ActiveRemote::Search
+    include ::ActiveRemote::Serialization
+    include ::ActiveRemote::Typecasting
 
     # Overrides some methods, providing support for dirty tracking,
     # so it needs to be included last.
-    include Dirty
+    include ::ActiveRemote::Dirty
 
     # Overrides persistence methods, so it must included after
-    include Validations
-    include ActiveModel::Validations::Callbacks
+    include ::ActiveRemote::Validations
+    include ::ActiveModel::Validations::Callbacks
 
     attr_reader :last_request, :last_response
 
