@@ -30,27 +30,4 @@ describe ActiveRemote::Serialization do
       end
     end
   end
-
-  describe "#add_errors_from_response" do
-    subject { Tag.new }
-
-    context "when the response responds to :errors" do
-      let(:error) { Generic::Error.new(:field => 'name', :message => 'Boom!') }
-      let(:response) { Generic::Remote::Tag.new(:errors => [ error ]) }
-
-      it "adds errors to the active remote object" do
-        expect(subject).to receive(:add_errors).with(response.errors)
-        subject.add_errors_from_response(response)
-      end
-    end
-
-    context "when the response does not respond to :errors" do
-      let(:response_without_errors) { double(:response_without_errors) }
-
-      it "does not add errors" do
-        expect(subject).to_not receive(:add_errors)
-        subject.add_errors_from_response(response_without_errors)
-      end
-    end
-  end
 end
