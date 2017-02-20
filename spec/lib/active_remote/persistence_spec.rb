@@ -1,16 +1,16 @@
 require 'spec_helper'
 
-describe ActiveRemote::Persistence do
-  let(:rpc) { Tag.new }
-  let(:response_without_errors) { HashWithIndifferentAccess.new(:errors => []) }
+describe ::ActiveRemote::Persistence do
+  let(:response_without_errors) { ::HashWithIndifferentAccess.new(:errors => []) }
+  let(:rpc) { ::ActiveRemote::RPCAdapters::ProtobufAdapter.new(::Tag.service_class) }
 
-  subject { Tag.new }
+  subject { ::Tag.new }
 
   before {
     allow(rpc).to receive(:execute).and_return(response_without_errors)
     allow(Tag).to receive(:rpc).and_return(rpc)
   }
-  after { allow(Tag).to receive(:rpc).and_call_original }
+  after { allow(::Tag).to receive(:rpc).and_call_original }
 
   describe ".create" do
     it "runs create callbacks" do
@@ -251,9 +251,6 @@ describe ActiveRemote::Persistence do
   end
 
   describe "#save!" do
-    before { allow(subject).to receive(:execute) }
-    after { allow(subject).to receive(:execute).and_call_original }
-
     context "when the record is saved" do
       it "returns true" do
         allow(subject).to receive(:save).and_return(true)
@@ -286,16 +283,13 @@ describe ActiveRemote::Persistence do
   describe "#update_attribute" do
     let(:tag) { Tag.allocate.instantiate({:guid => "123"}) }
 
-    before { allow(Tag.rpc).to receive(:execute).and_return(HashWithIndifferentAccess.new) }
-    after { allow(Tag.rpc).to receive(:execute).and_call_original }
-
     it "runs update callbacks" do
       expect(tag).to receive(:after_update_callback)
       tag.update_attribute(:name, "foo")
     end
 
     it "updates a remote record" do
-      expect(Tag.rpc).to receive(:execute).with(:update, {"name" => "foo", "guid" => "123"})
+      expect(rpc).to receive(:execute).with(:update, {"name" => "foo", "guid" => "123"})
       tag.update_attribute(:name, "foo")
     end
 
@@ -317,16 +311,13 @@ describe ActiveRemote::Persistence do
     let(:attributes) { HashWithIndifferentAccess.new(:name => 'bar') }
     let(:tag) { Tag.allocate.instantiate({:guid => "123"}) }
 
-    before { allow(Tag.rpc).to receive(:execute).and_return(HashWithIndifferentAccess.new) }
-    after { allow(Tag.rpc).to receive(:execute).and_call_original }
-
     it "runs update callbacks" do
       expect(tag).to receive(:after_update_callback)
       tag.update_attributes({})
     end
 
     it "updates a remote record" do
-      expect(Tag.rpc).to receive(:execute).with(:update, tag.scope_key_hash)
+      expect(rpc).to receive(:execute).with(:update, tag.scope_key_hash)
       tag.update_attributes({})
     end
 
