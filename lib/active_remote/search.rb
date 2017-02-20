@@ -13,14 +13,6 @@ module ActiveRemote
     end
 
     module ClassMethods
-
-      # :noapi:
-      def _active_remote_search_args(args)
-        warn "DEPRECATED Model._active_remote_search_args is depracted and will be remoted in Active Remote 3.0."
-
-        validate_search_args!(args)
-      end
-
       # Tries to load the first record; if it fails, an exception is raised.
       #
       # ====Examples
