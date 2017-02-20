@@ -1,12 +1,9 @@
-require 'active_remote/serializers/json'
-
 module ActiveRemote
   module Serialization
     extend ActiveSupport::Concern
 
     included do
       include ::ActiveModel::Serializers::JSON
-      include Serializers::JSON
     end
 
     module ClassMethods
