@@ -78,7 +78,7 @@ module ActiveRemote
       raise ReadOnlyRemoteRecord if readonly?
       response = rpc.execute(:delete, scope_key_hash)
 
-      add_errors_from_response(response)
+      add_errors(response.errors) if response.respond_to?(:errors)
 
       return success? ? freeze : false
     end
@@ -103,7 +103,7 @@ module ActiveRemote
       raise ReadOnlyRemoteRecord if readonly?
       response = rpc.execute(:destroy, scope_key_hash)
 
-      add_errors_from_response(response)
+      add_errors(response.errors) if response.respond_to?(:errors)
 
       return success? ? freeze : false
     end
@@ -252,7 +252,7 @@ module ActiveRemote
         response = rpc.execute(:create, new_attributes)
 
         assign_attributes(response.to_hash)
-        add_errors_from_response(response)
+        add_errors(response.errors) if response.respond_to?(:errors)
 
         @new_record = has_errors?
         success?
@@ -282,7 +282,7 @@ module ActiveRemote
         response = rpc.execute(:update, updated_attributes)
 
         assign_attributes(response.to_hash)
-        add_errors_from_response(response)
+        add_errors(response.errors) if response.respond_to?(:errors)
 
         success?
       end
