@@ -158,7 +158,7 @@ describe ActiveRemote::Association do
         before { allow(subject).to receive(:respond_to?).with("user_guid").and_return(false) }
 
         it 'raises an error' do
-          expect {subject.user_posts}.to raise_error(::ActiveAttr::UnknownAttributeError)
+          expect {subject.user_posts}.to raise_error(::ActiveRemote::UnknownAttributeError)
         end
       end
 
@@ -246,7 +246,7 @@ describe ActiveRemote::Association do
         before { allow(subject).to receive(:respond_to?).with("user_guid").and_return(false) }
 
         it 'raises an error' do
-          expect {subject.chief_editor}.to raise_error(::ActiveAttr::UnknownAttributeError)
+          expect {subject.chief_editor}.to raise_error(::ActiveRemote::UnknownAttributeError)
         end
       end
 

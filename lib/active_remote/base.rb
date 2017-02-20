@@ -1,14 +1,17 @@
 require 'active_model/callbacks'
-require 'active_attr/model'
 
 require 'active_remote/association'
 require 'active_remote/attribute_defaults'
+require 'active_remote/attribute_definition'
 require 'active_remote/attributes'
 require 'active_remote/bulk'
+require 'active_remote/block_initialization'
 require 'active_remote/config'
+require 'active_remote/chainable_initialization'
 require 'active_remote/dirty'
 require 'active_remote/dsl'
 require 'active_remote/integration'
+require 'active_remote/mass_assignment'
 require 'active_remote/persistence'
 require 'active_remote/primary_key'
 require 'active_remote/publication'
@@ -21,40 +24,37 @@ require 'active_remote/validations'
 
 module ActiveRemote
   class Base
-    extend ActiveModel::Callbacks
+    extend ::ActiveModel::Callbacks
+    extend ::ActiveModel::Naming
 
-    include ActiveAttr::BasicModel
-    include ActiveAttr::Attributes
-    include ActiveAttr::BlockInitialization
-    include ActiveAttr::ChainableInitialization
-    include ActiveAttr::Logger
-    include ActiveAttr::MassAssignment
-    include ActiveAttr::AttributeDefaults
-    include ActiveAttr::QueryAttributes
-    include ActiveAttr::Serialization
+    include ::ActiveModel::Conversion
+    include ::ActiveModel::Validations
 
-    include Association
-    include AttributeDefaults
-    include Attributes
-    include Bulk
-    include DSL
-    include Integration
-    include Persistence
-    include PrimaryKey
-    include Publication
-    include RPC
-    include ScopeKeys
-    include Search
-    include Serialization
-    include Typecasting
+    include ::ActiveRemote::Association
+    include ::ActiveRemote::AttributeDefaults
+    include ::ActiveRemote::Attributes
+    include ::ActiveRemote::Bulk
+    include ::ActiveRemote::BlockInitialization
+    include ::ActiveRemote::ChainableInitialization
+    include ::ActiveRemote::DSL
+    include ::ActiveRemote::Integration
+    include ::ActiveRemote::MassAssignment
+    include ::ActiveRemote::Persistence
+    include ::ActiveRemote::PrimaryKey
+    include ::ActiveRemote::Publication
+    include ::ActiveRemote::RPC
+    include ::ActiveRemote::ScopeKeys
+    include ::ActiveRemote::Search
+    include ::ActiveRemote::Serialization
+    include ::ActiveRemote::Typecasting
 
     # Overrides some methods, providing support for dirty tracking,
     # so it needs to be included last.
-    include Dirty
+    include ::ActiveRemote::Dirty
 
     # Overrides persistence methods, so it must included after
-    include Validations
-    include ActiveModel::Validations::Callbacks
+    include ::ActiveRemote::Validations
+    include ::ActiveModel::Validations::Callbacks
 
     attr_reader :last_request, :last_response
 

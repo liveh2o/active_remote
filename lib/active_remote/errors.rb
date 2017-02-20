@@ -5,6 +5,9 @@ module ActiveRemote
   class ActiveRemoteError < StandardError
   end
 
+  class DangerousAttributeError < ActiveRemoteError
+  end
+
   # Raised by ActiveRemove::Base.save when the remote record is readonly.
   class ReadOnlyRemoteRecord < ActiveRemoteError
   end
@@ -40,5 +43,8 @@ module ActiveRemote
   # Raised by ActiveRemove::Base.save! and ActiveRemote::Base.create! methods
   # when remote record cannot be saved because it is invalid.
   class RemoteRecordNotSaved < ActiveRemoteError
+  end
+
+  class UnknownAttributeError < ActiveRemoteError
   end
 end

@@ -1,3 +1,5 @@
+require "active_support/core_ext/string/conversions"
+
 require "active_remote/typecasting/big_decimal_typecaster"
 require "active_remote/typecasting/boolean"
 require "active_remote/typecasting/boolean_typecaster"
