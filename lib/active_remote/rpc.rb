@@ -3,76 +3,10 @@ require 'active_remote/serializers/protobuf'
 
 module ActiveRemote
   module RPC
-    extend ActiveSupport::Concern
+    extend ::ActiveSupport::Concern
 
     included do
-      include Embedded
-    end
-
-    module Embedded
-      extend ActiveSupport::Concern
-
-      included do
-        include Serializers::Protobuf
-      end
-
-      module ClassMethods
-        # :noapi:
-        def request(rpc_method, request_args)
-          warn "DEPRECATED Model.request is deprecated and will be removed in Active Remote 3.0. This is handled by the Protobuf RPC adpater now"
-
-          return request_args unless request_args.is_a?(Hash)
-
-          message_class = request_type(rpc_method)
-          fields = fields_from_attributes(message_class, request_args)
-          message_class.new(fields)
-        end
-
-        # :noapi:
-        def request_type(rpc_method)
-          warn "DEPRECATED Model.request_type is deprecated and will be removed in Active Remote 3.0. This is handled by the Protobuf RPC adpater now"
-
-          service_class.rpcs[rpc_method].request_type
-        end
-      end
-
-      # :noapi:
-      def execute(rpc_method, request_args)
-        warn "DEPRECATED Model#execute is deprecated and will be removed in Active Remote 3.0. Use Model#rpc.execute instead"
-
-        @last_request = request(rpc_method, request_args)
-
-        _service_class.client.__send__(rpc_method, @last_request) do |c|
-
-          # In the event of service failure, raise the error.
-          c.on_failure do |error|
-            raise ActiveRemoteError, error.message
-          end
-
-          # In the event of service success, assign the response.
-          c.on_success do |response|
-            @last_response = response
-          end
-        end
-
-        @last_response
-      end
-
-      # :noapi:
-      def remote_call(rpc_method, request_args)
-        warn "DEPRECATED Model#remote_call is deprecated and will be removed in Active Remote 3.0. Use Model#rpc.execute instead"
-
-        rpc.execute(rpc_method, request_args)
-      end
-
-      private
-
-      # :noapi:
-      def request(rpc_method, attributes)
-        warn "DEPRECATED Model#request is deprecated and will be removed in Active Remote 3.0. This is handled by the Protobuf RPC adpater now"
-
-        self.class.request(rpc_method, attributes)
-      end
+      include ::ActiveRemote::Serializers::Protobuf
     end
 
     module ClassMethods
@@ -104,7 +38,7 @@ module ActiveRemote
         #
         # path_to_adapter.classify.constantize
 
-        RPCAdapters::ProtobufAdapter
+        ::ActiveRemote::RPCAdapters::ProtobufAdapter
       end
     end
 
