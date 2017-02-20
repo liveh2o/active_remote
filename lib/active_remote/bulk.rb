@@ -103,19 +103,6 @@ module ActiveRemote
         end
       end
 
-      # Parse given records to get them ready to be built into a request.
-      #
-      # It handles any object that responds to +to_hash+, so protobuf messages
-      # and active remote objects will work just like hashes.
-      #
-      # Returns +{ :records => records }+.
-      #
-      def parse_records(*records)
-        warn "DEPRECATED Model.parse_records is deprecated. It will be removed in Active Remove 3.0"
-
-        _parse_records(*records)
-      end
-
       # Update multiple records at the same time. Returns a collection of active
       # remote objects from the passed records. Records that were not updated
       # are returned with error messages indicating what went wrong.
