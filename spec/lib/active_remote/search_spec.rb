@@ -65,27 +65,6 @@ describe ActiveRemote::Search do
     end
   end
 
-  describe "#_active_remote_search" do
-    let(:args) { Hash.new }
-
-    subject { Tag.new }
-
-    before {
-      allow(rpc).to receive(:execute).and_return(response)
-      allow(Tag).to receive(:rpc).and_return(rpc)
-    }
-
-    it "runs callbacks" do
-      expect(subject).to receive(:run_callbacks).with(:search)
-      subject._active_remote_search(args)
-    end
-
-    it "executes the search" do
-      expect(rpc).to receive(:execute).with(:search, args)
-      subject._active_remote_search(args)
-    end
-  end
-
   describe "#reload" do
     let(:args) { attributes.slice('guid', 'user_guid') }
     let(:attributes) { HashWithIndifferentAccess.new(:guid => 'foo', :name => 'bar', :updated_at => nil, :user_guid => 'baz') }
