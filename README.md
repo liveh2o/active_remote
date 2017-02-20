@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/liveh2o/active_remote.svg?branch=master)](https://travis-ci.org/liveh2o/active_remote)
+
 # Active Remote
 
 Active Remote provides [Active Record](https://github.com/rails/rails/tree/master/activerecord)-like object-relational mapping over RPC. Think of it as Active Record for your platform: within a service, use Active Record to persist objects and between services, use Active Remote.
