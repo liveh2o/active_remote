@@ -2,7 +2,6 @@ require 'active_model/callbacks'
 
 require 'active_remote/association'
 require 'active_remote/attribute_assignment'
-require 'active_remote/attribute_defaults'
 require 'active_remote/attribute_definition'
 require 'active_remote/attributes'
 require 'active_remote/bulk'
@@ -31,7 +30,6 @@ module ActiveRemote
 
     include ::ActiveRemote::Association
     include ::ActiveRemote::AttributeAssignment
-    include ::ActiveRemote::AttributeDefaults
     include ::ActiveRemote::Attributes
     include ::ActiveRemote::Bulk
     include ::ActiveRemote::BlockInitialization
@@ -61,7 +59,7 @@ module ActiveRemote
     def initialize(attributes = {})
       @attributes ||= begin
         attribute_names = self.class.attribute_names
-        Hash[attribute_names.map { |key| [key, send(key)] }]
+        Hash[attribute_names.map { |key| [key, nil] }]
       end
 
       assign_attributes(attributes) if attributes
