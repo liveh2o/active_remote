@@ -4,7 +4,6 @@ module ActiveRemote
     include ::ActiveModel::AttributeMethods
 
     included do
-      attribute_method_suffix "" if attribute_method_matchers.none? { |matcher| matcher.prefix == "" && matcher.suffix == "" }
       attribute_method_suffix "="
     end
 
