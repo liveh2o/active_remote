@@ -5,9 +5,7 @@ require 'active_remote/attribute_assignment'
 require 'active_remote/attribute_definition'
 require 'active_remote/attributes'
 require 'active_remote/bulk'
-require 'active_remote/block_initialization'
 require 'active_remote/config'
-require 'active_remote/chainable_initialization'
 require 'active_remote/dirty'
 require 'active_remote/dsl'
 require 'active_remote/integration'
@@ -32,8 +30,6 @@ module ActiveRemote
     include ::ActiveRemote::AttributeAssignment
     include ::ActiveRemote::Attributes
     include ::ActiveRemote::Bulk
-    include ::ActiveRemote::BlockInitialization
-    include ::ActiveRemote::ChainableInitialization
     include ::ActiveRemote::DSL
     include ::ActiveRemote::Integration
     include ::ActiveRemote::Persistence
@@ -68,7 +64,7 @@ module ActiveRemote
 
       skip_dirty_tracking do
         run_callbacks :initialize do
-          super
+          yield self if block_given?
         end
       end
     end
