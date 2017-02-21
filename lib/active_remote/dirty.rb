@@ -57,15 +57,6 @@ module ActiveRemote
       enable_dirty_tracking
     end
 
-    # Override #write_attribute (along with #[]=) so we can provide support for
-    # ActiveModel::Dirty.
-    #
-    def write_attribute(name, value)
-      __send__("#{name}_will_change!") if _active_remote_track_changes? && value != self[name]
-      super
-    end
-    alias_method :[]=, :write_attribute
-
   private
 
     # Wether or not changes are currently being tracked for this class.
