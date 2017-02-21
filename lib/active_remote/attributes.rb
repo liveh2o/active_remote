@@ -3,9 +3,6 @@ module ActiveRemote
     extend ::ActiveSupport::Concern
     include ::ActiveModel::AttributeMethods
 
-    # Methods deprecated on the Object class which can be safely overridden
-    DEPRECATED_OBJECT_METHODS = %w(id type)
-
     included do
       attribute_method_suffix "" if attribute_method_matchers.none? { |matcher| matcher.prefix == "" && matcher.suffix == "" }
       attribute_method_suffix "="
@@ -152,9 +149,11 @@ module ActiveRemote
       #   Person.dangerous_attribute? :timeout #=> "timeout"
       #
       def dangerous_attribute?(name)
+        return false if attribute_names.include?(name.to_s)
+
         attribute_methods(name).detect do |method_name|
-          !DEPRECATED_OBJECT_METHODS.include?(method_name.to_s) && allocate.respond_to?(method_name, true)
-        end unless attribute_names.include? name.to_s
+          allocate.respond_to?(method_name, true)
+        end
       end
 
       # Returns the class name plus its attribute names
