@@ -14,7 +14,7 @@ module ActiveRemote
     #   model == other
     #
     def ==(other)
-      return false unless other.instance_of? self.class
+      return false unless other.instance_of?(self.class)
       attributes == other.attributes
     end
 
@@ -92,7 +92,7 @@ module ActiveRemote
         if dangerous_attribute_method_name = dangerous_attribute?(name)
           raise ::ActiveRemote::DangerousAttributeError, %{an attribute method named "#{dangerous_attribute_method_name}" would conflict with an existing method}
         else
-          attribute! name, options
+          attribute!(name, options)
         end
       end
 
@@ -112,7 +112,7 @@ module ActiveRemote
           attribute_name = attribute_definition.name.to_s
           # Force active model to generate attribute methods
           remove_instance_variable("@attribute_methods_generated") if instance_variable_defined?("@attribute_methods_generated")
-          define_attribute_methods([attribute_definition.name]) unless attribute_names.include? attribute_name
+          define_attribute_methods([attribute_definition.name]) unless attribute_names.include?(attribute_name)
           attributes[attribute_name] = attribute_definition
         end
       end
@@ -180,7 +180,7 @@ module ActiveRemote
       # Expand an attribute name into its generated methods names
       #
       def attribute_methods(name)
-        attribute_method_matchers.map { |matcher| matcher.method_name name }
+        attribute_method_matchers.map { |matcher| matcher.method_name(name) }
       end
 
       # Ruby inherited hook to assign superclass attributes to subclasses
