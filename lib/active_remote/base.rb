@@ -1,6 +1,7 @@
 require 'active_model/callbacks'
 
 require 'active_remote/association'
+require 'active_remote/attribute_assignment'
 require 'active_remote/attribute_defaults'
 require 'active_remote/attribute_definition'
 require 'active_remote/attributes'
@@ -11,7 +12,6 @@ require 'active_remote/chainable_initialization'
 require 'active_remote/dirty'
 require 'active_remote/dsl'
 require 'active_remote/integration'
-require 'active_remote/mass_assignment'
 require 'active_remote/persistence'
 require 'active_remote/primary_key'
 require 'active_remote/rpc'
@@ -30,6 +30,7 @@ module ActiveRemote
     include ::ActiveModel::Validations
 
     include ::ActiveRemote::Association
+    include ::ActiveRemote::AttributeAssignment
     include ::ActiveRemote::AttributeDefaults
     include ::ActiveRemote::Attributes
     include ::ActiveRemote::Bulk
@@ -37,7 +38,6 @@ module ActiveRemote
     include ::ActiveRemote::ChainableInitialization
     include ::ActiveRemote::DSL
     include ::ActiveRemote::Integration
-    include ::ActiveRemote::MassAssignment
     include ::ActiveRemote::Persistence
     include ::ActiveRemote::PrimaryKey
     include ::ActiveRemote::RPC
@@ -58,11 +58,13 @@ module ActiveRemote
 
     define_model_callbacks :initialize, :only => :after
 
-    def initialize(*)
+    def initialize(attributes = {})
       @attributes ||= begin
         attribute_names = self.class.attribute_names
         Hash[attribute_names.map { |key| [key, send(key)] }]
       end
+
+      assign_attributes(attributes) if attributes
 
       @new_record = true
 
