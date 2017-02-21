@@ -83,6 +83,9 @@ module ActiveRemote
 
           search_hash.values.any?(&:nil?) ? [] : klass.search(search_hash)
         end
+
+        options.merge!(:has_many => true)
+        create_setter_method(has_many_class, options)
       end
 
       # Create a `has_one` association for a given remote resource.
@@ -135,6 +138,7 @@ module ActiveRemote
       def create_setter_method(associated_klass, options={})
         writer_method = "#{associated_klass}=".to_sym
         define_method(writer_method) do |new_value|
+          raise "New value must be an array" if options[:has_many] == true && new_value.class != Array
           klass_name = options.fetch(:class_name){ associated_klass }
           klass = klass_name.to_s.classify.constantize
 

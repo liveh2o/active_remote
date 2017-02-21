@@ -102,6 +102,7 @@ describe ActiveRemote::Association do
     subject { Author.new(:guid => guid, :user_guid => user_guid) }
 
     it { is_expected.to respond_to(:posts) }
+    it { is_expected.to respond_to(:posts=) }
 
     it "searches the associated model for all associated records" do
       expect(Post).to receive(:search).with(:author_guid => subject.guid).and_return(records)
@@ -167,6 +168,14 @@ describe ActiveRemote::Association do
 
         it 'raises an error' do
           expect {subject.user_posts}.to raise_error(::RuntimeError, /Could not find attribute/)
+        end
+      end
+    end
+
+    context "writer method" do
+      context "when new value is not an array" do
+        it "should raise error" do
+          expect { subject.posts = Post.new }.to raise_error(::RuntimeError, /New value must be an array/)
         end
       end
     end
