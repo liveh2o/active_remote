@@ -38,7 +38,7 @@ module ActiveRemote
     def read_attribute(name)
       name = name.to_s
 
-      if respond_to? name
+      if respond_to?(name)
         attribute(name)
       else
         raise ::ActiveRemote::UnknownAttributeError, "unknown attribute: #{name}"
@@ -51,7 +51,7 @@ module ActiveRemote
     def write_attribute(name, value)
       name = name.to_s
 
-      if respond_to? "#{name}="
+      if respond_to?("#{name}=")
         __send__("attribute=", name, value)
       else
         raise ::ActiveRemote::UnknownAttributeError, "unknown attribute: #{name}"
