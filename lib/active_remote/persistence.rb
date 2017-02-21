@@ -128,6 +128,11 @@ module ActiveRemote
     # when retrieving records that already exist, so @new_record is set to false.
     #
     def instantiate(record)
+      @attributes ||= begin
+        attribute_names = self.class.attribute_names
+        Hash[attribute_names.map { |key| [key, nil] }]
+      end
+
       skip_dirty_tracking do
         assign_attributes(record)
       end
