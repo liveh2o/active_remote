@@ -129,7 +129,7 @@ module ActiveRemote
     #
     def instantiate(record)
       skip_dirty_tracking do
-        assign_attributes(record, :without_protection => true)
+        assign_attributes(record)
       end
 
       # TODO: figure out how to safely run after_find/search callbacks here
