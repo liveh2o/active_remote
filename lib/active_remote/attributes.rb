@@ -17,11 +17,8 @@ module ActiveRemote
       attributes == other.attributes
     end
 
+    # Returns a copy of our attributes hash
     def attributes
-      @attributes ||= begin
-        attribute_names = self.class.attribute_names
-        Hash[attribute_names.map { |key| [key, send(key)] }]
-      end
       @attributes.dup
     end
 
@@ -65,14 +62,12 @@ module ActiveRemote
     # Read an attribute from the attributes hash
     #
     def attribute(name)
-      @attributes ||= {}
       @attributes[name]
     end
 
     # Write an attribute to the attributes hash
     #
     def attribute=(name, value)
-      @attributes ||= {}
       @attributes[name] = value
     end
 
