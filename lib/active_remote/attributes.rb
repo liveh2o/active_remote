@@ -71,6 +71,12 @@ module ActiveRemote
       @attributes[name] = value
     end
 
+    def attribute_method?(attr_name)
+      # Check if @attributes is defined because dangerous_attribute? method
+      # can check allocate.respond_to? before actaully calling initialize
+      defined?(@attributes) && @attributes.key?(attr_name)
+    end
+
     module ClassMethods
       # Defines an attribute
       #
