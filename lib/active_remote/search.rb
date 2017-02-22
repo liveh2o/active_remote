@@ -8,8 +8,6 @@ module ActiveRemote
     included do
       include Persistence
       include RPC
-
-      define_model_callbacks :search
     end
 
     module ClassMethods
@@ -94,7 +92,6 @@ module ActiveRemote
 
         if response.respond_to?(:records)
           records = serialize_records(response.records)
-          records.each { |record| record.run_callbacks :search }
         end
       end
 
