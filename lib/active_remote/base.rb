@@ -4,7 +4,6 @@ require 'active_remote/association'
 require 'active_remote/attribute_assignment'
 require 'active_remote/attribute_definition'
 require 'active_remote/attributes'
-require 'active_remote/bulk'
 require 'active_remote/config'
 require 'active_remote/dirty'
 require 'active_remote/dsl'
@@ -29,7 +28,6 @@ module ActiveRemote
     include ::ActiveRemote::Association
     include ::ActiveRemote::AttributeAssignment
     include ::ActiveRemote::Attributes
-    include ::ActiveRemote::Bulk
     include ::ActiveRemote::DSL
     include ::ActiveRemote::Integration
     include ::ActiveRemote::Persistence
