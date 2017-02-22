@@ -111,15 +111,6 @@ module ActiveRemote
       end
     end
 
-    # :noapi:
-    def _active_remote_search(args)
-      warn "DEPRECATED Model#_active_remote_search is depracted and will be remoted in Active Remote 3.0."
-
-      run_callbacks :search do
-        rpc.execute(:search, args)
-      end
-    end
-
     # Reload this record from the remote service.
     #
     def reload
