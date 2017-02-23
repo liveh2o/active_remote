@@ -8,8 +8,6 @@ module ActiveRemote
     included do
       include Persistence
       include RPC
-
-      define_model_callbacks :search
     end
 
     module ClassMethods
@@ -94,7 +92,6 @@ module ActiveRemote
 
         if response.respond_to?(:records)
           records = serialize_records(response.records)
-          records.each { |record| record.run_callbacks :search }
         end
       end
 
@@ -111,15 +108,6 @@ module ActiveRemote
         end
 
         args
-      end
-    end
-
-    # :noapi:
-    def _active_remote_search(args)
-      warn "DEPRECATED Model#_active_remote_search is depracted and will be remoted in Active Remote 3.0."
-
-      run_callbacks :search do
-        rpc.execute(:search, args)
       end
     end
 
