@@ -30,21 +30,10 @@ module ActiveRemote
     def attribute=(name, value)
       return super if value.nil?
 
-      typecaster = _attribute_typecaster(name)
+      typecaster = self.class.attributes[name][:typecaster]
       return super unless typecaster
 
       super(name, typecaster.call(value))
-    end
-
-    def _attribute_typecaster(attribute_name)
-      self.class.attributes[attribute_name][:typecaster] || _typecaster_for(attribute_name)
-    end
-
-    def _typecaster_for(attribute_name)
-      type = self.class.attributes[attribute_name][:type]
-      return nil unless type
-
-      TYPECASTER_MAP[type]
     end
 
     module ClassMethods
