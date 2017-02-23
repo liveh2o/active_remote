@@ -128,24 +128,9 @@ module ActiveRemote
     # Instantiate a record with the given remote attributes. Generally used
     # when retrieving records that already exist, so @new_record is set to false.
     #
-    def instantiate(record)
-      @attributes ||= begin
-        attribute_names = self.class.attribute_names
-        Hash[attribute_names.map { |key| [key, nil] }]
-      end
-
-      skip_dirty_tracking do
-        assign_attributes(record)
-      end
-
-      # TODO: figure out how to safely run after_find/search callbacks here
-      # currently, several functions use this code path, so an alternate path
-      # may need to be added
-
-      run_callbacks :initialize
-
-      @new_record = false
-      self
+    def instantiate(new_attributes)
+      new_attributes = self.class.build_from_rpc(new_attributes)
+      init_with(new_attributes)
     end
 
     # Returns true if the remote record hasn't been saved yet; otherwise,
