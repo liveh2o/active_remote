@@ -3,6 +3,34 @@ require 'spec_helper'
 describe ::ActiveRemote::RPC do
   subject { ::Tag.new }
 
+  describe ".build_from_rpc" do
+    let(:new_attributes) { { :name => "test" } }
+
+    context "missing attributes from rpc" do
+      it "initializes to nil" do
+        expect(::Tag.build_from_rpc(new_attributes)).to include("guid" => nil)
+      end
+    end
+
+    context "extra attributes from rpc" do
+      let(:new_attributes) { { :foobar => "test" } }
+
+      it "ignores unknown attributes" do
+        expect(::Tag.build_from_rpc(new_attributes)).to_not include("foobar" => "test")
+      end
+    end
+
+    context "typecasted attributes" do
+      let(:new_attributes) { { :birthday => "2017-01-01" } }
+
+      it "calls the typecasters" do
+        expect(
+          ::TypecastedAuthor.build_from_rpc(new_attributes)
+        ).to include("birthday" => "2017-01-01".to_datetime)
+      end
+    end
+  end
+
   describe ".remote_call" do
     let(:args) { double(:args) }
     let(:response) { double(:response) }

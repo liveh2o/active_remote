@@ -69,6 +69,17 @@ module ActiveRemote
       end
     end
 
+    # Initialize an object with the attributes hash directly
+    # When used with allocate, bypasses initialize
+    def init_with(attributes)
+      @attributes = attributes
+      @new_record = false
+
+      run_callbacks :initialize
+
+      self
+    end
+
     def freeze
       @attributes.freeze; self
     end
