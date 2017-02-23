@@ -10,6 +10,22 @@ module ActiveRemote
     end
 
     module ClassMethods
+      # Builds an attribute hash that be assigned directly
+      # to an object from an rpc response
+      def build_from_rpc(new_attributes)
+        new_attributes = new_attributes.stringify_keys
+        constructed_attributes = {}
+        attributes.each do |name, definition|
+          if new_attributes[name].nil?
+            constructed_attributes[name] = nil
+          elsif definition[:typecaster]
+            constructed_attributes[name] = definition[:typecaster].call(new_attributes[name])
+          else
+            constructed_attributes[name] = new_attributes[name]
+          end
+        end
+        constructed_attributes
+      end
 
       # Execute an RPC call to the remote service and return the raw response.
       #

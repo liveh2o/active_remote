@@ -49,8 +49,9 @@ module ActiveRemote
       # Instantiate a record with the given remote attributes. Generally used
       # when retrieving records that already exist, so @new_record is set to false.
       #
-      def instantiate(attributes, options = {})
-        new_object = self.new.instantiate(attributes)
+      def instantiate(new_attributes, options = {})
+        attributes = self.build_from_rpc(new_attributes)
+        new_object = self.allocate.init_with(attributes)
         new_object.readonly! if options[:readonly]
 
         new_object
