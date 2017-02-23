@@ -56,6 +56,12 @@ module ActiveRemote
       raise TypeError, "can't convert #{name.class} into Symbol" unless name.respond_to? :to_sym
       @name = name.to_sym
       @options = options
+
+      if @options[:type]
+        typecaster = ::ActiveRemote::Typecasting::TYPECASTER_MAP[@options[:type]]
+        fail ::ActiveRemote::UnknownType unless typecaster
+        @options[:typecaster] = typecaster
+      end
     end
 
     # Returns the code that would generate the attribute definition
