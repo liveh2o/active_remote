@@ -4,6 +4,7 @@
 ----------
 
 - Remove dependency on ActiveAttr [#48]
+- Remove attribute defaults feature [#50]
 - Remove core exts [#49]
 - Remove deprecated rpc methods `.request`, `.request_type`, #execute`, `#remote_call`
   These methods are handled by the rpc adater now. [#49]
