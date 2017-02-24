@@ -18,5 +18,5 @@
 - Extracted bulk methods to active_remote-bulk [#54]
 - Removed search callbacks [#55]
 - Refactor of instantiate from rpc codepath [#56]
-- Change to internals of typecasting.  Declaring `attribute :name, :type => Integer
+- Change to internals of typecasting.  Declaring `attribute :name, :type => Integer`
   will no longer affect performance negatively. [#56]
