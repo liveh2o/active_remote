@@ -23,7 +23,7 @@ module ActiveRemote
     end
   end
 
-  # Raised by ActiveRemove::Base.find when remote record is not found when
+  # Raised by ActiveRemote::Base.find when remote record is not found when
   # searching with the given arguments.
   class RemoteRecordNotFound < ActiveRemoteError
     attr_accessor :remote_record_class
@@ -46,5 +46,36 @@ module ActiveRemote
   end
 
   class UnknownAttributeError < ActiveRemoteError
+  end
+
+  # Errors from Protobuf
+  class BadRequestDataError < ActiveRemoteError
+  end
+
+  class BadRequestProtoError < ActiveRemoteError
+  end
+
+  class ServiceNotFoundError < ActiveRemoteError
+  end
+
+  class MethodNotFoundError < ActiveRemoteError
+  end
+
+  class RpcError < ActiveRemoteError
+  end
+
+  class RpcFailedError < ActiveRemoteError
+  end
+
+  class InvalidRequestProtoError < ActiveRemoteError
+  end
+
+  class BadResponseProtoError < ActiveRemoteError
+  end
+
+  class UnknownHostError < ActiveRemoteError
+  end
+
+  class IOError < ActiveRemoteError
   end
 end
