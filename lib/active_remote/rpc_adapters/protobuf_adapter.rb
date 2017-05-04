@@ -5,7 +5,7 @@ module ActiveRemote
     class ProtobufAdapter
       include Serializers::Protobuf
 
-      attr_reader :last_request, :last_response, :service_class
+      attr_reader :service_class
 
       ##
       # Constructor!
@@ -17,9 +17,10 @@ module ActiveRemote
       # Invoke an RPC call to the service for the given rpc method.
       #
       def execute(rpc_method, request_args)
-        @last_request = request(rpc_method, request_args)
+        last_request = request(rpc_method, request_args)
+        last_response = nil
 
-        service_class.client.__send__(rpc_method, @last_request) do |c|
+        service_class.client.__send__(rpc_method, last_request) do |c|
           # In the event of service failure, raise the error.
           c.on_failure do |error|
             protobuf_error = protobuf_error_class(error)
@@ -28,11 +29,11 @@ module ActiveRemote
 
           # In the event of service success, assign the response.
           c.on_success do |response|
-            @last_response = response
+            last_response = response
           end
         end
 
-        @last_response
+        last_response
       end
 
       private
