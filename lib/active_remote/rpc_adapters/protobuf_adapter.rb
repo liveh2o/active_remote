@@ -38,6 +38,8 @@ module ActiveRemote
       private
 
       def protobuf_error_class(error)
+        return ::ActiveRemote::ActiveRemoteError unless error.respond_to?(:error_type)
+
         case error.error_type
         when ::Protobuf::Socketrpc::ErrorReason::BAD_REQUEST_DATA
           ::ActiveRemote::BadRequestDataError
@@ -60,7 +62,7 @@ module ActiveRemote
         when ::Protobuf::Socketrpc::ErrorReason::IO_ERROR
           ::ActiveRemote::IOError
         else
-          ActiveRemoteError
+          ::ActiveRemote::ActiveRemoteError
         end
       end
 
