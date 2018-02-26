@@ -208,7 +208,7 @@ describe ::ActiveRemote::Persistence do
       subject { Tag.new }
 
       it "creates the record" do
-        expected_attributes = subject.attributes.reject { |key, value| key == "guid" }
+        expected_attributes = subject.attributes
         expect(rpc).to receive(:execute).with(:create, expected_attributes)
         subject.save
       end

@@ -238,7 +238,6 @@ module ActiveRemote
       run_callbacks :create do
         # Use the getter here so we get the type casting.
         new_attributes = attributes
-        new_attributes.delete(primary_key.to_s)
 
         response = rpc.execute(:create, new_attributes)
 
