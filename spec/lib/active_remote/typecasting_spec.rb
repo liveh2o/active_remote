@@ -14,6 +14,13 @@ describe ::ActiveRemote::Typecasting do
       record = test_class.new(:birthday => "2016-01-01")
       expect(record.birthday).to eq(DateTime.parse("2016-01-01"))
     end
+
+    context "invalid date" do
+      it "sets attribute to nil" do
+        record = test_class.new(:birthday => "23451234")
+        expect(record.birthday).to be_nil
+      end
+    end
   end
 
   describe "float" do
