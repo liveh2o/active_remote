@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe ::ActiveRemote::Persistence do
   let(:response_without_errors) { ::HashWithIndifferentAccess.new(:errors => []) }
-  let(:rpc) { ::ActiveRemote::RPCAdapters::ProtobufAdapter.new(::Tag.service_class) }
+  let(:rpc) { ::ActiveRemote::RPCAdapters::ProtobufAdapter.new(::Tag.service_class, ::Tag.endpoints) }
 
   subject { ::Tag.new }
 

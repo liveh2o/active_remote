@@ -34,7 +34,7 @@ module ActiveRemote
       end
 
       def rpc
-        rpc_adapter.new(service_class)
+        rpc_adapter.new(service_class, endpoints)
       end
 
       def rpc_adapter
@@ -56,6 +56,10 @@ module ActiveRemote
 
         ::ActiveRemote::RPCAdapters::ProtobufAdapter
       end
+    end
+
+    def remote_call(rpc_method, request_args)
+      self.class.remote_call(rpc_method, request_args)
     end
 
     def rpc

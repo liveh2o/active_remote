@@ -35,7 +35,7 @@ describe ::ActiveRemote::RPC do
     let(:args) { double(:args) }
     let(:response) { double(:response) }
 
-    let(:rpc) { ::ActiveRemote::RPCAdapters::ProtobufAdapter.new(::Tag.service_class) }
+    let(:rpc) { ::ActiveRemote::RPCAdapters::ProtobufAdapter.new(::Tag.service_class, ::Tag.endpoints) }
 
     before { allow(rpc).to receive(:execute).and_return(response) }
     before { allow(::Tag).to receive(:rpc).and_return(rpc) }

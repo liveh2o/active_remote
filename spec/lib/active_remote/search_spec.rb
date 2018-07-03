@@ -41,7 +41,7 @@ describe ActiveRemote::Search do
 
     context "given args that respond to :to_hash" do
       let(:args) { Hash.new }
-      let(:rpc) { ::ActiveRemote::RPCAdapters::ProtobufAdapter.new(::Tag.service_class) }
+      let(:rpc) { ::ActiveRemote::RPCAdapters::ProtobufAdapter.new(::Tag.service_class, ::Tag.endpoints) }
 
       before { allow(rpc).to receive(:execute).and_return(response) }
       before { allow(::Tag).to receive(:rpc).and_return(rpc) }

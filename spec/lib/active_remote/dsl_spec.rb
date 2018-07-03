@@ -21,6 +21,27 @@ describe ActiveRemote::DSL do
     end
   end
 
+  describe ".endpoints" do
+    it "has default values" do
+      expect(Tag.endpoints).to eq({
+        :create => :create,
+        :delete => :delete,
+        :destroy => :destroy,
+        :search => :search,
+        :update => :update
+      })
+    end
+
+    context "given a new value for an endpoint" do
+      after { Tag.endpoints(:create => :create) }
+
+      it "overwrites default values" do
+        Tag.endpoints(:create => :register)
+        expect(Tag.endpoints[:create]).to eq(:register)
+      end
+    end
+  end
+
   describe ".namespace" do
     context "when given a value" do
       it "sets @namespace to the value" do
