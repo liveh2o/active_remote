@@ -22,6 +22,7 @@ service TagService {
   rpc Create (Tag) returns (Tag);
   rpc Update (Tag) returns (Tag);
   rpc Delete (Tag) returns (Tag);
+  rpc Register (Tag) returns (Tag);
   rpc CreateAll (Tags) returns (Tags);
   rpc UpdateAll (Tags) returns (Tags);
   rpc DeleteAll (Tags) returns (Tags);

@@ -1,7 +1,9 @@
+# encoding: utf-8
+
 ##
 # This file is auto-generated. DO NOT EDIT!
 #
-require 'protobuf/message'
+require 'protobuf'
 require 'protobuf/rpc/service'
 
 
@@ -12,6 +14,7 @@ require 'error.pb'
 
 module Generic
   module Remote
+    ::Protobuf::Optionable.inject(self) { ::Google::Protobuf::FileOptions }
 
     ##
     # Message Classes
@@ -48,6 +51,7 @@ module Generic
       rpc :create, ::Generic::Remote::Tag, ::Generic::Remote::Tag
       rpc :update, ::Generic::Remote::Tag, ::Generic::Remote::Tag
       rpc :delete, ::Generic::Remote::Tag, ::Generic::Remote::Tag
+      rpc :register, ::Generic::Remote::Tag, ::Generic::Remote::Tag
       rpc :create_all, ::Generic::Remote::Tags, ::Generic::Remote::Tags
       rpc :update_all, ::Generic::Remote::Tags, ::Generic::Remote::Tags
       rpc :delete_all, ::Generic::Remote::Tags, ::Generic::Remote::Tags

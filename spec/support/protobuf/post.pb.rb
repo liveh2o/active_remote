@@ -1,7 +1,9 @@
+# encoding: utf-8
+
 ##
 # This file is auto-generated. DO NOT EDIT!
 #
-require 'protobuf/message'
+require 'protobuf'
 require 'protobuf/rpc/service'
 
 
@@ -13,6 +15,7 @@ require 'category.pb'
 
 module Generic
   module Remote
+    ::Protobuf::Optionable.inject(self) { ::Google::Protobuf::FileOptions }
 
     ##
     # Message Classes

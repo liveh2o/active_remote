@@ -6,20 +6,25 @@ module ActiveRemote
       include Serializers::Protobuf
 
       attr_reader :last_request, :last_response, :service_class
+      attr_accessor :endpoints
+
+      delegate :client, :to => :service_class
 
       ##
       # Constructor!
       #
-      def initialize(service_class)
+      def initialize(service_class, endpoints)
         @service_class = service_class
+        @endpoints = endpoints
       end
 
       # Invoke an RPC call to the service for the given rpc method.
       #
-      def execute(rpc_method, request_args)
+      def execute(endpoint, request_args)
+        rpc_method = endpoints.fetch(endpoint) { endpoint }
         @last_request = request(rpc_method, request_args)
 
-        service_class.client.__send__(rpc_method, @last_request) do |c|
+        client.__send__(rpc_method, @last_request) do |c|
           # In the event of service failure, raise the error.
           c.on_failure do |error|
             protobuf_error = protobuf_error_class(error)
@@ -35,7 +40,7 @@ module ActiveRemote
         @last_response
       end
 
-      private
+    private
 
       def protobuf_error_class(error)
         return ::ActiveRemote::ActiveRemoteError unless error.respond_to?(:error_type)

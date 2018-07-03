@@ -20,6 +20,38 @@ module ActiveRemote
         @publishable_attributes += attributes
       end
 
+      def endpoint_for_create(endpoint)
+        endpoints :create => endpoint
+      end
+
+      def endpoint_for_delete(endpoint)
+        endpoints :delete => endpoint
+      end
+
+      def endpoint_for_destroy(endpoint)
+        endpoints :destroy => endpoint
+      end
+
+      def endpoint_for_search(endpoint)
+        endpoints :search => endpoint
+      end
+
+      def endpoint_for_update(endpoint)
+        endpoints :update => endpoint
+      end
+
+      def endpoints(endpoints_hash = nil)
+        @endpoints ||= {
+          :create  => :create,
+          :delete  => :delete,
+          :destroy => :destroy,
+          :search  => :search,
+          :update  => :update
+        }
+        @endpoints.merge!(endpoints_hash) if endpoints_hash.present?
+        @endpoints
+      end
+
       # Set the namespace for the underlying RPC service class. If no namespace
       # is given, then none will be used.
       #
@@ -105,6 +137,10 @@ module ActiveRemote
 
     # Private convenience methods for accessing DSL methods in instances
     #
+    def _endpoints
+      self.class.endpoints
+    end
+
     def _publishable_attributes
       self.class.publishable_attributes
     end
