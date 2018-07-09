@@ -27,6 +27,16 @@ describe ::ActiveRemote::Persistence do
       value = Tag.create(:name => 'foo')
       expect(value).to be_a(Tag)
     end
+
+    context "when the server state changes" do
+      let(:response_without_errors) { ::HashWithIndifferentAccess.new(:errors => [], :user_guid => "123") }
+
+      it "uses the server state on create" do
+        tag = Tag.create({:name => "Ron", :user_guid => "456"})
+        expect(tag.name).to eq(nil)
+        expect(tag.user_guid).to eq("123")
+      end
+    end
   end
 
   describe ".create!" do
@@ -332,6 +342,16 @@ describe ::ActiveRemote::Persistence do
     it "saves the record" do
       expect(subject).to receive(:save)
       subject.update_attributes(attributes)
+    end
+
+    context "when the server state changes" do
+      let(:response_without_errors) { ::HashWithIndifferentAccess.new(:errors => [], :user_guid => "123") }
+
+      it "uses the server state on update" do
+        tag.update_attributes({:name => "Ron", :user_guid => "456"})
+        expect(tag.name).to eq(nil)
+        expect(tag.user_guid).to eq("123")
+      end
     end
   end
 
