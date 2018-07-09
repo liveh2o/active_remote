@@ -114,6 +114,7 @@ module ActiveRemote
           remove_instance_variable("@attribute_methods_generated") if instance_variable_defined?("@attribute_methods_generated")
           define_attribute_methods([attribute_definition.name]) unless attribute_names.include?(attribute_name)
           attributes[attribute_name] = attribute_definition
+          build_default_attributes_hash
         end
       end
 
@@ -181,6 +182,14 @@ module ActiveRemote
       #
       def attribute_methods(name)
         attribute_method_matchers.map { |matcher| matcher.method_name(name) }
+      end
+
+      def build_default_attributes_hash
+        @default_attributes_hash = Hash[attribute_names.map { |key| [key, nil] }]
+      end
+
+      def default_attributes_hash
+        @default_attributes_hash || {}
       end
 
       # Ruby inherited hook to assign superclass attributes to subclasses
