@@ -53,7 +53,7 @@ module ActiveRemote
     define_model_callbacks :initialize, :only => :after
 
     def initialize(attributes = {})
-      @attributes = self.class.send(:default_attributes_hash).dup
+      reset_attributes
 
       assign_attributes(attributes) if attributes
 

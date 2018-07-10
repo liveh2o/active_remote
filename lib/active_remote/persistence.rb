@@ -241,6 +241,7 @@ module ActiveRemote
 
         response = rpc.execute(:create, new_attributes)
 
+        reset_attributes
         assign_attributes(response.to_hash)
         add_errors(response.errors) if response.respond_to?(:errors)
 
@@ -271,6 +272,7 @@ module ActiveRemote
 
         response = rpc.execute(:update, updated_attributes)
 
+        reset_attributes
         assign_attributes(response.to_hash)
         add_errors(response.errors) if response.respond_to?(:errors)
 

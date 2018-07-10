@@ -36,6 +36,10 @@ module ActiveRemote
       _assign_attributes(sanitize_for_mass_assignment(attributes))
     end
 
+    def reset_attributes
+      @attributes = self.class.send(:default_attributes_hash).dup
+    end
+
     private
 
     def _assign_attributes(attributes)
