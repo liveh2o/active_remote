@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   ##
   # Dependencies
   #
-  s.add_dependency "activemodel", ">= 4.0"
+  s.add_dependency "activemodel", ">= 4.0", "< 5"
   s.add_dependency "activesupport", ">= 4.0"
   s.add_dependency "protobuf", ">= 3.0"
 
