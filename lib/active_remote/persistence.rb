@@ -77,7 +77,7 @@ module ActiveRemote
     #
     def delete
       raise ReadOnlyRemoteRecord if readonly?
-      response = rpc.execute(:delete, scope_key_hash)
+      response = remote_call(:delete, scope_key_hash)
 
       add_errors(response.errors) if response.respond_to?(:errors)
 
@@ -102,7 +102,7 @@ module ActiveRemote
     #
     def destroy
       raise ReadOnlyRemoteRecord if readonly?
-      response = rpc.execute(:destroy, scope_key_hash)
+      response = remote_call(:destroy, scope_key_hash)
 
       add_errors(response.errors) if response.respond_to?(:errors)
 
@@ -239,7 +239,7 @@ module ActiveRemote
         # Use the getter here so we get the type casting.
         new_attributes = attributes
 
-        response = rpc.execute(:create, new_attributes)
+        response = remote_call(:create, new_attributes)
 
         assign_attributes(response.to_hash)
         add_errors(response.errors) if response.respond_to?(:errors)
@@ -269,7 +269,7 @@ module ActiveRemote
         updated_attributes.slice!(*attribute_names)
         updated_attributes.merge!(scope_key_hash)
 
-        response = rpc.execute(:update, updated_attributes)
+        response = remote_call(:update, updated_attributes)
 
         assign_attributes(response.to_hash)
         add_errors(response.errors) if response.respond_to?(:errors)

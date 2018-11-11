@@ -88,7 +88,7 @@ module ActiveRemote
       def search(args)
         args = validate_search_args!(args)
 
-        response = rpc.execute(:search, args)
+        response = remote_call(:search, args)
 
         if response.respond_to?(:records)
           records = serialize_records(response.records)
