@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+
+require "active_remote"
+require "benchmark/ips"
+
+require "./spec/support/models/typecasted_author"
+
+ATTRIBUTES = {
+  :guid => "0c030733-3b78-4587-b94b-5e0cf26497c5",
+  :name => "Charles Dickens",
+  :age => 68,
+  :birthday => "1812-02-07 00:00:00",
+  :writes_fiction => true,
+  :net_sales => 1_000_000.0
+}
+
+::Benchmark.ips do |x|
+  x.config(:time => 20, :warmup => 10)
+  x.report("initialize") do
+    ::TypecastedAuthor.new(ATTRIBUTES)
+  end
+
+  x.report("instantiate") do
+    ::TypecastedAuthor.instantiate(ATTRIBUTES)
+  end
+
+  x.report("init attributes") do
+    ::TypecastedAuthor.new(ATTRIBUTES).attributes
+  end
+
+  x.report("inst attributes") do
+    ::TypecastedAuthor.instantiate(ATTRIBUTES).attributes
+  end
+end
