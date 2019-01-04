@@ -5,7 +5,7 @@ module ActiveRemote
     class ProtobufAdapter
       include Serializers::Protobuf
 
-      attr_reader :last_request, :last_response, :service_class
+      attr_reader :service_class
       attr_accessor :endpoints
 
       delegate :client, :to => :service_class
@@ -22,9 +22,10 @@ module ActiveRemote
       #
       def execute(endpoint, request_args)
         rpc_method = endpoints.fetch(endpoint) { endpoint }
-        @last_request = request(rpc_method, request_args)
+        request = build_request(rpc_method, request_args)
+        response = nil
 
-        client.__send__(rpc_method, @last_request) do |c|
+        client.send(rpc_method, request) do |c|
           # In the event of service failure, raise the error.
           c.on_failure do |error|
             protobuf_error = protobuf_error_class(error)
@@ -32,15 +33,25 @@ module ActiveRemote
           end
 
           # In the event of service success, assign the response.
-          c.on_success do |response|
-            @last_response = response
+          c.on_success do |rpc_response|
+            response = rpc_response
           end
         end
 
-        @last_response
+        response
       end
 
     private
+
+      # Return a protobuf request object for the given rpc request.
+      #
+      def build_request(rpc_method, request_args)
+        return request_args unless request_args.is_a?(Hash)
+
+        message_class = request_type(rpc_method)
+        fields = fields_from_attributes(message_class, request_args)
+        message_class.new(fields)
+      end
 
       def protobuf_error_class(error)
         return ::ActiveRemote::ActiveRemoteError unless error.respond_to?(:error_type)
@@ -69,16 +80,6 @@ module ActiveRemote
         else
           ::ActiveRemote::ActiveRemoteError
         end
-      end
-
-      # Return a protobuf request object for the given rpc request.
-      #
-      def request(rpc_method, request_args)
-        return request_args unless request_args.is_a?(Hash)
-
-        message_class = request_type(rpc_method)
-        fields = fields_from_attributes(message_class, request_args)
-        message_class.new(fields)
       end
 
       # Return the class applicable to the request for the given rpc method.

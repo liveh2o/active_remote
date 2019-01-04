@@ -42,8 +42,6 @@ module ActiveRemote
     include ::ActiveRemote::Validations
     include ::ActiveModel::Validations::Callbacks
 
-    attr_reader :last_request, :last_response
-
     define_model_callbacks :initialize, :only => :after
 
     def initialize(attributes = {})
