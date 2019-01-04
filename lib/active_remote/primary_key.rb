@@ -32,5 +32,23 @@ module ActiveRemote
     def primary_key
       self.class.primary_key
     end
+
+    # Returns an Array of all key attributes if any of the attributes is set, whether or not
+    # the object is persisted. Returns +nil+ if there are no key attributes.
+    #
+    #   class Person
+    #     include ActiveModel::Conversion
+    #     attr_accessor :id
+    #
+    #     def initialize(id)
+    #       @id = id
+    #     end
+    #   end
+    #
+    #   person = Person.new(1)
+    #   person.to_key # => [1]
+    def to_key
+      send(primary_key) ? [send(primary_key)] : nil
+    end
   end
 end
