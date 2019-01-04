@@ -4,28 +4,19 @@ describe ::ActiveRemote::QueryAttributes do
   subject { ::Author.new }
 
   describe "#query_attribute" do
-    it "raises when getting an undefined attribute" do
-      expect { subject.query_attribute(:foobar) }.to raise_error(::ActiveRemote::UnknownAttributeError)
-    end
-
     it "is false when the attribute is false" do
-      subject.name = false
-      expect(subject.name?).to eq false
+      subject.writes_fiction = false
+      expect(subject.writes_fiction?).to eq false
     end
 
     it "is true when the attribute is true" do
-      subject.name = true
-      expect(subject.name?).to eq true
+      subject.writes_fiction = true
+      expect(subject.writes_fiction?).to eq true
     end
 
     it "is false when the attribute is nil" do
       subject.name = nil
       expect(subject.name?).to eq false
-    end
-
-    it "is true when the attribute is an Object" do
-      subject.name = Object.new
-      expect(subject.name?).to eq true
     end
 
     it "is false when the attribute is an empty string" do
@@ -40,13 +31,13 @@ describe ::ActiveRemote::QueryAttributes do
 
     # This behavior varies from ActiveRecord, so we test it explicitly
     it "is true when the attribute is 0" do
-      subject.name = 0
-      expect(subject.name?).to eq true
+      subject.age = 0
+      expect(subject.age?).to eq true
     end
 
     it "is true when the attribute is 1" do
-      subject.name = 1
-      expect(subject.name?).to eq true
+      subject.age = 1
+      expect(subject.age?).to eq true
     end
   end
 end

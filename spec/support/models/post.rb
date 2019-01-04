@@ -6,11 +6,11 @@ require "support/protobuf/post.pb"
 class Post < ::ActiveRemote::Base
   service_class ::Generic::Remote::PostService
 
-  attribute :guid
-  attribute :name
-  attribute :author_guid
-  attribute :user_guid
-  attribute :bestseller_guid
+  attribute :guid, :string
+  attribute :name, :string
+  attribute :author_guid, :string
+  attribute :user_guid, :string
+  attribute :bestseller_guid, :string
 
   belongs_to :author
   belongs_to :coauthor, :class_name => "::Author"

@@ -117,7 +117,8 @@ module ActiveRemote
     #
     def reload
       fresh_object = self.class.find(scope_key_hash)
-      @attributes.update(fresh_object.instance_variable_get("@attributes"))
+      @attributes = fresh_object.instance_variable_get("@attributes")
+      self
     end
   end
 end
