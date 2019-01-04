@@ -6,12 +6,16 @@ require "support/protobuf/author.pb"
 class Author < ::ActiveRemote::Base
   service_class ::Generic::Remote::AuthorService
 
-  attribute :guid
-  attribute :name
-  attribute :user_guid
-  attribute :chief_editor_guid
-  attribute :editor_guid
-  attribute :category_guid
+  attribute :guid, :string
+  attribute :name, :string
+  attribute :user_guid, :string
+  attribute :chief_editor_guid, :string
+  attribute :editor_guid, :string
+  attribute :category_guid, :string
+  attribute :age, :integer
+  attribute :birthday, :datetime
+  attribute :writes_fiction, :boolean
+  attribute :net_sales, :float
 
   has_many :posts
   has_many :user_posts, :class_name => "::Post", :scope => :user_guid

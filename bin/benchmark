@@ -5,7 +5,14 @@ require "bundler/setup"
 require "active_remote"
 require "benchmark/ips"
 
-require "./spec/support/models/typecasted_author"
+class Author < ::ActiveRemote::Base
+  attribute :guid, :string
+  attribute :name, :string
+  attribute :age, :integer
+  attribute :birthday, :datetime
+  attribute :writes_fiction, :boolean
+  attribute :net_sales, :float
+end
 
 ATTRIBUTES = {
   :guid => "0c030733-3b78-4587-b94b-5e0cf26497c5",
@@ -19,18 +26,18 @@ ATTRIBUTES = {
 ::Benchmark.ips do |x|
   x.config(:time => 20, :warmup => 10)
   x.report("initialize") do
-    ::TypecastedAuthor.new(ATTRIBUTES)
+    ::Author.new(ATTRIBUTES)
   end
 
   x.report("instantiate") do
-    ::TypecastedAuthor.instantiate(ATTRIBUTES)
+    ::Author.instantiate(ATTRIBUTES)
   end
 
   x.report("init attributes") do
-    ::TypecastedAuthor.new(ATTRIBUTES).attributes
+    ::Author.new(ATTRIBUTES).attributes
   end
 
   x.report("inst attributes") do
-    ::TypecastedAuthor.instantiate(ATTRIBUTES).attributes
+    ::Author.instantiate(ATTRIBUTES).attributes
   end
 end

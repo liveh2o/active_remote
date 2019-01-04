@@ -8,8 +8,7 @@ module ActiveRemote
       # class must be loaded into memory already. A method will be defined
       # with the same name as the association. When invoked, the associated
       # remote model will issue a `search` for the :guid with the associated
-      # guid's attribute (e.g. read_attribute(:client_guid)) and return the first
-      # remote object from the result, or nil.
+      # guid attribute and return the first remote object from the result, or nil.
       #
       # A `belongs_to` association should be used when the associating remote
       # contains the guid to the associated model. For example, if a User model
@@ -37,8 +36,8 @@ module ActiveRemote
         perform_association(belongs_to_klass, options) do |klass, object|
           foreign_key = options.fetch(:foreign_key) { :"#{klass.name.demodulize.underscore}_guid" }
           search_hash = {}
-          search_hash[:guid] = object.read_attribute(foreign_key)
-          search_hash[options[:scope]] = object.read_attribute(options[:scope]) if options.key?(:scope)
+          search_hash[:guid] = object.send(foreign_key)
+          search_hash[options[:scope]] = object.send(options[:scope]) if options.key?(:scope)
 
           search_hash.values.any?(&:nil?) ? nil : klass.search(search_hash).first
         end
@@ -49,7 +48,7 @@ module ActiveRemote
       # class must be loaded into memory already. A method will be defined
       # with the same plural name as the association. When invoked, the associated
       # remote model will issue a `search` for the :guid with the associated
-      # guid's attribute (e.g. read_attribute(:client_guid)).
+      # guid attribute.
       #
       # A `has_many` association should be used when the associated model has
       # a field to identify the associating model, and there can be multiple
@@ -79,7 +78,7 @@ module ActiveRemote
           foreign_key = options.fetch(:foreign_key) { :"#{object.class.name.demodulize.underscore}_guid" }
           search_hash = {}
           search_hash[foreign_key] = object.guid
-          search_hash[options[:scope]] = object.read_attribute(options[:scope]) if options.key?(:scope)
+          search_hash[options[:scope]] = object.send(options[:scope]) if options.key?(:scope)
 
           search_hash.values.any?(&:nil?) ? [] : klass.search(search_hash)
         end
@@ -93,8 +92,7 @@ module ActiveRemote
       # class must be loaded into memory already. A method will be defined
       # with the same name as the association. When invoked, the associated
       # remote model will issue a `search` for the :guid with the associated
-      # guid's attribute (e.g. read_attribute(:client_guid)) and return the first
-      # remote object in the result, or nil.
+      # guid attribute and return the first remote object in the result, or nil.
       #
       # A `has_one` association should be used when the associated remote
       # contains the guid from the associating model. For example, if a User model
@@ -120,7 +118,7 @@ module ActiveRemote
           foreign_key = options.fetch(:foreign_key) { :"#{object.class.name.demodulize.underscore}_guid" }
           search_hash = {}
           search_hash[foreign_key] = object.guid
-          search_hash[options[:scope]] = object.read_attribute(options[:scope]) if options.key?(:scope)
+          search_hash[options[:scope]] = object.send(options[:scope]) if options.key?(:scope)
 
           search_hash.values.any?(&:nil?) ? nil : klass.search(search_hash).first
         end

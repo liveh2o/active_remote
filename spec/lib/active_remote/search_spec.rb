@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe ActiveRemote::Search do
-  let(:records) { [Generic::Remote::Tag.new] }
+  let(:records) { [Generic::Remote::Tag.new(:guid => "123")] }
   let(:response) { Generic::Remote::Tags.new(:records => records) }
   let(:rpc) { double(:rpc) }
 
@@ -37,7 +37,7 @@ describe ActiveRemote::Search do
   end
 
   describe ".search" do
-    let(:serialized_records) { [Tag.new] }
+    let(:serialized_records) { [Tag.instantiate(:guid => "123")] }
 
     context "given args that respond to :to_hash" do
       let(:args) { {} }
@@ -52,7 +52,8 @@ describe ActiveRemote::Search do
       end
 
       it "returns records" do
-        expect(Tag.search(args)).to eq serialized_records
+        records = Tag.search(args)
+        expect(records).to eq serialized_records
       end
     end
 

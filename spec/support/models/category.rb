@@ -6,9 +6,9 @@ require "support/protobuf/category.pb"
 class Category < ::ActiveRemote::Base
   service_class ::Generic::Remote::CategoryService
 
-  attribute :guid
-  attribute :user_guid
-  attribute :chief_editor_guid
+  attribute :guid, :string
+  attribute :user_guid, :string
+  attribute :chief_editor_guid, :string
 
   has_many :posts
 

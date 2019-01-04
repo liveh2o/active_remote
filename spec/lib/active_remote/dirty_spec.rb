@@ -4,10 +4,10 @@ describe ActiveRemote::Dirty do
   context "when writing attributes through the setter" do
     subject { Post.new(:name => "foo") }
 
-    before {
-      subject.previous_changes.try(:clear)
-      subject.changed_attributes.try(:clear)
-    }
+    before do
+      subject.changes_applied
+      subject.clear_changes_information
+    end
 
     context "when the value changes" do
       before { subject.name = "bar" }
@@ -25,10 +25,10 @@ describe ActiveRemote::Dirty do
   context "when writing attributes directly" do
     subject { Post.new(:name => "foo") }
 
-    before {
-      subject.previous_changes.try(:clear)
-      subject.changed_attributes.try(:clear)
-    }
+    before do
+      subject.changes_applied
+      subject.clear_changes_information
+    end
 
     context "when the value changes" do
       before { subject[:name] = "bar" }
@@ -46,10 +46,10 @@ describe ActiveRemote::Dirty do
   describe "#reload" do
     subject { Post.new(:name => "foo") }
 
-    before {
+    before do
       allow(Post).to receive(:find).and_return(Post.new(:name => "foo"))
       subject.reload
-    }
+    end
 
     its(:changes) { should be_empty }
   end
@@ -68,10 +68,10 @@ describe ActiveRemote::Dirty do
 
     subject { Post.new(:name => "foo") }
 
-    before {
+    before do
       allow(subject).to receive(:create_or_update).and_return(true)
       subject.save
-    }
+    end
 
     its(:previous_changes) { should eq changes }
     its(:changes) { should be_empty }
@@ -82,27 +82,12 @@ describe ActiveRemote::Dirty do
 
     subject { Post.new(:name => "foo") }
 
-    before {
+    before do
       allow(subject).to receive(:save).and_return(true)
       subject.save!
-    }
+    end
 
     its(:previous_changes) { should eq changes }
     its(:changes) { should be_empty }
-  end
-
-  describe "#instantiate" do
-    let(:post) { Post.new }
-    let(:record) { ::Generic::Remote::Post.new(:name => "foo") }
-
-    it "clears previous changes" do
-      new_record = post.instantiate(record.to_hash)
-      expect(new_record.previous_changes).to eq({})
-    end
-
-    it "clears changes" do
-      new_record = post.instantiate(record.to_hash)
-      expect(new_record.changes).to be_empty
-    end
   end
 end

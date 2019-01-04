@@ -24,8 +24,7 @@ module ActiveRemote
     #
     def reload(*)
       super.tap do
-        @previously_changed.try(:clear)
-        changed_attributes.clear
+        clear_changes_information
       end
     end
 
@@ -41,8 +40,7 @@ module ActiveRemote
     #
     def save(*)
       if (status = super)
-        @previously_changed = changes
-        changed_attributes.clear
+        changes_applied
       end
 
       status
@@ -52,8 +50,7 @@ module ActiveRemote
     #
     def save!(*)
       super.tap do
-        @previously_changed = changes
-        changed_attributes.clear
+        changes_applied
       end
     end
 
@@ -77,7 +74,7 @@ module ActiveRemote
     # ActiveModel::Dirty.
     #
     def attribute=(name, value)
-      __send__("#{name}_will_change!") if _active_remote_track_changes? && value != self[name]
+      send("#{name}_will_change!") if _active_remote_track_changes? && value != self[name]
       super
     end
 

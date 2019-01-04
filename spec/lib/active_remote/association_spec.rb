@@ -155,14 +155,6 @@ describe ActiveRemote::Association do
         expect(subject.user_posts).to eq(records)
       end
 
-      context "when user_guid doesnt exist on model " do
-        before { allow(subject).to receive(:respond_to?).with("user_guid").and_return(false) }
-
-        it "raises an error" do
-          expect { subject.user_posts }.to raise_error(::ActiveRemote::UnknownAttributeError)
-        end
-      end
-
       context "when user_guid doesnt exist on associated model " do
         before { allow(Post).to receive_message_chain(:public_instance_methods, :include?).with(:user_guid).and_return(false) }
 
@@ -249,14 +241,6 @@ describe ActiveRemote::Association do
       it "searches the associated model for multiple records" do
         expect(Author).to receive(:search).with(:chief_editor_guid => subject.guid, :user_guid => subject.user_guid).and_return(records)
         expect(subject.chief_editor).to eq(record)
-      end
-
-      context "when user_guid doesnt exist on model " do
-        before { allow(subject).to receive(:respond_to?).with("user_guid").and_return(false) }
-
-        it "raises an error" do
-          expect { subject.chief_editor }.to raise_error(::ActiveRemote::UnknownAttributeError)
-        end
       end
 
       context "when user_guid doesnt exist on associated model " do

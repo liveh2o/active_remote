@@ -15,8 +15,8 @@ module ActiveRemote
       def build_from_rpc(values)
         values = values.stringify_keys
 
-        attributes.inject({}) do |attributes, (name, definition)|
-          attributes[name] = definition.from_rpc(values[name])
+        attribute_names.inject(_default_attributes.deep_dup) do |attributes, name|
+          attributes.write_from_database(name, values[name])
           attributes
         end
       end
@@ -53,8 +53,7 @@ module ActiveRemote
     end
 
     def assign_attributes_from_rpc(response)
-      new_attributes = self.class.build_from_rpc(response.to_hash)
-      @attributes.update(new_attributes)
+      @attributes = self.class.build_from_rpc(response.to_hash)
       add_errors(response.errors) if response.respond_to?(:errors)
     end
 
