@@ -1,8 +1,8 @@
 class TypecastedAuthor < ::ActiveRemote::Base
   attribute :guid, :type => String
   attribute :name, :typecaster => StringTypecaster
-  attribute :age, :type => Integer
+  attribute :age, :integer
   attribute :birthday, :type => DateTime
-  attribute :writes_fiction, :type => Boolean
-  attribute :net_sales, :type => Float
+  attribute :writes_fiction, :boolean
+  attribute :net_sales, :typecaster => FloatTypecaster
 end

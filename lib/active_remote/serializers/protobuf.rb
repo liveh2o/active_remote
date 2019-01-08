@@ -1,27 +1,31 @@
-require "active_remote/typecasting"
+require "active_remote/type"
 
 module ActiveRemote
   module Serializers
     module Protobuf
       extend ActiveSupport::Concern
 
-      TYPECASTER_MAP = {
-        ::Protobuf::Field::BoolField     => ActiveRemote::Typecasting::BooleanTypecaster,
-        ::Protobuf::Field::BytesField    => ActiveRemote::Typecasting::StringTypecaster,
-        ::Protobuf::Field::DoubleField   => ActiveRemote::Typecasting::FloatTypecaster,
-        ::Protobuf::Field::Fixed32Field  => ActiveRemote::Typecasting::IntegerTypecaster,
-        ::Protobuf::Field::Fixed64Field  => ActiveRemote::Typecasting::IntegerTypecaster,
-        ::Protobuf::Field::FloatField    => ActiveRemote::Typecasting::FloatTypecaster,
-        ::Protobuf::Field::Int32Field    => ActiveRemote::Typecasting::IntegerTypecaster,
-        ::Protobuf::Field::Int64Field    => ActiveRemote::Typecasting::IntegerTypecaster,
-        ::Protobuf::Field::Sfixed32Field => ActiveRemote::Typecasting::IntegerTypecaster,
-        ::Protobuf::Field::Sfixed64Field => ActiveRemote::Typecasting::IntegerTypecaster,
-        ::Protobuf::Field::Sint32Field   => ActiveRemote::Typecasting::IntegerTypecaster,
-        ::Protobuf::Field::Sint64Field   => ActiveRemote::Typecasting::IntegerTypecaster,
-        ::Protobuf::Field::StringField   => ActiveRemote::Typecasting::StringTypecaster,
-        ::Protobuf::Field::Uint32Field   => ActiveRemote::Typecasting::IntegerTypecaster,
-        ::Protobuf::Field::Uint64Field   => ActiveRemote::Typecasting::IntegerTypecaster
+      FIELD_TYPE_MAP = {
+        ::Protobuf::Field::BoolField => :boolean,
+        ::Protobuf::Field::BytesField => :string,
+        ::Protobuf::Field::DoubleField => :float,
+        ::Protobuf::Field::Fixed32Field => :float,
+        ::Protobuf::Field::Fixed64Field => :float,
+        ::Protobuf::Field::FloatField => :float,
+        ::Protobuf::Field::Int32Field => :integer,
+        ::Protobuf::Field::Int64Field => :integer,
+        ::Protobuf::Field::Sfixed32Field => :float,
+        ::Protobuf::Field::Sfixed64Field => :float,
+        ::Protobuf::Field::Sint32Field => :integer,
+        ::Protobuf::Field::Sint64Field => :integer,
+        ::Protobuf::Field::StringField => :string,
+        ::Protobuf::Field::Uint32Field => :integer,
+        ::Protobuf::Field::Uint64Field => :integer
       }
+
+      def self.type_name_for_field(field)
+        FIELD_TYPE_MAP[field.type_class]
+      end
 
       module ClassMethods
         def fields_from_attributes(message_class, attributes)
@@ -118,6 +122,10 @@ module ActiveRemote
           value.is_a?(Array) ? value : [ value ]
         end
 
+        def type_name
+          Serializers::Protobuf.type_name_for_field(field)
+        end
+
         def typecast(value)
           return value if value.nil?
 
@@ -129,7 +137,7 @@ module ActiveRemote
         end
 
         def typecaster
-          @typecaster ||= TYPECASTER_MAP[field.type_class]
+          @typecaster ||= Type.lookup(type_name)
         end
 
         def typecaster?
