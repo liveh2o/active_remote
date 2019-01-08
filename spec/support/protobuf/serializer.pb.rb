@@ -9,7 +9,14 @@ require 'protobuf'
 ##
 # Message Classes
 #
-class Serializer < ::Protobuf::Message; end
+class Serializer < ::Protobuf::Message
+  class Type < ::Protobuf::Enum
+    define :DEFAULT, 0
+    define :USER, 1
+  end
+
+end
+
 
 
 ##
@@ -31,5 +38,6 @@ class Serializer
   optional :string, :string_field, 13
   optional :uint32, :uint32_field, 14
   optional :uint64, :uint64_field, 15
+  optional ::Serializer::Type, :enum_field, 16
 end
 
