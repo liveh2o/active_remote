@@ -83,6 +83,7 @@ describe ActiveRemote::Serializers::Protobuf::Field do
       it { typecasts(:string_field, string_value => '') }
       it { typecasts(:uint32_field, '0' => 0) }
       it { typecasts(:uint64_field, '0' => 0) }
+      it { typecasts(:enum_field, 0 => 0) }
     end
   end
 end

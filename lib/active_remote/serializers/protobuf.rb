@@ -137,6 +137,8 @@ module ActiveRemote
         end
 
         def typecaster
+          return nil if type_name.nil?
+
           @typecaster ||= Type.lookup(type_name)
         end
 
