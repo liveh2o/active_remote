@@ -1,3 +1,5 @@
+require "active_remote/type"
+
 module ActiveRemote
   # Represents an attribute for reflection
   #
@@ -47,15 +49,17 @@ module ActiveRemote
     #   AttributeDefinition.new(:amount)
     #
     # @param [Symbol, String, #to_sym] name attribute name
+    # @param [Symbol] type attribute type
     # @param [Hash{Symbol => Object}] options attribute options
     #
     # @return [ActiveAttr::AttributeDefinition]
     #
     # @since 0.2.0
-    def initialize(name, options={})
+    def initialize(name, type = :unknown, **options)
       raise TypeError, "can't convert #{name.class} into Symbol" unless name.respond_to? :to_sym
       @name = name.to_sym
       @options = options
+      @options[:typecaster] = ::ActiveRemote::Type.lookup(type) unless type == :unknown
 
       if @options[:type]
         typecaster = ::ActiveRemote::Typecasting::TYPECASTER_MAP[@options[:type]]
@@ -101,6 +105,6 @@ module ActiveRemote
 
     # The attribute options
     # @since 0.5.0
-    attr_reader :options
+    attr_reader :options, :type
   end
 end
