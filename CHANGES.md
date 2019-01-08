@@ -1,5 +1,49 @@
 # ActiveRemote Changes
 
+3.3.0
+----------
+
+- Add support for registering types that can be used to define attributes without using the existing `:type` or
+  `:typecaster` options  `attribute :name, :string` [#69]
+
+3.2.2
+----------
+
+- Speed up boolean typecasting [#67, @abrandoned]
+
+3.2.1
+----------
+
+- Use `:remote_call` instead of of `rpc.execute` in persistence, search
+
+3.2.0
+----------
+
+- Add ability to override default RPC endpoints [#66]
+- Require Active Model 4.x to 5.1 for compatibility
+
+3.1.3
+----------
+
+- Require Active Model 4.x for compatibility
+- Cache and dup default attributes instead of building from scratch (4x speed boost on initialize) [#63, @film42]
+
+3.1.2
+----------
+
+- Allow primary_key to be set on create [#61, @mattnichols]
+- Change the behavior of DateTime types to gracefully handle invalid dates [#62, @brianstien]
+
+3.1.1
+----------
+
+- Guard against undefined method errors in the Protobuf adapter [#59, @brianstien]
+
+3.1.0
+----------
+
+- Bubble up the type of error given from Protobuf instead of a generic `ActiveRemoteError` [#58, @ryanbjones]
+
 3.0.0
 ----------
 
