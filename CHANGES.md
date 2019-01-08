@@ -1,5 +1,10 @@
 # ActiveRemote Changes
 
+3.3.1
+----------
+
+- Fix unknown type error in Protobuf serializer [#70]
+
 3.3.0
 ----------
 
