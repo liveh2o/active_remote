@@ -1,4 +1,4 @@
-require "active_remote/type"
+require "active_model/type"
 
 module ActiveRemote
   # Represents an attribute for reflection
@@ -12,7 +12,7 @@ module ActiveRemote
 
     # The attribute name
     # @since 0.2.0
-    attr_reader :name
+    attr_reader :name, :type
 
     # Compare attribute definitions
     #
@@ -55,17 +55,19 @@ module ActiveRemote
     # @return [ActiveAttr::AttributeDefinition]
     #
     # @since 0.2.0
-    def initialize(name, type = :unknown, **options)
+    def initialize(name, type = :value, **options)
       raise TypeError, "can't convert #{name.class} into Symbol" unless name.respond_to? :to_sym
       @name = name.to_sym
+      @type = ::ActiveModel::Type.lookup(type)
       @options = options
-      @options[:typecaster] = ::ActiveRemote::Type.lookup(type) unless type == :unknown
+    end
 
-      if @options[:type]
-        typecaster = ::ActiveRemote::Typecasting::TYPECASTER_MAP[@options[:type]]
-        fail ::ActiveRemote::UnknownType unless typecaster
-        @options[:typecaster] = typecaster
-      end
+    def from_rpc(value)
+      type.deserialize(value)
+    end
+
+    def from_user(value)
+      type.cast(value)
     end
 
     # Returns the code that would generate the attribute definition
@@ -107,4 +109,6 @@ module ActiveRemote
     # @since 0.5.0
     attr_reader :options, :type
   end
+
+  ::ActiveModel::Type.register(:value, ::ActiveModel::Type::Value)
 end

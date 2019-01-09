@@ -1,5 +1,3 @@
-require "active_remote/type"
-
 module ActiveRemote
   module Serializers
     module Protobuf
@@ -99,13 +97,21 @@ module ActiveRemote
           when field.message? then
             message_value
           when field.repeated? then
-            repeated_value.map { |value| typecast(value) }
+            repeated_value.map { |value| cast(value) }
           else
-            typecasted_value
+            cast_value
           end
         end
 
       private
+
+        def cast(value)
+          type.cast(value)
+        end
+
+        def cast_value
+          cast(value)
+        end
 
         def message_value(attributes = nil)
           attributes ||= value
@@ -122,28 +128,12 @@ module ActiveRemote
           value.is_a?(Array) ? value : [ value ]
         end
 
+        def type
+          @type ||= ::ActiveModel::Type.lookup(type_name)
+        end
+
         def type_name
-          Serializers::Protobuf.type_name_for_field(field)
-        end
-
-        def typecast(value)
-          return value if value.nil?
-
-          typecaster? ? typecaster.call(value) : value
-        end
-
-        def typecasted_value
-          typecast(value)
-        end
-
-        def typecaster
-          return nil if type_name.nil?
-
-          @typecaster ||= Type.lookup(type_name)
-        end
-
-        def typecaster?
-          typecaster.present?
+          Serializers::Protobuf.type_name_for_field(field) || :value
         end
       end
     end

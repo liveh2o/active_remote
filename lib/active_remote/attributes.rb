@@ -68,7 +68,7 @@ module ActiveRemote
     # Write an attribute to the attributes hash
     #
     def attribute=(name, value)
-      @attributes[name] = value
+      @attributes[name] = self.class.attributes[name].from_user(value)
     end
 
     def attribute_method?(attr_name)
