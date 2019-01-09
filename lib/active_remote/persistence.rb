@@ -241,7 +241,7 @@ module ActiveRemote
 
         response = remote_call(:create, new_attributes)
 
-        assign_attributes(response.to_hash)
+        instantiate(response.to_hash)
         add_errors(response.errors) if response.respond_to?(:errors)
 
         @new_record = has_errors?
@@ -271,7 +271,7 @@ module ActiveRemote
 
         response = remote_call(:update, updated_attributes)
 
-        assign_attributes(response.to_hash)
+        instantiate(response.to_hash)
         add_errors(response.errors) if response.respond_to?(:errors)
 
         success?
