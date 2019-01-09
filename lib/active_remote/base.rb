@@ -1,7 +1,6 @@
 require 'active_model/callbacks'
 
 require 'active_remote/association'
-require 'active_remote/attribute_assignment'
 require 'active_remote/attribute_definition'
 require 'active_remote/attributes'
 require 'active_remote/config'
@@ -20,13 +19,10 @@ require 'active_remote/validations'
 module ActiveRemote
   class Base
     extend ::ActiveModel::Callbacks
-    extend ::ActiveModel::Naming
 
-    include ::ActiveModel::Conversion
-    include ::ActiveModel::Validations
+    include ::ActiveModel::Model
 
     include ::ActiveRemote::Association
-    include ::ActiveRemote::AttributeAssignment
     include ::ActiveRemote::Attributes
     include ::ActiveRemote::DSL
     include ::ActiveRemote::Integration
