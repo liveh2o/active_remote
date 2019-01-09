@@ -21,25 +21,25 @@ module ActiveRemote
       attribute_method_suffix "?"
     end
 
-    # Test the presence of an attribute
-    #
-    # See {Typecasting::BooleanTypecaster.call} for more details.
-    #
-    # @example Query an attribute
-    #   person.query_attribute(:name)
-    #
-    def query_attribute(name)
-      if respond_to?("#{name}?")
-        send("#{name}?")
+    def query_attribute(attr_name)
+      value = self[attr_name]
+
+      case value
+      when true        then true
+      when false, nil  then false
       else
-        raise ::ActiveRemote::UnknownAttributeError, "unknown attribute: #{name}"
+        if value.respond_to?(:zero?)
+          !value.zero?
+        else
+          !value.blank?
+        end
       end
     end
 
   private
 
-    def attribute?(name)
-      ::ActiveRemote::Typecasting::BooleanTypecaster.call(read_attribute(name))
+    def attribute?(attribute_name)
+      query_attribute(attribute_name)
     end
   end
 end
