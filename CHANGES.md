@@ -1,5 +1,13 @@
 # ActiveRemote Changes
 
+5.0.0
+----------
+
+- Use Active Model attributes [#72]
+- Use type casting from Active Model (custom types must be registered) [#71]
+- Use query attributes from Active Record (string values such as 'FALSE', and '0' are now considered present) [#71]
+- Drop support for Rails 4.2 (versions will match Rails version moving forward) [#71]
+
 3.3.1
 ----------
 
