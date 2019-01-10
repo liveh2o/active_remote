@@ -1,5 +1,5 @@
-require 'active_remote/rpc_adapters/protobuf_adapter'
-require 'active_remote/serializers/protobuf'
+require "active_remote/rpc_adapters/protobuf_adapter"
+require "active_remote/serializers/protobuf"
 
 module ActiveRemote
   module RPC

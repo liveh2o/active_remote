@@ -1,4 +1,4 @@
-require 'support/protobuf/tag.pb'
+require "support/protobuf/tag.pb"
 
 ##
 # Define a generic class that inherits from active remote base

@@ -125,7 +125,7 @@ module ActiveRemote
         end
 
         def repeated_value
-          value.is_a?(Array) ? value : [ value ]
+          value.is_a?(Array) ? value : [value]
         end
 
         def type

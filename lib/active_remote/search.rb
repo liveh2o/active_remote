@@ -1,5 +1,5 @@
-require 'active_remote/persistence'
-require 'active_remote/rpc'
+require "active_remote/persistence"
+require "active_remote/rpc"
 
 module ActiveRemote
   module Search
@@ -26,9 +26,9 @@ module ActiveRemote
       #
       def find(args)
         remote = self.search(args).first
-        raise RemoteRecordNotFound.new(self) if remote.nil?
+        raise RemoteRecordNotFound, self if remote.nil?
 
-        return remote
+        remote
       end
 
       # Tries to load the first record; if it fails, then create is called
@@ -91,7 +91,9 @@ module ActiveRemote
         response = remote_call(:search, args)
 
         if response.respond_to?(:records)
-          records = serialize_records(response.records)
+          serialize_records(response.records)
+        else
+          response
         end
       end
 
@@ -115,7 +117,7 @@ module ActiveRemote
     #
     def reload
       fresh_object = self.class.find(scope_key_hash)
-      @attributes.update(fresh_object.instance_variable_get('@attributes'))
+      @attributes.update(fresh_object.instance_variable_get("@attributes"))
     end
   end
 end

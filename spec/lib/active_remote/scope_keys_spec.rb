@@ -1,16 +1,16 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe ActiveRemote::ScopeKeys do
   let(:key) { :user_guid }
-  let(:_scope_keys) { [ 'user_guid' ] }
-  let(:scope_keys) { [ 'guid' ] + _scope_keys }
+  let(:_scope_keys) { ["user_guid"] }
+  let(:scope_keys) { ["guid"] + _scope_keys }
   let(:tag) { Tag.new(tag_hash) }
-  let(:tag_hash) { { :guid => 'TAG-123', :user_guid => 'USR-123', :name => 'teh tag' } }
+  let(:tag_hash) { { :guid => "TAG-123", :user_guid => "USR-123", :name => "teh tag" } }
 
   describe ".scope_key" do
     after { Tag._scope_keys = [] }
 
-    it 'adds scope_key to _scope_keys' do
+    it "adds scope_key to _scope_keys" do
       Tag.scope_key(key)
       expect(Tag._scope_keys).to eq(_scope_keys)
     end
@@ -20,7 +20,7 @@ describe ActiveRemote::ScopeKeys do
     before { allow(Tag).to receive(:_scope_keys).and_return(_scope_keys) }
 
     it "combines primary key with _scope_keys" do
-      expect(Tag.scope_keys).to eq(['guid'] + _scope_keys)
+      expect(Tag.scope_keys).to eq(["guid"] + _scope_keys)
     end
   end
 
@@ -31,7 +31,7 @@ describe ActiveRemote::ScopeKeys do
   end
 
   describe "#scope_key_hash" do
-    let(:scope_key_hash) { { 'guid' => 'TAG-123', 'user_guid' => 'USR-123' } }
+    let(:scope_key_hash) { { "guid" => "TAG-123", "user_guid" => "USR-123" } }
 
     before { allow(tag).to receive(:scope_keys).and_return(scope_keys) }
 

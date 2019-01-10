@@ -1,8 +1,8 @@
-require 'support/models/message_with_options'
-require 'support/models/author'
-require 'support/models/default_author'
-require 'support/models/category'
-require 'support/models/no_attributes'
-require 'support/models/post'
-require 'support/models/tag'
-require 'support/models/typecasted_author'
+require "support/models/message_with_options"
+require "support/models/author"
+require "support/models/default_author"
+require "support/models/category"
+require "support/models/no_attributes"
+require "support/models/post"
+require "support/models/tag"
+require "support/models/typecasted_author"

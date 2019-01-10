@@ -3,7 +3,6 @@ module ActiveRemote
     extend ActiveSupport::Concern
 
     module ClassMethods
-
       ##
       # The default_primary_key is used to define what attribute is used
       # as a primary key for your global code base. If you use a primary

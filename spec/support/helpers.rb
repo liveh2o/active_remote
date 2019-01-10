@@ -11,25 +11,25 @@ def reset_dsl_variables(klass)
 end
 
 def reset_app_name(klass)
- klass.send(:instance_variable_set, :@app_name, nil)
+  klass.send(:instance_variable_set, :@app_name, nil)
 end
 
 def reset_auto_paging_size(klass)
- klass.send(:instance_variable_set, :@auto_paging_size, nil)
+  klass.send(:instance_variable_set, :@auto_paging_size, nil)
 end
 
 def reset_namespace(klass)
- klass.send(:instance_variable_set, :@namespace, nil)
+  klass.send(:instance_variable_set, :@namespace, nil)
 end
 
 def reset_publishable_attributes(klass)
- klass.send(:instance_variable_set, :@publishable_attributes, nil)
+  klass.send(:instance_variable_set, :@publishable_attributes, nil)
 end
 
 def reset_service_class(klass)
- klass.send(:instance_variable_set, :@service_class, nil)
+  klass.send(:instance_variable_set, :@service_class, nil)
 end
 
 def reset_service_name(klass)
- klass.send(:instance_variable_set, :@service_name, nil)
+  klass.send(:instance_variable_set, :@service_name, nil)
 end

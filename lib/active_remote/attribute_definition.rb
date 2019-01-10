@@ -12,7 +12,7 @@ module ActiveRemote
 
     # The attribute name
     # @since 0.2.0
-    attr_reader :name, :type
+    attr_reader :name
 
     # Compare attribute definitions
     #
@@ -90,9 +90,7 @@ module ActiveRemote
     # @return [String] the attribute name
     #
     # @since 0.2.0
-    def to_s
-      name.to_s
-    end
+    delegate :to_s, :to => :name
 
     # The attribute name
     #
@@ -103,7 +101,7 @@ module ActiveRemote
       name
     end
 
-    protected
+  protected
 
     # The attribute options
     # @since 0.5.0

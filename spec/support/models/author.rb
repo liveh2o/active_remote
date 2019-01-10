@@ -1,4 +1,4 @@
-require 'support/protobuf/author.pb'
+require "support/protobuf/author.pb"
 
 ##
 # Define a generic class that inherits from active remote base

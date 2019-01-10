@@ -1,14 +1,14 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe ActiveRemote::Search do
-  let(:records) { [ Generic::Remote::Tag.new ] }
+  let(:records) { [Generic::Remote::Tag.new] }
   let(:response) { Generic::Remote::Tags.new(:records => records) }
   let(:rpc) { double(:rpc) }
 
   describe ".find" do
-    let(:args) { Hash.new }
+    let(:args) { {} }
     let(:record) { double(:record) }
-    let(:records) { [ record ] }
+    let(:records) { [record] }
 
     before { allow(Tag).to receive(:search).and_return(records) }
 
@@ -37,10 +37,10 @@ describe ActiveRemote::Search do
   end
 
   describe ".search" do
-    let(:serialized_records) { [ Tag.new ] }
+    let(:serialized_records) { [Tag.new] }
 
     context "given args that respond to :to_hash" do
-      let(:args) { Hash.new }
+      let(:args) { {} }
       let(:rpc) { ::ActiveRemote::RPCAdapters::ProtobufAdapter.new(::Tag.service_class, ::Tag.endpoints) }
 
       before { allow(rpc).to receive(:execute).and_return(response) }
@@ -66,8 +66,8 @@ describe ActiveRemote::Search do
   end
 
   describe "#reload" do
-    let(:args) { attributes.slice('guid', 'user_guid') }
-    let(:attributes) { HashWithIndifferentAccess.new(:guid => 'foo', :name => 'bar', :updated_at => nil, :user_guid => 'baz') }
+    let(:args) { attributes.slice("guid", "user_guid") }
+    let(:attributes) { HashWithIndifferentAccess.new(:guid => "foo", :name => "bar", :updated_at => nil, :user_guid => "baz") }
 
     subject { Tag.new(args) }
 

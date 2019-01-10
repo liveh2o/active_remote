@@ -33,12 +33,12 @@ module ActiveRemote
       #     end
       #   end
       #
-      def belongs_to(belongs_to_klass, options={})
+      def belongs_to(belongs_to_klass, options = {})
         perform_association(belongs_to_klass, options) do |klass, object|
           foreign_key = options.fetch(:foreign_key) { :"#{klass.name.demodulize.underscore}_guid" }
           search_hash = {}
           search_hash[:guid] = object.read_attribute(foreign_key)
-          search_hash[options[:scope]] = object.read_attribute(options[:scope]) if options.has_key?(:scope)
+          search_hash[options[:scope]] = object.read_attribute(options[:scope]) if options.key?(:scope)
 
           search_hash.values.any?(&:nil?) ? nil : klass.search(search_hash).first
         end
@@ -74,17 +74,17 @@ module ActiveRemote
       #     end
       #   end
       #
-      def has_many(has_many_class, options={})
+      def has_many(has_many_class, options = {})
         perform_association(has_many_class, options) do |klass, object|
           foreign_key = options.fetch(:foreign_key) { :"#{object.class.name.demodulize.underscore}_guid" }
           search_hash = {}
           search_hash[foreign_key] = object.guid
-          search_hash[options[:scope]] = object.read_attribute(options[:scope]) if options.has_key?(:scope)
+          search_hash[options[:scope]] = object.read_attribute(options[:scope]) if options.key?(:scope)
 
           search_hash.values.any?(&:nil?) ? [] : klass.search(search_hash)
         end
 
-        options.merge!(:has_many => true)
+        options[:has_many] = true
         create_setter_method(has_many_class, options)
       end
 
@@ -115,12 +115,12 @@ module ActiveRemote
       #     end
       #   end
       #
-      def has_one(has_one_klass, options={})
+      def has_one(has_one_klass, options = {})
         perform_association(has_one_klass, options) do |klass, object|
           foreign_key = options.fetch(:foreign_key) { :"#{object.class.name.demodulize.underscore}_guid" }
           search_hash = {}
           search_hash[foreign_key] = object.guid
-          search_hash[options[:scope]] = object.read_attribute(options[:scope]) if options.has_key?(:scope)
+          search_hash[options[:scope]] = object.read_attribute(options[:scope]) if options.key?(:scope)
 
           search_hash.values.any?(&:nil?) ? nil : klass.search(search_hash).first
         end
@@ -135,29 +135,27 @@ module ActiveRemote
 
     private
 
-      def create_setter_method(associated_klass, options={})
+      def create_setter_method(associated_klass, options = {})
         writer_method = "#{associated_klass}=".to_sym
         define_method(writer_method) do |new_value|
           raise "New value must be an array" if options[:has_many] == true && new_value.class != Array
-          klass_name = options.fetch(:class_name){ associated_klass }
-          klass = klass_name.to_s.classify.constantize
 
           instance_variable_set(:"@#{new_value.class.name.demodulize.underscore}", new_value)
           new_value
         end
       end
 
-      def perform_association(associated_klass, options={})
+      def perform_association(associated_klass, options = {})
         define_method(associated_klass) do
-          klass_name = options.fetch(:class_name){ associated_klass }
+          klass_name = options.fetch(:class_name) { associated_klass }
           klass = klass_name.to_s.classify.constantize
 
-          self.class.validate_scoped_attributes(klass, self.class, options) if options.has_key?(:scope)
+          self.class.validate_scoped_attributes(klass, self.class, options) if options.key?(:scope)
 
           value = instance_variable_get(:"@#{associated_klass}")
 
           unless value
-            value = yield( klass, self )
+            value = yield(klass, self)
             instance_variable_set(:"@#{associated_klass}", value)
           end
 

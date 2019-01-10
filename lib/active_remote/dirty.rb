@@ -1,4 +1,4 @@
-require 'active_model/dirty'
+require "active_model/dirty"
 
 # Overrides persistence methods, providing support for dirty tracking.
 #
@@ -32,7 +32,7 @@ module ActiveRemote
     # Override #save to store changes as previous changes then clear them.
     #
     def save(*)
-      if status = super
+      if (status = super)
         @previously_changed = changes
         changed_attributes.clear
       end
@@ -49,7 +49,7 @@ module ActiveRemote
       end
     end
 
-    def skip_dirty_tracking(&block)
+    def skip_dirty_tracking
       disable_dirty_tracking
 
       yield

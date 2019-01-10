@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 # For testing the DSL methods
 module Another
@@ -17,19 +17,19 @@ describe ActiveRemote::DSL do
       Tag.attr_publishable :guid
       Tag.attr_publishable :name
 
-      expect(Tag.publishable_attributes).to match_array([ :guid, :name ])
+      expect(Tag.publishable_attributes).to match_array([:guid, :name])
     end
   end
 
   describe ".endpoints" do
     it "has default values" do
-      expect(Tag.endpoints).to eq({
+      expect(Tag.endpoints).to eq(
         :create => :create,
         :delete => :delete,
         :destroy => :destroy,
         :search => :search,
         :update => :update
-      })
+      )
     end
 
     context "given a new value for an endpoint" do

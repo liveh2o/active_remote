@@ -1,11 +1,10 @@
-require 'active_support/inflector'
+require "active_support/inflector"
 
 module ActiveRemote
   module DSL
     extend ActiveSupport::Concern
 
     module ClassMethods
-
       # Whitelist enable attributes for serialization purposes.
       #
       # ====Examples
@@ -121,10 +120,10 @@ module ActiveRemote
       # the class constant.
       #
       def _determine_service_class
-        class_name = [ namespace, service_name ].join("/")
+        class_name = [namespace, service_name].join("/")
         const_name = class_name.camelize
 
-        return const_name.present? ? const_name.constantize : const_name
+        const_name.present? ? const_name.constantize : const_name
       end
 
       def _determine_service_name

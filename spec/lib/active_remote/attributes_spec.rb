@@ -144,7 +144,7 @@ describe ::ActiveRemote::Attributes do
       end
 
       it "returns a new Hash " do
-        subject.attributes.merge!("foobar" => "foobar")
+        subject.attributes["foobar"] = "foobar"
         expect(subject.attributes).to_not include("foobar" => "foobar")
       end
 
@@ -158,11 +158,11 @@ describe ::ActiveRemote::Attributes do
     before { subject.name = "test" }
 
     it "includes the class name and all attribute values in alphabetical order by attribute name" do
-      expect(subject.inspect).to eq(%{#<Author category_guid: nil, chief_editor_guid: nil, editor_guid: nil, guid: nil, name: "test", user_guid: nil>})
+      expect(subject.inspect).to eq(%(#<Author category_guid: nil, chief_editor_guid: nil, editor_guid: nil, guid: nil, name: "test", user_guid: nil>))
     end
 
     it "doesn't format the inspection string for attributes if the model does not have any" do
-      expect(::NoAttributes.new.inspect).to eq(%{#<NoAttributes>})
+      expect(::NoAttributes.new.inspect).to eq(%(#<NoAttributes>))
     end
   end
 

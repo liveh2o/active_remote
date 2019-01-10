@@ -1,4 +1,4 @@
-require 'active_remote/serializers/protobuf'
+require "active_remote/serializers/protobuf"
 
 module ActiveRemote
   module RPCAdapters

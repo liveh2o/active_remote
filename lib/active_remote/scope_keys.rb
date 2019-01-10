@@ -10,7 +10,6 @@ module ActiveRemote
     end
 
     module ClassMethods
-
       ##
       # Allows you to define, at a class level, what keys should be
       # used as identifiers when making remote calls. For instance,
@@ -31,7 +30,7 @@ module ActiveRemote
       # persistence or refresh calls.
       #
       def scope_keys
-        [ primary_key.to_s ] + _scope_keys
+        [primary_key.to_s] + _scope_keys
       end
     end
 

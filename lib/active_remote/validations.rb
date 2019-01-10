@@ -54,7 +54,7 @@ module ActiveRemote
   protected
 
     def raise_validation_error
-      fail(::ActiveRemote::RemoteRecordInvalid.new(self))
+      fail ActiveRemote::RemoteRecordInvalid, self
     end
 
     def perform_validations(options = {})

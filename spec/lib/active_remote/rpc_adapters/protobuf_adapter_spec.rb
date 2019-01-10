@@ -17,7 +17,7 @@ describe ActiveRemote::RPCAdapters::ProtobufAdapter do
 
       it "calls the custom endpoint" do
         expect(adapter.client).to receive(:register)
-        adapter.execute(:create, { :name => "foo" })
+        adapter.execute(:create, :name => "foo")
       end
     end
   end

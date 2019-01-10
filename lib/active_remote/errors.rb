@@ -18,7 +18,7 @@ module ActiveRemote
 
     def initialize(record)
       @record = record
-      errors = @record.errors.full_messages.join(', ')
+      errors = @record.errors.full_messages.join(", ")
       super(errors)
     end
   end

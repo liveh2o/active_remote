@@ -1,0 +1,28 @@
+# Styles are inherited from Mad Rubocop
+
+inherit_gem:
+  mad_rubocop: .rubocop.yml
+
+# Styles that are modified from the defaults
+AllCops:
+  TargetRubyVersion: 2.5
+  Exclude:
+    - "**/*.pb.rb"
+
+Style/BlockDelimiters:
+  Description: >-
+                Avoid using {...} for multi-line blocks (multiline chaining is always ugly).
+                Prefer {...} over do...end for single-line blocks.
+  Exclude:
+    - "spec/**/*"
+
+Style/HashSyntax:
+  Description: >-
+                 Prefer Ruby 1.8 hash syntax { :a => 1, :b => 2 } over 1.9 syntax { a: 1, b: 2 }.
+  EnforcedStyle: hash_rockets
+  Exclude:
+    - "Gemfile"
+
+Layout/SpaceAroundOperators:
+  Exclude:
+    - "*.gemspec"

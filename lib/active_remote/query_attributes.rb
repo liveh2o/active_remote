@@ -31,7 +31,7 @@ module ActiveRemote
         if value.respond_to?(:zero?)
           !value.zero?
         else
-          !value.blank?
+          value.present?
         end
       end
     end

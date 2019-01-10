@@ -88,9 +88,9 @@ module ActiveRemote
       # @example Define an attribute.
       #   attribute :name
       #
-      def attribute(name, options={})
-        if dangerous_attribute_method_name = dangerous_attribute?(name)
-          raise ::ActiveRemote::DangerousAttributeError, %{an attribute method named "#{dangerous_attribute_method_name}" would conflict with an existing method}
+      def attribute(name, options = {})
+        if (dangerous_attribute_method_name = dangerous_attribute?(name))
+          raise ::ActiveRemote::DangerousAttributeError, %(an attribute method named "#{dangerous_attribute_method_name}" would conflict with an existing method)
         else
           attribute!(name, options)
         end
@@ -107,7 +107,7 @@ module ActiveRemote
       # @example Define a dangerous attribute.
       #   attribute! :timeout
       #
-      def attribute!(name, options={})
+      def attribute!(name, options = {})
         ::ActiveRemote::AttributeDefinition.new(name, options).tap do |attribute_definition|
           attribute_name = attribute_definition.name.to_s
           # Force active model to generate attribute methods
@@ -164,7 +164,7 @@ module ActiveRemote
       #
       def inspect
         inspected_attributes = attribute_names.sort
-        attributes_list = "(#{inspected_attributes.join(", ")})" unless inspected_attributes.empty?
+        attributes_list = "(#{inspected_attributes.join(', ')})" unless inspected_attributes.empty?
         "#{name}#{attributes_list}"
       end
 

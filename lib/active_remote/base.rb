@@ -1,20 +1,20 @@
-require 'active_model/callbacks'
+require "active_model/callbacks"
 
-require 'active_remote/association'
-require 'active_remote/attribute_definition'
-require 'active_remote/attributes'
-require 'active_remote/config'
-require 'active_remote/dirty'
-require 'active_remote/dsl'
-require 'active_remote/integration'
-require 'active_remote/persistence'
-require 'active_remote/primary_key'
-require 'active_remote/query_attributes'
-require 'active_remote/rpc'
-require 'active_remote/scope_keys'
-require 'active_remote/search'
-require 'active_remote/serialization'
-require 'active_remote/validations'
+require "active_remote/association"
+require "active_remote/attribute_definition"
+require "active_remote/attributes"
+require "active_remote/config"
+require "active_remote/dirty"
+require "active_remote/dsl"
+require "active_remote/integration"
+require "active_remote/persistence"
+require "active_remote/primary_key"
+require "active_remote/query_attributes"
+require "active_remote/rpc"
+require "active_remote/scope_keys"
+require "active_remote/search"
+require "active_remote/serialization"
+require "active_remote/validations"
 
 module ActiveRemote
   class Base
@@ -70,7 +70,8 @@ module ActiveRemote
     end
 
     def freeze
-      @attributes.freeze; self
+      @attributes.freeze
+      self
     end
 
     def frozen?

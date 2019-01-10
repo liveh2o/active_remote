@@ -1,4 +1,4 @@
-require 'active_remote/rpc'
+require "active_remote/rpc"
 
 module ActiveRemote
   module Persistence
@@ -20,7 +20,6 @@ module ActiveRemote
     end
 
     module ClassMethods
-
       # Creates a remote record through the service.
       #
       # The service will run any validations and if any of them fail, will return
@@ -81,7 +80,7 @@ module ActiveRemote
 
       add_errors(response.errors) if response.respond_to?(:errors)
 
-      return success? ? freeze : false
+      success? ? freeze : false
     end
 
     # Deletes the record from the service (the service determines if the
@@ -92,7 +91,7 @@ module ActiveRemote
     #
     def delete!
       delete
-      raise ActiveRemoteError.new(errors.to_s) if has_errors?
+      raise ActiveRemoteError, errors.to_s if has_errors?
     end
 
     # Destroys (hard deletes) the record from the service and freezes this
@@ -106,7 +105,7 @@ module ActiveRemote
 
       add_errors(response.errors) if response.respond_to?(:errors)
 
-      return success? ? freeze : false
+      success? ? freeze : false
     end
 
     # Destroys (hard deletes) the record from the service and freezes this
@@ -116,13 +115,13 @@ module ActiveRemote
     #
     def destroy!
       destroy
-      raise ActiveRemoteError.new(errors.to_s) if has_errors?
+      raise ActiveRemoteError, errors.to_s if has_errors?
     end
 
     # Returns true if the record has errors; otherwise, returns false.
     #
     def has_errors?
-      return respond_to?(:errors) && errors.present?
+      respond_to?(:errors) && errors.present?
     end
 
     # Instantiate a record with the given remote attributes. Generally used
@@ -143,7 +142,7 @@ module ActiveRemote
     # Returns true if the remote record has been saved; otherwise, returns false.
     #
     def persisted?
-      return ! new_record?
+      !new_record?
     end
 
     # Sets the instance to be a readonly object
@@ -190,7 +189,7 @@ module ActiveRemote
     # Returns true if the record doesn't have errors; otherwise, returns false.
     #
     def success?
-      return ! has_errors?
+      !has_errors?
     end
 
     # Updates a single attribute and saves the record.

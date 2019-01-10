@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe ::ActiveRemote::Integration do
   let(:guid) { "GUID-derp" }
@@ -29,7 +29,7 @@ describe ::ActiveRemote::Integration do
 
     it "adds the 'updated_at' attribute to the cache_key if updated_at is present" do
       ::ActiveRemote.config.default_cache_key_updated_at = true
-      twenty_o_one_one = subject[:updated_at] = DateTime.new(2001, 01, 01)
+      twenty_o_one_one = subject[:updated_at] = DateTime.new(2001, 0o1, 0o1)
       expect(subject).to receive(:new_record?).and_return(false)
       expect(subject.cache_key).to eq("tag/#{guid}-#{twenty_o_one_one.to_s(:number)}")
       subject[:updated_at] = nil

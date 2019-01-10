@@ -1,12 +1,12 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe ActiveRemote::PrimaryKey do
-  let(:tag) { Tag.new(:id => '1234', :guid => 'TAG-123', :user_guid => 'USR-123') }
+  let(:tag) { Tag.new(:id => "1234", :guid => "TAG-123", :user_guid => "USR-123") }
 
   after { Tag.instance_variable_set :@primary_key, nil }
 
   describe ".default_primary_key" do
-    it 'returns array of :guid' do
+    it "returns array of :guid" do
       expect(Tag.default_primary_key).to eq(:guid)
     end
   end

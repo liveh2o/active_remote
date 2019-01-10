@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe ActiveRemote::Association do
   let(:record) { double(:record) }
-  let(:records) { [ record ] }
+  let(:records) { [record] }
 
   describe ".belongs_to" do
     context "simple association" do
@@ -39,7 +39,7 @@ describe ActiveRemote::Association do
         end
       end
 
-      context 'scoped field' do
+      context "scoped field" do
         it { is_expected.to respond_to(:user) }
 
         it "searches the associated model for multiple records" do
@@ -47,19 +47,19 @@ describe ActiveRemote::Association do
           expect(subject.user).to eq(record)
         end
 
-        context 'when user_guid doesnt exist on model 'do
+        context "when user_guid doesnt exist on model " do
           before { allow(subject.class).to receive_message_chain(:public_instance_methods, :include?).with(:user_guid).and_return(false) }
 
-          it 'raises an error' do
-            expect {subject.user}.to raise_error(::RuntimeError, /Could not find attribute/)
+          it "raises an error" do
+            expect { subject.user }.to raise_error(::RuntimeError, /Could not find attribute/)
           end
         end
 
-        context 'when user_guid doesnt exist on associated model 'do
+        context "when user_guid doesnt exist on associated model " do
           before { allow(Author).to receive_message_chain(:public_instance_methods, :include?).with(:user_guid).and_return(false) }
 
-          it 'raises an error' do
-            expect {subject.user}.to raise_error(::RuntimeError, /Could not find attribute/)
+          it "raises an error" do
+            expect { subject.user }.to raise_error(::RuntimeError, /Could not find attribute/)
           end
         end
       end
@@ -95,7 +95,7 @@ describe ActiveRemote::Association do
   end
 
   describe ".has_many" do
-    let(:records) { [ record, record, record ] }
+    let(:records) { [record, record, record] }
     let(:guid) { "AUT-123" }
     let(:user_guid) { "USR-123" }
 
@@ -147,7 +147,7 @@ describe ActiveRemote::Association do
       end
     end
 
-    context 'scoped field' do
+    context "scoped field" do
       it { is_expected.to respond_to(:user_posts) }
 
       it "searches the associated model for multiple records" do
@@ -155,19 +155,19 @@ describe ActiveRemote::Association do
         expect(subject.user_posts).to eq(records)
       end
 
-      context 'when user_guid doesnt exist on model 'do
+      context "when user_guid doesnt exist on model " do
         before { allow(subject).to receive(:respond_to?).with("user_guid").and_return(false) }
 
-        it 'raises an error' do
-          expect {subject.user_posts}.to raise_error(::ActiveRemote::UnknownAttributeError)
+        it "raises an error" do
+          expect { subject.user_posts }.to raise_error(::ActiveRemote::UnknownAttributeError)
         end
       end
 
-      context 'when user_guid doesnt exist on associated model 'do
+      context "when user_guid doesnt exist on associated model " do
         before { allow(Post).to receive_message_chain(:public_instance_methods, :include?).with(:user_guid).and_return(false) }
 
-        it 'raises an error' do
-          expect {subject.user_posts}.to raise_error(::RuntimeError, /Could not find attribute/)
+        it "raises an error" do
+          expect { subject.user_posts }.to raise_error(::RuntimeError, /Could not find attribute/)
         end
       end
     end
@@ -243,7 +243,7 @@ describe ActiveRemote::Association do
       end
     end
 
-    context 'scoped field' do
+    context "scoped field" do
       it { is_expected.to respond_to(:chief_editor) }
 
       it "searches the associated model for multiple records" do
@@ -251,19 +251,19 @@ describe ActiveRemote::Association do
         expect(subject.chief_editor).to eq(record)
       end
 
-      context 'when user_guid doesnt exist on model 'do
+      context "when user_guid doesnt exist on model " do
         before { allow(subject).to receive(:respond_to?).with("user_guid").and_return(false) }
 
-        it 'raises an error' do
-          expect {subject.chief_editor}.to raise_error(::ActiveRemote::UnknownAttributeError)
+        it "raises an error" do
+          expect { subject.chief_editor }.to raise_error(::ActiveRemote::UnknownAttributeError)
         end
       end
 
-      context 'when user_guid doesnt exist on associated model 'do
+      context "when user_guid doesnt exist on associated model " do
         before { allow(Author).to receive_message_chain(:public_instance_methods, :include?).with(:user_guid).and_return(false) }
 
-        it 'raises an error' do
-          expect {subject.chief_editor}.to raise_error(::RuntimeError, /Could not find attribute/)
+        it "raises an error" do
+          expect { subject.chief_editor }.to raise_error(::RuntimeError, /Could not find attribute/)
         end
       end
     end
