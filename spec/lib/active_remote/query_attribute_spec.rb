@@ -38,9 +38,10 @@ describe ::ActiveRemote::QueryAttributes do
       expect(subject.name?).to eq true
     end
 
-    it "is false when the attribute is 0" do
+    # This behavior varies from ActiveRecord, so we test it explicitly
+    it "is true when the attribute is 0" do
       subject.name = 0
-      expect(subject.name?).to eq false
+      expect(subject.name?).to eq true
     end
 
     it "is true when the attribute is 1" do
