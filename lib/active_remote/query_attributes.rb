@@ -28,11 +28,7 @@ module ActiveRemote
       when true        then true
       when false, nil  then false
       else
-        if value.respond_to?(:zero?)
-          !value.zero?
-        else
-          value.present?
-        end
+        value.present?
       end
     end
 
