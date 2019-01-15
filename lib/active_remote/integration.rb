@@ -24,7 +24,7 @@ module ActiveRemote
     #   user.to_param  # => "GUID-1"
     #
     def to_param
-      self[:guid] && self[:guid].to_s
+      self[:guid]&.to_s
     end
 
     ##

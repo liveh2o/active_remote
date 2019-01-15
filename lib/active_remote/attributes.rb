@@ -14,6 +14,7 @@ module ActiveRemote
     #
     def ==(other)
       return false unless other.instance_of?(self.class)
+
       attributes == other.attributes
     end
 

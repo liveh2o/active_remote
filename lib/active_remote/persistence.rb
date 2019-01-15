@@ -76,6 +76,7 @@ module ActiveRemote
     #
     def delete
       raise ReadOnlyRemoteRecord if readonly?
+
       response = remote_call(:delete, scope_key_hash)
 
       add_errors(response.errors) if response.respond_to?(:errors)
@@ -101,6 +102,7 @@ module ActiveRemote
     #
     def destroy
       raise ReadOnlyRemoteRecord if readonly?
+
       response = remote_call(:destroy, scope_key_hash)
 
       add_errors(response.errors) if response.respond_to?(:errors)
@@ -203,6 +205,7 @@ module ActiveRemote
     # attribute is marked as readonly.
     def update_attribute(name, value)
       raise ReadOnlyRemoteRecord if readonly?
+
       name = name.to_s
       send("#{name}=", value)
       save(:validate => false)
@@ -254,6 +257,7 @@ module ActiveRemote
     #
     def create_or_update(*args)
       raise ReadOnlyRemoteRecord if readonly?
+
       new_record? ? remote_create : remote_update(*args)
     end
 

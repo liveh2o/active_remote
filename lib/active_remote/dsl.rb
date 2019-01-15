@@ -41,11 +41,11 @@ module ActiveRemote
 
       def endpoints(endpoints_hash = nil)
         @endpoints ||= {
-          :create  => :create,
-          :delete  => :delete,
+          :create => :create,
+          :delete => :delete,
           :destroy => :destroy,
-          :search  => :search,
-          :update  => :update
+          :search => :search,
+          :update => :update
         }
         @endpoints.merge!(endpoints_hash) if endpoints_hash.present?
         @endpoints

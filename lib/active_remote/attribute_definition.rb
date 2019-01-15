@@ -28,6 +28,7 @@ module ActiveRemote
     def <=>(other)
       return nil unless other.instance_of? self.class
       return nil if name == other.name && options != other.options
+
       self.name.to_s <=> other.name.to_s
     end
 
@@ -57,6 +58,7 @@ module ActiveRemote
     # @since 0.2.0
     def initialize(name, type = :value, **options)
       raise TypeError, "can't convert #{name.class} into Symbol" unless name.respond_to? :to_sym
+
       @name = name.to_sym
       @type = ::ActiveModel::Type.lookup(type)
       @options = options

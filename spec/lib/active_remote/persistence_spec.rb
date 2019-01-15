@@ -313,12 +313,12 @@ describe ::ActiveRemote::Persistence do
 
     it "runs update callbacks" do
       expect(tag).to receive(:after_update_callback)
-      tag.update_attributes({})
+      tag.update({})
     end
 
     it "updates a remote record" do
       expect(rpc).to receive(:execute).with(:update, tag.scope_key_hash)
-      tag.update_attributes({})
+      tag.update({})
     end
 
     before { allow(subject).to receive(:save) }
@@ -326,12 +326,12 @@ describe ::ActiveRemote::Persistence do
 
     it "assigns new attributes" do
       expect(subject).to receive(:assign_attributes).with(attributes)
-      subject.update_attributes(attributes)
+      subject.update(attributes)
     end
 
     it "saves the record" do
       expect(subject).to receive(:save)
-      subject.update_attributes(attributes)
+      subject.update(attributes)
     end
   end
 
@@ -343,12 +343,12 @@ describe ::ActiveRemote::Persistence do
 
     it "assigns new attributes" do
       expect(subject).to receive(:assign_attributes).with(attributes)
-      subject.update_attributes!(attributes)
+      subject.update!(attributes)
     end
 
     it "saves! the record" do
       expect(subject).to receive(:save!)
-      subject.update_attributes!(attributes)
+      subject.update!(attributes)
     end
   end
 end
