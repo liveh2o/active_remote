@@ -158,6 +158,19 @@ module ActiveRemote
       self.class.readonly? || @readonly
     end
 
+    # Executes a remote call on the current object and serializes it's attributes and
+    # errors from the response.
+    #
+    # Defaults request args to the scope key hash (e.g., { guid: 'ABC-123' }) when none are given.
+    # Returns false if the response contained errors; otherwise, returns true.
+    #
+    def remote(endpoint, request_args = scope_key_hash)
+      response = remote_call(endpoint, request_args)
+      assign_attributes_from_rpc(response)
+
+      success?
+    end
+
     # Saves the remote record.
     #
     # If it is a new record, it will be created through the service, otherwise
@@ -238,13 +251,7 @@ module ActiveRemote
     #
     def remote_create
       run_callbacks :create do
-        # Use the getter here so we get the type casting.
-        new_attributes = attributes
-
-        response = remote_call(:create, new_attributes)
-
-        instantiate(response.to_hash)
-        add_errors(response.errors) if response.respond_to?(:errors)
+        remote(:create, attributes)
 
         @new_record = has_errors?
         success?
@@ -272,12 +279,7 @@ module ActiveRemote
         updated_attributes.slice!(*attribute_names)
         updated_attributes.merge!(scope_key_hash)
 
-        response = remote_call(:update, updated_attributes)
-
-        instantiate(response.to_hash)
-        add_errors(response.errors) if response.respond_to?(:errors)
-
-        success?
+        remote(:update, updated_attributes)
       end
     end
   end

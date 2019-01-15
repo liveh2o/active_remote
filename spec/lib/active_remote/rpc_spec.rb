@@ -50,4 +50,35 @@ describe ::ActiveRemote::RPC do
       expect(::Tag.remote_call(:remote_method, args)).to eq response
     end
   end
+
+  describe "#assign_attributes_from_rpc" do
+    let(:response) { ::Generic::Remote::Tag.new(:guid => tag.guid, :name => "bar") }
+    let(:tag) { ::Tag.new(:guid => SecureRandom.uuid) }
+
+    it "updates the attributes from the response" do
+      expect { tag.assign_attributes_from_rpc(response) }.to change { tag.name }.to(response.name)
+    end
+
+    context "when response does not respond to errors" do
+      let(:response) { double(:response, :to_hash => ::Hash.new) }
+
+      it "does not add errors from the response" do
+        expect { tag.assign_attributes_from_rpc(response) }.to_not change { tag.has_errors? }
+      end
+    end
+
+    context "when errors are returned" do
+      let(:response) {
+        ::Generic::Remote::Tag.new(
+          :guid => tag.guid,
+          :name => "bar",
+          :errors => [{ :field => "name", :message => "message" }]
+        )
+      }
+
+      it "adds errors from the response" do
+        expect { tag.assign_attributes_from_rpc(response) }.to change { tag.has_errors? }.to(true)
+      end
+    end
+  end
 end
