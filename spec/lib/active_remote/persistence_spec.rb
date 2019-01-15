@@ -140,15 +140,6 @@ describe ::ActiveRemote::Persistence do
     end
   end
 
-  describe "#readonly?" do
-    context "when the record is created through instantiate with options[:readonly]" do
-      subject { Tag.instantiate({ :guid => "foo" }, :readonly => true) }
-
-      its(:new_record?) { should be_falsey }
-      its(:readonly?) { should be_truthy }
-    end
-  end
-
   describe "#has_errors?" do
     context "when errors are not present" do
       before { subject.errors.clear }
@@ -194,6 +185,70 @@ describe ::ActiveRemote::Persistence do
       subject { Tag.new }
 
       its(:persisted?) { should be_falsey }
+    end
+  end
+
+  describe "#readonly?" do
+    context "when the record is created through instantiate with options[:readonly]" do
+      subject { Tag.instantiate({ :guid => "foo" }, :readonly => true) }
+
+      its(:new_record?) { should be_falsey }
+      its(:readonly?) { should be_truthy }
+    end
+  end
+
+  describe "#remote" do
+    let(:response) { ::Generic::Remote::Tag.new(:guid => tag.guid, :name => "bar") }
+    let(:rpc) { ::ActiveRemote::RPCAdapters::ProtobufAdapter.new(::Tag.service_class, ::Tag.endpoints) }
+    let(:tag) { ::Tag.new(:guid => SecureRandom.uuid) }
+
+    subject { tag }
+
+    before do
+      allow(::Tag).to receive(:rpc).and_return(rpc)
+      allow(rpc).to receive(:execute).and_return(response)
+    end
+
+    it "calls the given RPC method with default args" do
+      expect(::Tag.rpc).to receive(:execute).with(:remote_method, tag.scope_key_hash)
+      tag.remote(:remote_method)
+    end
+
+    it "updates the attributes from the response" do
+      expect { tag.remote(:remote_method) }.to change { tag.name }.to(response.name)
+    end
+
+    it "returns true" do
+      expect(tag.remote(:remote_method)).to be(true)
+    end
+
+    context "when request args are given" do
+      it "calls the given RPC method with default args" do
+        attributes = { :guid => tag.guid, :name => "foo" }
+        expect(::Tag.rpc).to receive(:execute).with(:remote_method, attributes)
+        tag.remote(:remote_method, attributes)
+      end
+    end
+
+    context "when response does not respond to errors" do
+      it "returns true" do
+        allow(rpc).to receive(:execute).and_return(double(:response, :to_hash => ::Hash.new))
+        expect(tag.remote(:remote_method)).to be(true)
+      end
+    end
+
+    context "when errors are returned" do
+      let(:response) {
+        ::Generic::Remote::Tag.new(:guid => tag.guid, :name => "bar", :errors => [{ :field => "name", :message => "message" }])
+      }
+
+      it "adds errors from the response" do
+        expect { tag.remote(:remote_method) }.to change { tag.has_errors? }.to(true)
+      end
+
+      it "returns false" do
+        expect(tag.remote(:remote_method)).to be(false)
+      end
     end
   end
 

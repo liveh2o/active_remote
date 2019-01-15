@@ -52,6 +52,12 @@ module ActiveRemote
       end
     end
 
+    def assign_attributes_from_rpc(response)
+      new_attributes = self.class.build_from_rpc(response.to_hash)
+      @attributes.update(new_attributes)
+      add_errors(response.errors) if response.respond_to?(:errors)
+    end
+
     def remote_call(rpc_method, request_args)
       self.class.remote_call(rpc_method, request_args)
     end
