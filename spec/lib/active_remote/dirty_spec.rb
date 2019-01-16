@@ -54,6 +54,15 @@ describe ActiveRemote::Dirty do
     its(:changes) { should be_empty }
   end
 
+  describe "#remote" do
+    let(:post) { Post.new(:name => "foo") }
+
+    it "clears changes information" do
+      allow(post).to receive(:remote_call).and_return(::Generic::Remote::Post.new(:name => "foo"))
+      expect { post.remote(:reload) }.to change { post.changed? }.to(false)
+    end
+  end
+
   describe "#save" do
     let!(:changes) { subject.changes }
 

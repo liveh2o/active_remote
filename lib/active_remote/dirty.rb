@@ -29,6 +29,14 @@ module ActiveRemote
       end
     end
 
+    # Override #remote to provide dirty tracking.
+    #
+    def remote(*)
+      super.tap do
+        clear_changes_information
+      end
+    end
+
     # Override #save to store changes as previous changes then clear them.
     #
     def save(*)
