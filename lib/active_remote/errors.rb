@@ -42,7 +42,7 @@ module ActiveRemote
 
   # Raised by ActiveRemove::Base.save! and ActiveRemote::Base.create! methods
   # when remote record cannot be saved because it is invalid.
-  class RemoteRecordNotSaved < ActiveRemoteError
+  class RemoteRecordNotSaved < RemoteRecordInvalid
   end
 
   class UnknownAttributeError < ActiveRemoteError
