@@ -184,7 +184,7 @@ module ActiveRemote
     # Also runs any before/after save callbacks that are defined.
     #
     def save!(*args)
-      save(*args) || raise(RemoteRecordNotSaved)
+      save(*args) || fail(RemoteRecordNotSaved, self)
     end
 
     # Returns true if the record doesn't have errors; otherwise, returns false.
