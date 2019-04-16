@@ -43,6 +43,16 @@ module ActiveRemote
   # Raised by ActiveRemove::Base.save! and ActiveRemote::Base.create! methods
   # when remote record cannot be saved because it is invalid.
   class RemoteRecordNotSaved < ActiveRemoteError
+    attr_reader :record
+
+    def initialize(message_or_record = nil)
+      message = message_or_record
+      if message_or_record.is_a?(::ActiveRemote::Base)
+        @record = message_or_record
+        message = @record.errors.full_messages.join(", ")
+      end
+      super(message)
+    end
   end
 
   class UnknownAttributeError < ActiveRemoteError

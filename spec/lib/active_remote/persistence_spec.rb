@@ -314,9 +314,16 @@ describe ::ActiveRemote::Persistence do
     end
 
     context "when the record is not saved" do
+      let(:errors) {
+        [Generic::Error.new(:field => "name", :message => "Error one!"),
+         Generic::Error.new(:field => "name", :message => "Error two!")]
+      }
+      let(:response) { Generic::Remote::Tag.new(:errors => errors) }
+      before { allow(rpc).to receive(:execute).and_return(response) }
+
       it "raises an exception" do
-        allow(subject).to receive(:save).and_return(false)
-        expect { subject.save! }.to raise_error(ActiveRemote::RemoteRecordNotSaved)
+        expect { subject.save! }
+          .to raise_error(ActiveRemote::RemoteRecordNotSaved, "Name Error one!, Name Error two!")
       end
     end
   end
