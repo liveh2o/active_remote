@@ -45,7 +45,7 @@ module ActiveRemote
   class RemoteRecordNotSaved < ActiveRemoteError
     attr_reader :record
 
-    def initialize(message_or_record)
+    def initialize(message_or_record = nil)
       message = message_or_record
       if message_or_record.is_a?(::ActiveRemote::Base)
         @record = message_or_record
