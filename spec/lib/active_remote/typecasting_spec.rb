@@ -43,4 +43,11 @@ describe ::ActiveRemote::Typecasting do
       expect(record.guid).to eq("1000")
     end
   end
+
+  describe "big_integer" do
+    it "casts to big_integer" do
+      record = test_class.new(:big_integer_field => 1000000000000000)
+      expect(record.big_integer_field).to eq(1000000000000000)
+    end
+  end
 end
