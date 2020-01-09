@@ -5,4 +5,5 @@ class TypecastedAuthor < ::ActiveRemote::Base
   attribute :birthday, :type => DateTime
   attribute :writes_fiction, :boolean
   attribute :net_sales, :typecaster => FloatTypecaster
+  attribute :big_integer_field, :big_integer
 end
