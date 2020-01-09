@@ -31,5 +31,6 @@ module ActiveRemote
     register(:integer, Typecasting::IntegerTypecaster)
     register(:object, Typecasting::ObjectTypecaster)
     register(:string, Typecasting::StringTypecaster)
+    register(:big_integer, Typecasting::IntegerTypecaster)
   end
 end
