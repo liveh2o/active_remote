@@ -53,7 +53,7 @@ describe ::ActiveRemote::RPC do
 
   describe "#assign_attributes_from_rpc" do
     let(:response) { ::Generic::Remote::Tag.new(:guid => tag.guid, :name => "bar") }
-    let(:tag) { ::Tag.new(:guid => SecureRandom.uuid) }
+    let(:tag) { ::Tag.new(:guid => SecureRandom.uuid, :name => "foo") }
 
     it "updates the attributes from the response" do
       expect { tag.assign_attributes_from_rpc(response) }.to change { tag.name }.to(response.name)
@@ -78,6 +78,12 @@ describe ::ActiveRemote::RPC do
 
       it "adds errors from the response" do
         expect { tag.assign_attributes_from_rpc(response) }.to change { tag.has_errors? }.to(true)
+      end
+
+      it "does not update attributes" do
+        expect(tag.name).to eq "foo"
+        tag.assign_attributes_from_rpc(response)
+        expect(tag.name).to eq "foo"
       end
     end
   end
