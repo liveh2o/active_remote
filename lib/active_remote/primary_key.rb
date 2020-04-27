@@ -48,7 +48,8 @@ module ActiveRemote
     #   person = Person.new(1)
     #   person.to_key # => [1]
     def to_key
-      send(primary_key) ? [send(primary_key)] : nil
+      has_primary_key = respond_to?(primary_key.to_sym) && send(primary_key)
+      has_primary_key ? [send(primary_key)] : nil
     end
   end
 end
