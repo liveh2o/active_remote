@@ -32,4 +32,18 @@ describe ActiveRemote::PrimaryKey do
       expect(Tag.new.primary_key).to eq Tag.primary_key
     end
   end
+
+  describe "#to_key" do
+    context "when no primary key is specified and default of guid does not exist" do
+      it "returns nil" do
+        expect(NoAttributes.new.to_key).to eq nil
+      end
+    end
+
+    context "when no primary key is specified, but default of guid exists" do
+      it "returns guid in array" do
+        expect(Tag.new(:guid => "TAG-123").to_key).to eq ["TAG-123"]
+      end
+    end
+  end
 end

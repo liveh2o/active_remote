@@ -33,6 +33,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec-pride", ">= 3.1.0"
   s.add_development_dependency "mad_rubocop"
   s.add_development_dependency "pry"
+  s.add_development_dependency "protobuf-nats"
   s.add_development_dependency "protobuf-rspec", ">= 1.1.2"
   s.add_development_dependency "simplecov"
   s.add_development_dependency "benchmark-ips"
