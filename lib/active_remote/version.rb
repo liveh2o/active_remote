@@ -1,3 +1,3 @@
 module ActiveRemote
-  VERSION = "5.2.0.beta"
+  VERSION = "5.2.0"
 end
