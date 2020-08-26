@@ -36,6 +36,33 @@ describe ActiveRemote::Search do
     end
   end
 
+  describe ".find_by" do
+    let(:args) { {} }
+    let(:record) { double(:record) }
+    let(:records) { [record] }
+
+    before { allow(Tag).to receive(:search).and_return(records) }
+
+    it "searches with the given args" do
+      expect(Tag).to receive(:search).with(args)
+      Tag.find_by(args)
+    end
+
+    context "when records are returned" do
+      it "returns the first record" do
+        expect(Tag.find_by(args)).to eq record
+      end
+    end
+
+    context "when no records are returned" do
+      before { allow(Tag).to receive(:search).and_return([]) }
+
+      it "returns nil" do
+        expect(Tag.find_by(args)).to be_nil
+      end
+    end
+  end
+
   describe ".search" do
     let(:serialized_records) { [Tag.instantiate(:guid => "123")] }
 
