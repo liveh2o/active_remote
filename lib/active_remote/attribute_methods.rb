@@ -6,6 +6,18 @@ module ActiveRemote
       def attribute_names
         @attribute_names ||= attribute_types.keys
       end
+
+      def filtered_attributes(attributes)
+        if attributes.is_a? Symbol
+          @filtered_attributes = [attributes]
+        elsif attributes.is_a? Array
+          @filtered_attributes = attributes
+        end
+      end
+
+      def filtered_attribute_names
+        @filtered_attributes || []
+      end
     end
 
     def [](name)
@@ -45,7 +57,7 @@ module ActiveRemote
     end
 
     def attribute_names
-      @attributes.keys
+      @attributes.keys.delete(self.class.filtered_attribute_names) || []
     end
   end
 end
