@@ -7,17 +7,16 @@ module ActiveRemote
         @attribute_names ||= attribute_types.keys
       end
 
+      attr_reader :filtered_attribute_names
+
       def filtered_attributes(attributes)
         if attributes.is_a? Symbol
-          @filtered_attributes = [attributes]
+          @filtered_attribute_names = [attributes]
         elsif attributes.is_a? Array
-          @filtered_attributes = attributes
+          @filtered_attribute_names = attributes
         end
       end
 
-      def filtered_attribute_names
-        @filtered_attributes || []
-      end
     end
 
     def [](name)
