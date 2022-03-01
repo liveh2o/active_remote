@@ -148,7 +148,7 @@ describe ::ActiveRemote::Persistence do
     end
 
     context "when errors are present" do
-      before { subject.errors[:base] << "Boom!" }
+      before { subject.errors.add(:base, :invalid, :message => "Boom!") }
 
       its(:has_errors?) { should be_truthy }
     end
@@ -295,7 +295,7 @@ describe ::ActiveRemote::Persistence do
     end
 
     context "when the record has errors before the save" do
-      before { subject.errors[:base] << "Boom!" }
+      before { subject.errors.add(:base, :invalid, :message => "Boom!") }
 
       it "clears the errors before the save" do
         expect(subject.errors).not_to be_empty
@@ -330,7 +330,7 @@ describe ::ActiveRemote::Persistence do
 
   describe "#success?" do
     context "when errors are present" do
-      before { subject.errors[:base] << "Boom!" }
+      before { subject.errors.add(:base, :invalid, :message => "Boom!") }
 
       its(:success?) { should be_falsey }
     end
