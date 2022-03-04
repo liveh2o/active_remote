@@ -6,6 +6,12 @@ module ActiveRemote
       def attribute_names
         @attribute_names ||= attribute_types.keys
       end
+
+      attr_reader :filtered_attribute_names
+
+      def filtered_attributes(attributes)
+        @filtered_attribute_names = attributes
+      end
     end
 
     def [](name)
@@ -45,7 +51,7 @@ module ActiveRemote
     end
 
     def attribute_names
-      @attributes.keys
+      @attributes.keys.delete(self.class.filtered_attribute_names) || []
     end
   end
 end
