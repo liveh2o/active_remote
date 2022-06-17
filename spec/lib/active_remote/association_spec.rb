@@ -76,8 +76,10 @@ describe ActiveRemote::Association do
         expect(subject.coauthor).to eq record
       end
 
-      it "should create a setter method" do
-        expect(subject).to respond_to(:coauthor=)
+      it "creates a setter method" do
+        author = Author.new(:guid => author_guid)
+        subject.coauthor = author
+        expect(subject.coauthor).to eq(author)
       end
     end
 

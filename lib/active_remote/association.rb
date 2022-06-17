@@ -84,7 +84,7 @@ module ActiveRemote
         end
 
         options[:has_many] = true
-        create_setter_method(has_many_class, options)
+        create_association_writer(has_many_class, options)
       end
 
       # Create a `has_one` association for a given remote resource.
@@ -133,12 +133,11 @@ module ActiveRemote
 
     private
 
-      def create_setter_method(associated_klass, options = {})
-        writer_method = "#{associated_klass}=".to_sym
-        define_method(writer_method) do |new_value|
+      def create_association_writer(associated_klass, options = {})
+        define_method("#{associated_klass}=") do |new_value|
           raise "New value must be an array" if options[:has_many] == true && new_value.class != Array
 
-          instance_variable_set(:"@#{new_value.class.name.demodulize.underscore}", new_value)
+          instance_variable_set(:"@#{associated_klass}", new_value)
           new_value
         end
       end
@@ -160,7 +159,7 @@ module ActiveRemote
           return value
         end
 
-        create_setter_method(associated_klass, options)
+        create_association_writer(associated_klass, options)
       end
     end
   end
