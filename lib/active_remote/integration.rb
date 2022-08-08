@@ -63,7 +63,7 @@ module ActiveRemote
       case
       when new_record? then
         "#{model_name.cache_key}/new"
-      when ::ActiveRemote.config.default_cache_key_updated_at? && (timestamp = self[:updated_at]) then
+      when ::ActiveRemote.config.default_cache_key_updated_at? && (self.respond_to?(:[]) && timestamp = self["updated_at"]) then
         timestamp = timestamp.utc.to_s(self.class.cache_timestamp_format)
         "#{model_name.cache_key}/#{send(primary_key)}-#{timestamp}"
       else
