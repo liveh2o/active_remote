@@ -9,11 +9,11 @@ module ActiveRemote
     end
 
     def [](name)
-      attribute(name.to_s)
+      @attributes.fetch_value(name.to_s)
     end
 
     def []=(name, value)
-      _write_attribute(name.to_s, value)
+      @attributes.write_from_user(name.to_s, value)
     end
 
     # Returns an <tt>#inspect</tt>-like string for the value of the
