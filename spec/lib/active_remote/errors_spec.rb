@@ -4,8 +4,8 @@ describe ::ActiveRemote::RemoteRecordNotSaved do
   let(:record) { ::Tag.new }
 
   before do
-    record.errors[:base] << "Some error one!"
-    record.errors[:base] << "Some error two!"
+    record.errors.add(:base, :invalid, :message => "Some error one!")
+    record.errors.add(:base, :invalid, :message => "Some error two!")
   end
 
   context "when an active remote record is used" do
