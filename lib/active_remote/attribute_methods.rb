@@ -11,13 +11,15 @@ module ActiveRemote
     def [](attr_name)
       name = attr_name.to_s
       name = self.class.attribute_aliases[name] || name
-      @attributes.fetch_value(name.to_s)
+
+      attribute(name.to_s)
     end
 
     def []=(attr_name, value)
       name = attr_name.to_s
       name = self.class.attribute_aliases[name] || name
-      @attributes.write_from_user(name, value)
+
+      _write_attribute(name.to_s, value)
     end
 
     # Returns an <tt>#inspect</tt>-like string for the value of the
