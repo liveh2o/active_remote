@@ -11,14 +11,12 @@ module ActiveRemote
     def [](attr_name)
       name = attr_name.to_s
       name = self.class.attribute_aliases[name] || name
-
       attribute(name.to_s)
     end
 
     def []=(attr_name, value)
       name = attr_name.to_s
       name = self.class.attribute_aliases[name] || name
-
       _write_attribute(name.to_s, value)
     end
 
