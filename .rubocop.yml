@@ -5,7 +5,7 @@ inherit_gem:
 
 # Styles that are modified from the defaults
 AllCops:
-  TargetRubyVersion: 2.5
+  TargetRubyVersion: 3.1
   Exclude:
     - "**/*.pb.rb"
 

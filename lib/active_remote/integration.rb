@@ -64,7 +64,7 @@ module ActiveRemote
       when new_record? then
         "#{model_name.cache_key}/new"
       when ::ActiveRemote.config.default_cache_key_updated_at? && (self.respond_to?(:[]) && timestamp = self["updated_at"]) then
-        timestamp = timestamp.utc.to_s(self.class.cache_timestamp_format)
+        timestamp = timestamp.utc.to_fs(self.class.cache_timestamp_format)
         "#{model_name.cache_key}/#{send(primary_key)}-#{timestamp}"
       else
         "#{model_name.cache_key}/#{send(primary_key)}"
@@ -88,14 +88,14 @@ module ActiveRemote
     # +false+ (which it is by default until Rails 6.0).
     def cache_version
       if cache_versioning && (timestamp = try(:updated_at))
-        timestamp.utc.to_s(:usec)
+        timestamp.utc.to_fs(:usec)
       end
     end
 
     module ClassMethods
       # Defines your model's +to_param+ method to generate "pretty" URLs
       # using +method_name+, which can be any attribute or method that
-      # responds to +to_s+.
+      # responds to +to_fs+.
       #
       #   class User < ActiveRecord::Base
       #     to_param :name

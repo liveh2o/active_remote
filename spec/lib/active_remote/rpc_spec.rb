@@ -30,7 +30,7 @@ describe ::ActiveRemote::RPC do
       it "calls the typecasters" do
         expect(
           ::Author.build_from_rpc(new_attributes)
-        ).to include("birthday" => "2017-01-01".to_datetime)
+        ).to include({"birthday" => "2017-01-01".to_datetime})
       end
     end
   end
