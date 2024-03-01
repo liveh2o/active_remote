@@ -95,7 +95,7 @@ module ActiveRemote
     module ClassMethods
       # Defines your model's +to_param+ method to generate "pretty" URLs
       # using +method_name+, which can be any attribute or method that
-      # responds to +to_fs+.
+      # responds to +to_s+.
       #
       #   class User < ActiveRecord::Base
       #     to_param :name
