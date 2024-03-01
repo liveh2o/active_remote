@@ -35,7 +35,7 @@ describe ::ActiveRemote::Integration do
       ::ActiveRemote.config.default_cache_key_updated_at = true
       twenty_o_one_one = tag.updated_at = DateTime.new(2001, 0o1, 0o1)
       expect(tag).to receive(:new_record?).and_return(false)
-      expect(tag.cache_key).to eq("tags/#{guid}-#{twenty_o_one_one.to_s(:usec)}")
+      expect(tag.cache_key).to eq("tags/#{guid}-#{twenty_o_one_one.to_fs(:usec)}")
       tag.updated_at = nil
       ::ActiveRemote.config.default_cache_key_updated_at = false
     end
@@ -91,7 +91,7 @@ describe ::ActiveRemote::Integration do
 
       it "returns a cache version" do
         tag.updated_at = DateTime.new(2001, 0o1, 0o1)
-        expect(tag.cache_version).to eq(tag.updated_at.utc.to_s(:usec))
+        expect(tag.cache_version).to eq(tag.updated_at.utc.to_fs(:usec))
       end
     end
 
