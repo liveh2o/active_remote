@@ -39,7 +39,7 @@ module ActiveRemote
           search_hash[:guid] = object.send(foreign_key)
           search_hash[options[:scope]] = object.send(options[:scope]) if options.key?(:scope)
 
-          search_hash.values.any?(&:nil?) ? nil : klass.search(search_hash).first
+          search_hash.values.any?(&:nil?) ? nil : klass.search(**search_hash).first
         end
       end
 
@@ -80,7 +80,7 @@ module ActiveRemote
           search_hash[foreign_key] = object.guid
           search_hash[options[:scope]] = object.send(options[:scope]) if options.key?(:scope)
 
-          search_hash.values.any?(&:nil?) ? [] : klass.search(search_hash)
+          search_hash.values.any?(&:nil?) ? [] : klass.search(**search_hash)
         end
 
         options[:has_many] = true
@@ -120,7 +120,7 @@ module ActiveRemote
           search_hash[foreign_key] = object.guid
           search_hash[options[:scope]] = object.send(options[:scope]) if options.key?(:scope)
 
-          search_hash.values.any?(&:nil?) ? nil : klass.search(search_hash).first
+          search_hash.values.any?(&:nil?) ? nil : klass.search(**search_hash).first
         end
       end
 
