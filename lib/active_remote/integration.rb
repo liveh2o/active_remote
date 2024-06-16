@@ -9,7 +9,7 @@ module ActiveRemote
       # versioning is off. Accepts any of the symbols in <tt>Time::DATE_FORMATS</tt>.
       #
       # This is +:usec+, by default.
-      class_attribute :cache_timestamp_format, :instance_writer => false, :default => :usec
+      class_attribute :cache_timestamp_format, instance_writer: false, default: :usec
 
       ##
       # :singleton-method:
@@ -17,7 +17,7 @@ module ActiveRemote
       # by a changing version in the #cache_version method.
       #
       # This is +false+, by default until Rails 6.0.
-      class_attribute :cache_versioning, :instance_writer => false, :default => false
+      class_attribute :cache_versioning, instance_writer: false, default: false
     end
 
     # Returns a +String+, which Action Pack uses for constructing a URL to this
@@ -60,10 +60,10 @@ module ActiveRemote
     #   Person.find(5).cache_key  # => "people/5-20071224150000" (updated_at available)
     #
     def cache_key
-      case
-      when new_record? then
+      if new_record?
+
         "#{model_name.cache_key}/new"
-      when ::ActiveRemote.config.default_cache_key_updated_at? && (self.respond_to?(:[]) && timestamp = self["updated_at"]) then
+      elsif ::ActiveRemote.config.default_cache_key_updated_at? && (respond_to?(:[]) && (timestamp = self["updated_at"]))
         timestamp = timestamp.utc.to_fs(self.class.cache_timestamp_format)
         "#{model_name.cache_key}/#{send(primary_key)}-#{timestamp}"
       else
@@ -123,8 +123,8 @@ module ActiveRemote
         else
           define_method :to_param do
             if (default = super()) &&
-               (result = send(method_name).to_s).present? &&
-               (param = result.squish.parameterize.truncate(20, :separator => /-/, :omission => "")).present?
+                (result = send(method_name).to_s).present? &&
+                (param = result.squish.parameterize.truncate(20, separator: /-/, omission: "")).present?
               "#{default}-#{param}"
             else
               default

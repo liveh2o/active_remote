@@ -20,32 +20,32 @@ module ActiveRemote
       end
 
       def endpoint_for_create(endpoint)
-        endpoints :create => endpoint
+        endpoints create: endpoint
       end
 
       def endpoint_for_delete(endpoint)
-        endpoints :delete => endpoint
+        endpoints delete: endpoint
       end
 
       def endpoint_for_destroy(endpoint)
-        endpoints :destroy => endpoint
+        endpoints destroy: endpoint
       end
 
       def endpoint_for_search(endpoint)
-        endpoints :search => endpoint
+        endpoints search: endpoint
       end
 
       def endpoint_for_update(endpoint)
-        endpoints :update => endpoint
+        endpoints update: endpoint
       end
 
       def endpoints(endpoints_hash = nil)
         @endpoints ||= {
-          :create => :create,
-          :delete => :delete,
-          :destroy => :destroy,
-          :search => :search,
-          :update => :update
+          create: :create,
+          delete: :delete,
+          destroy: :destroy,
+          search: :search,
+          update: :update
         }
         @endpoints.merge!(endpoints_hash) if endpoints_hash.present?
         @endpoints
@@ -114,7 +114,7 @@ module ActiveRemote
         @service_name ||= _determine_service_name
       end
 
-    private
+      private
 
       # Combine the namespace and service values, constantize them and return
       # the class constant.
@@ -127,12 +127,12 @@ module ActiveRemote
       end
 
       def _determine_service_name
-        underscored_name = self.name.underscore
-        "#{underscored_name}_service".to_sym
+        underscored_name = name.underscore
+        :"#{underscored_name}_service"
       end
     end
 
-  private
+    private
 
     # Private convenience methods for accessing DSL methods in instances
     #

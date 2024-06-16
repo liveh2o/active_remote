@@ -15,9 +15,8 @@ module ActiveRemote
       def build_from_rpc(values)
         values = values.stringify_keys
 
-        attribute_names.inject(_default_attributes.deep_dup) do |attributes, name|
+        attribute_names.each_with_object(_default_attributes.deep_dup) do |name, attributes|
           attributes.write_from_database(name, values[name])
-          attributes
         end
       end
 

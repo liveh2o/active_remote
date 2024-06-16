@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe ::ActiveRemote::Integration do
   let(:guid) { "GUID-derp" }
-  let(:tag) { ::Tag.new(:guid => guid) }
+  let(:tag) { ::Tag.new(guid: guid) }
 
   subject { tag }
 
@@ -46,7 +46,7 @@ describe ::ActiveRemote::Integration do
   end
 
   describe "#cache_key_with_version" do
-    let(:tag) { ::Tag.new(:guid => guid, :updated_at => ::DateTime.current) }
+    let(:tag) { ::Tag.new(guid: guid, updated_at: ::DateTime.current) }
 
     specify { expect(subject).to respond_to(:cache_key_with_version) }
 

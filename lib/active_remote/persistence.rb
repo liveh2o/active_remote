@@ -28,7 +28,7 @@ module ActiveRemote
       # The newly created record is returned if it was successfully saved or not.
       #
       def create(attributes)
-        remote = self.new(attributes)
+        remote = new(attributes)
         remote.save
         remote
       end
@@ -40,7 +40,7 @@ module ActiveRemote
       # an ActiveRemote::RemoteRecordNotSaved exception.
       #
       def create!(attributes)
-        remote = self.new(attributes)
+        remote = new(attributes)
         remote.save!
         remote
       end
@@ -49,8 +49,8 @@ module ActiveRemote
       # when retrieving records that already exist, so @new_record is set to false.
       #
       def instantiate(new_attributes = {}, options = {})
-        attributes = self.build_from_rpc(new_attributes)
-        new_object = self.allocate.init_with(attributes)
+        attributes = build_from_rpc(new_attributes)
+        new_object = allocate.init_with(attributes)
         new_object.readonly! if options[:readonly]
 
         new_object
@@ -220,8 +220,8 @@ module ActiveRemote
       raise ReadOnlyRemoteRecord if readonly?
 
       name = name.to_s
-      send("#{name}=", value)
-      save(:validate => false)
+      send(:"#{name}=", value)
+      save(validate: false)
     end
 
     # Updates the attributes of the remote record from the passed-in hash and
@@ -244,7 +244,7 @@ module ActiveRemote
     end
     alias_method :update!, :update_attributes!
 
-  private
+    private
 
     # Handles creating a remote object and serializing it's attributes and
     # errors from the response.

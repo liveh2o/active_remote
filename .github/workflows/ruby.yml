@@ -16,6 +16,15 @@ on:
     branches: [master]
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.1"
+          bundler-cache: true
+      - run: bundle exec standardrb --parallel --format github
   test:
     runs-on: ubuntu-latest
     strategy:

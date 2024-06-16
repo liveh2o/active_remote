@@ -25,7 +25,7 @@ module ActiveRemote
       #   Tag.find(Generic::Remote::TagRequest.new(:guid => 'foo'))
       #
       def find(args)
-        remote = self.search(args).first
+        remote = search(args).first
         raise RemoteRecordNotFound, self if remote.nil?
 
         remote
@@ -45,7 +45,7 @@ module ActiveRemote
       #   Tag.find_by(Generic::Remote::TagRequest.new(:guid => 'foo'))
       #
       def find_by(args)
-        self.search(args).first
+        search(args).first
       end
 
       # Tries to load the first record; if it fails, then create is called
@@ -60,8 +60,8 @@ module ActiveRemote
       #   Tag.first_or_create(Generic::Remote::TagRequest.new(:name => 'foo'))
       #
       def first_or_create(attributes)
-        remote = self.search(attributes).first
-        remote ||= self.create(attributes)
+        remote = search(attributes).first
+        remote ||= create(attributes)
         remote
       end
 
@@ -69,8 +69,8 @@ module ActiveRemote
       # with the same arguments.
       #
       def first_or_create!(attributes)
-        remote = self.search(attributes).first
-        remote ||= self.create!(attributes)
+        remote = search(attributes).first
+        remote ||= create!(attributes)
         remote
       end
 
@@ -86,8 +86,8 @@ module ActiveRemote
       #   Tag.first_or_initialize(Generic::Remote::TagRequest.new(:name => 'foo'))
       #
       def first_or_initialize(attributes)
-        remote = self.search(attributes).first
-        remote ||= self.new(attributes)
+        remote = search(attributes).first
+        remote ||= new(attributes)
         remote
       end
 
@@ -134,7 +134,7 @@ module ActiveRemote
     #
     def reload
       fresh_object = self.class.find(scope_key_hash)
-      @attributes = fresh_object.instance_variable_get("@attributes")
+      @attributes = fresh_object.instance_variable_get(:@attributes)
       self
     end
   end

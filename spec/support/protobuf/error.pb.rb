@@ -1,9 +1,7 @@
-# encoding: utf-8
-
 ##
 # This file is auto-generated. DO NOT EDIT!
 #
-require 'protobuf'
+require "protobuf"
 
 module Generic
   ::Protobuf::Optionable.inject(self) { ::Google::Protobuf::FileOptions }
@@ -13,7 +11,6 @@ module Generic
   #
   class Error < ::Protobuf::Message; end
 
-
   ##
   # Message Fields
   #
@@ -21,6 +18,4 @@ module Generic
     optional :string, :field, 1
     optional :string, :message, 2
   end
-
 end
-

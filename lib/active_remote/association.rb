@@ -131,10 +131,10 @@ module ActiveRemote
         raise "Could not find attribute: '#{options[:scope]}' on #{associated_class}" unless associated_class.public_instance_methods.include?(options[:scope])
       end
 
-    private
+      private
 
       def create_association_writer(associated_klass, options = {})
-        define_method("#{associated_klass}=") do |new_value|
+        define_method(:"#{associated_klass}=") do |new_value|
           raise "New value must be an array" if options[:has_many] == true && new_value.class != Array
 
           instance_variable_set(:"@#{associated_klass}", new_value)
@@ -156,7 +156,7 @@ module ActiveRemote
             instance_variable_set(:"@#{associated_klass}", value)
           end
 
-          return value
+          value
         end
 
         create_association_writer(associated_klass, options)
