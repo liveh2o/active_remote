@@ -4,7 +4,7 @@ describe ::ActiveRemote::RPC do
   subject { ::Tag.new }
 
   describe ".build_from_rpc" do
-    let(:new_attributes) { { :name => "test" } }
+    let(:new_attributes) { {name: "test"} }
 
     it "dups the default attributes" do
       expect { ::Tag.build_from_rpc(new_attributes) }.to_not change { ::Tag._default_attributes["name"] }
@@ -17,7 +17,7 @@ describe ::ActiveRemote::RPC do
     end
 
     context "extra attributes from rpc" do
-      let(:new_attributes) { { :foobar => "test" } }
+      let(:new_attributes) { {foobar: "test"} }
 
       it "ignores unknown attributes" do
         expect(::Tag.build_from_rpc(new_attributes)).to_not include("foobar" => "test")
@@ -25,7 +25,7 @@ describe ::ActiveRemote::RPC do
     end
 
     context "typecasted attributes" do
-      let(:new_attributes) { { :birthday => "2017-01-01" } }
+      let(:new_attributes) { {birthday: "2017-01-01"} }
 
       it "calls the typecasters" do
         expect(
@@ -56,15 +56,15 @@ describe ::ActiveRemote::RPC do
   end
 
   describe "#assign_attributes_from_rpc" do
-    let(:response) { ::Generic::Remote::Tag.new(:guid => tag.guid, :name => "bar") }
-    let(:tag) { ::Tag.new(:guid => SecureRandom.uuid) }
+    let(:response) { ::Generic::Remote::Tag.new(guid: tag.guid, name: "bar") }
+    let(:tag) { ::Tag.new(guid: SecureRandom.uuid) }
 
     it "updates the attributes from the response" do
       expect { tag.assign_attributes_from_rpc(response) }.to change { tag.name }.to(response.name)
     end
 
     context "when response does not respond to errors" do
-      let(:response) { double(:response, :to_hash => ::Hash.new) }
+      let(:response) { double(:response, to_hash: {}) }
 
       it "does not add errors from the response" do
         expect { tag.assign_attributes_from_rpc(response) }.to_not change { tag.has_errors? }
@@ -74,9 +74,9 @@ describe ::ActiveRemote::RPC do
     context "when errors are returned" do
       let(:response) {
         ::Generic::Remote::Tag.new(
-          :guid => tag.guid,
-          :name => "bar",
-          :errors => [{ :field => "name", :message => "message" }]
+          guid: tag.guid,
+          name: "bar",
+          errors: [{field: "name", message: "message"}]
         )
       }
 

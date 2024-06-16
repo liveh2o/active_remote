@@ -25,14 +25,14 @@ module ActiveRemote
       value = self[attr_name]
 
       case value
-      when true        then true
-      when false, nil  then false
+      when true then true
+      when false, nil then false
       else
         value.present?
       end
     end
 
-  private
+    private
 
     def attribute?(attribute_name)
       query_attribute(attribute_name)

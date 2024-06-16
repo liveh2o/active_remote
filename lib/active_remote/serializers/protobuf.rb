@@ -50,7 +50,7 @@ module ActiveRemote
         # Class methods
         #
         def self.from_attributes(message_class, attributes)
-          fields = self.new(message_class, attributes)
+          fields = new(message_class, attributes)
           fields.from_attributes
         end
 
@@ -58,12 +58,11 @@ module ActiveRemote
         # Instance methods
         #
         def from_attributes
-          attributes.inject({}) do |hash, (key, value)|
+          attributes.each_with_object({}) do |(key, value), hash|
             field = message_class.get_field(key, true) # Check extension fields, too
             value = Field.from_attribute(field, value) if field
 
             hash[key] = value
-            hash
           end
         end
       end
@@ -83,7 +82,7 @@ module ActiveRemote
         # Class methods
         #
         def self.from_attribute(field, value)
-          field = self.new(field, value)
+          field = new(field, value)
           field.from_attribute
         end
 
@@ -91,19 +90,21 @@ module ActiveRemote
         # Instance methods
         #
         def from_attribute
-          case
-          when field.repeated_message? then
+          if field.repeated_message?
+
             repeated_message_value
-          when field.message? then
+          elsif field.message?
+
             message_value
-          when field.repeated? then
+          elsif field.repeated?
+
             repeated_value.map { |value| cast(value) }
           else
             cast_value
           end
         end
 
-      private
+        private
 
         def cast(value)
           type.cast(value)

@@ -45,13 +45,13 @@ module ActiveRemote
     #
     def valid?(context = nil)
       context ||= (new_record? ? :create : :update)
-      output = super(context)
+      output = super
       errors.empty? && output
     end
 
     alias_method :validate, :valid?
 
-  protected
+    protected
 
     def raise_validation_error
       fail ActiveRemote::RemoteRecordInvalid, self

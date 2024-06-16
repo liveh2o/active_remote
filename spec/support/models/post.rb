@@ -13,9 +13,9 @@ class Post < ::ActiveRemote::Base
   attribute :bestseller_guid, :string
 
   belongs_to :author
-  belongs_to :coauthor, :class_name => "::Author"
-  belongs_to :bestseller, :class_name => "::Author", :foreign_key => :bestseller_guid
-  belongs_to :user, :class_name => "::Author", :scope => :user_guid
+  belongs_to :coauthor, class_name: "::Author"
+  belongs_to :bestseller, class_name: "::Author", foreign_key: :bestseller_guid
+  belongs_to :user, class_name: "::Author", scope: :user_guid
 
-  validates :name, :presence => true
+  validates :name, presence: true
 end
