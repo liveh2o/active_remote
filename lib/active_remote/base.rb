@@ -43,7 +43,7 @@ module ActiveRemote
     include ::ActiveRemote::Validations
     include ::ActiveModel::Validations::Callbacks
 
-    define_model_callbacks :initialize, :only => :after
+    define_model_callbacks :initialize, only: :after
 
     def initialize(attributes = {})
       super
@@ -107,23 +107,23 @@ module ActiveRemote
       # We check defined?(@attributes) not to issue warnings if the object is
       # allocated but not initialized.
       inspection = if defined?(@attributes) && @attributes
-                     attribute_names.collect do |name, _|
-                       if attribute?(name)
-                         "#{name}: #{attribute_for_inspect(name)}"
-                       else
-                         name
-                       end
-                     end.compact.join(", ")
-                   else
-                     "not initialized"
-                   end
+        attribute_names.collect do |name, _|
+          if attribute?(name)
+            "#{name}: #{attribute_for_inspect(name)}"
+          else
+            name
+          end
+        end.compact.join(", ")
+      else
+        "not initialized"
+      end
 
       "#<#{self.class} #{inspection}>"
     end
 
     # Returns a hash of the given methods with their names as keys and returned values as values.
     def slice(*methods)
-      Hash[methods.flatten.map! { |method| [method, public_send(method)] }].with_indifferent_access
+      methods.flatten.map! { |method| [method, public_send(method)] }.to_h.with_indifferent_access
     end
   end
 

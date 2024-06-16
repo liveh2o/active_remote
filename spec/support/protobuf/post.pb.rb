@@ -1,17 +1,14 @@
-# encoding: utf-8
-
 ##
 # This file is auto-generated. DO NOT EDIT!
 #
-require 'protobuf'
-require 'protobuf/rpc/service'
-
+require "protobuf"
+require "protobuf/rpc/service"
 
 ##
 # Imports
 #
-require 'error.pb'
-require 'category.pb'
+require "error.pb"
+require "category.pb"
 
 module Generic
   module Remote
@@ -21,9 +18,10 @@ module Generic
     # Message Classes
     #
     class Post < ::Protobuf::Message; end
-    class Posts < ::Protobuf::Message; end
-    class PostRequest < ::Protobuf::Message; end
 
+    class Posts < ::Protobuf::Message; end
+
+    class PostRequest < ::Protobuf::Message; end
 
     ##
     # Message Fields
@@ -48,7 +46,6 @@ module Generic
       repeated :string, :user_guid, 4
     end
 
-
     ##
     # Service Classes
     #
@@ -62,8 +59,5 @@ module Generic
       rpc :delete_all, ::Generic::Remote::Posts, ::Generic::Remote::Posts
       rpc :destroy_all, ::Generic::Remote::Posts, ::Generic::Remote::Posts
     end
-
   end
-
 end
-

@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe ActiveRemote::Serialization do
   describe ".serialize_records" do
-    let(:records) { [{ :foo => "bar" }] }
+    let(:records) { [{foo: "bar"}] }
 
     subject { Tag.new }
 
@@ -14,7 +14,7 @@ describe ActiveRemote::Serialization do
   end
 
   describe "#add_errors" do
-    let(:error) { Generic::Error.new(:field => "name", :message => "Boom!") }
+    let(:error) { Generic::Error.new(field: "name", message: "Boom!") }
     let(:response) {
       tag = Generic::Remote::Tag.new
       tag.errors << error

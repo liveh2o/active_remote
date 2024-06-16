@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe ActiveRemote::PrimaryKey do
-  let(:tag) { Tag.new(:id => "1234", :guid => "TAG-123", :user_guid => "USR-123") }
+  let(:tag) { Tag.new(id: "1234", guid: "TAG-123", user_guid: "USR-123") }
 
   after { Tag.instance_variable_set :@primary_key, nil }
 
@@ -42,7 +42,7 @@ describe ActiveRemote::PrimaryKey do
 
     context "when no primary key is specified, but default of guid exists" do
       it "returns guid in array" do
-        expect(Tag.new(:guid => "TAG-123").to_key).to eq ["TAG-123"]
+        expect(Tag.new(guid: "TAG-123").to_key).to eq ["TAG-123"]
       end
     end
   end

@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe ActiveRemote::Dirty do
   context "when writing attributes through the setter" do
-    subject { Post.new(:name => "foo") }
+    subject { Post.new(name: "foo") }
 
     before do
       subject.changes_applied
@@ -23,7 +23,7 @@ describe ActiveRemote::Dirty do
   end
 
   context "when writing attributes directly" do
-    subject { Post.new(:name => "foo") }
+    subject { Post.new(name: "foo") }
 
     before do
       subject.changes_applied
@@ -44,10 +44,10 @@ describe ActiveRemote::Dirty do
   end
 
   describe "#reload" do
-    subject { Post.new(:name => "foo") }
+    subject { Post.new(name: "foo") }
 
     before do
-      allow(Post).to receive(:find).and_return(Post.new(:name => "foo"))
+      allow(Post).to receive(:find).and_return(Post.new(name: "foo"))
       subject.reload
     end
 
@@ -55,10 +55,10 @@ describe ActiveRemote::Dirty do
   end
 
   describe "#remote" do
-    let(:post) { Post.new(:name => "foo") }
+    let(:post) { Post.new(name: "foo") }
 
     it "clears changes information" do
-      allow(post).to receive(:remote_call).and_return(::Generic::Remote::Post.new(:name => "foo"))
+      allow(post).to receive(:remote_call).and_return(::Generic::Remote::Post.new(name: "foo"))
       expect { post.remote(:reload) }.to change { post.changed? }.to(false)
     end
   end
@@ -66,7 +66,7 @@ describe ActiveRemote::Dirty do
   describe "#save" do
     let!(:changes) { subject.changes }
 
-    subject { Post.new(:name => "foo") }
+    subject { Post.new(name: "foo") }
 
     before do
       allow(subject).to receive(:create_or_update).and_return(true)
@@ -80,7 +80,7 @@ describe ActiveRemote::Dirty do
   describe "#save!" do
     let!(:changes) { subject.changes }
 
-    subject { Post.new(:name => "foo") }
+    subject { Post.new(name: "foo") }
 
     before do
       allow(subject).to receive(:save).and_return(true)

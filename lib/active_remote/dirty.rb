@@ -62,7 +62,7 @@ module ActiveRemote
       enable_dirty_tracking
     end
 
-  private
+    private
 
     # Wether or not changes are currently being tracked for this class.
     #
@@ -74,7 +74,7 @@ module ActiveRemote
     # ActiveModel::Dirty.
     #
     def attribute=(name, value)
-      send("#{name}_will_change!") if _active_remote_track_changes? && value != self[name]
+      send(:"#{name}_will_change!") if _active_remote_track_changes? && value != self[name]
       super
     end
 

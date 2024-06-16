@@ -24,19 +24,19 @@ describe ActiveRemote::DSL do
   describe ".endpoints" do
     it "has default values" do
       expect(Tag.endpoints).to eq(
-        :create => :create,
-        :delete => :delete,
-        :destroy => :destroy,
-        :search => :search,
-        :update => :update
+        create: :create,
+        delete: :delete,
+        destroy: :destroy,
+        search: :search,
+        update: :update
       )
     end
 
     context "given a new value for an endpoint" do
-      after { Tag.endpoints(:create => :create) }
+      after { Tag.endpoints(create: :create) }
 
       it "overwrites default values" do
-        Tag.endpoints(:create => :register)
+        Tag.endpoints(create: :register)
         expect(Tag.endpoints[:create]).to eq(:register)
       end
     end
