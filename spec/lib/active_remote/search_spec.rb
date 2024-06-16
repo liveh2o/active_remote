@@ -1,8 +1,8 @@
 require "spec_helper"
 
 describe ActiveRemote::Search do
-  let(:records) { [Generic::Remote::Tag.new(:guid => "123")] }
-  let(:response) { Generic::Remote::Tags.new(:records => records) }
+  let(:records) { [Generic::Remote::Tag.new(guid: "123")] }
+  let(:response) { Generic::Remote::Tags.new(records: records) }
   let(:rpc) { double(:rpc) }
 
   describe ".find" do
@@ -64,7 +64,7 @@ describe ActiveRemote::Search do
   end
 
   describe ".search" do
-    let(:serialized_records) { [Tag.instantiate(:guid => "123")] }
+    let(:serialized_records) { [Tag.instantiate(guid: "123")] }
 
     context "given args that respond to :to_hash" do
       let(:args) { {} }
@@ -95,7 +95,7 @@ describe ActiveRemote::Search do
 
   describe "#reload" do
     let(:args) { attributes.slice("guid", "user_guid") }
-    let(:attributes) { HashWithIndifferentAccess.new(:guid => "foo", :name => "bar", :updated_at => nil, :user_guid => "baz") }
+    let(:attributes) { HashWithIndifferentAccess.new(guid: "foo", name: "bar", updated_at: nil, user_guid: "baz") }
 
     subject { Tag.new(args) }
 

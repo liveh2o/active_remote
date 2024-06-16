@@ -8,7 +8,7 @@ module ActiveRemote
       attr_reader :service_class
       attr_accessor :endpoints
 
-      delegate :client, :to => :service_class
+      delegate :client, to: :service_class
 
       ##
       # Constructor!
@@ -41,7 +41,7 @@ module ActiveRemote
         response
       end
 
-    private
+      private
 
       # Return a protobuf request object for the given rpc request.
       #

@@ -1,10 +1,7 @@
-# encoding: utf-8
-
 ##
 # This file is auto-generated. DO NOT EDIT!
 #
-require 'protobuf'
-
+require "protobuf"
 
 ##
 # Message Classes
@@ -14,10 +11,7 @@ class Serializer < ::Protobuf::Message
     define :DEFAULT, 0
     define :USER, 1
   end
-
 end
-
-
 
 ##
 # Message Fields
@@ -40,4 +34,3 @@ class Serializer
   optional :uint64, :uint64_field, 15
   optional ::Serializer::Type, :enum_field, 16
 end
-

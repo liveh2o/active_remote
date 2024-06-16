@@ -13,7 +13,7 @@ class Category < ::ActiveRemote::Base
   has_many :posts
 
   has_one :author
-  has_one :senior_author, :class_name => "::Author"
-  has_one :primary_editor, :class_name => "::Author", :foreign_key => :editor_guid
-  has_one :chief_editor, :class_name => "::Author", :scope => :user_guid, :foreign_key => :chief_editor_guid
+  has_one :senior_author, class_name: "::Author"
+  has_one :primary_editor, class_name: "::Author", foreign_key: :editor_guid
+  has_one :chief_editor, class_name: "::Author", scope: :user_guid, foreign_key: :chief_editor_guid
 end

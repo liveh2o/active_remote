@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe ::ActiveRemote::Persistence do
-  let(:response_without_errors) { ::HashWithIndifferentAccess.new(:errors => []) }
+  let(:response_without_errors) { ::HashWithIndifferentAccess.new(errors: []) }
   let(:rpc) { ::ActiveRemote::RPCAdapters::ProtobufAdapter.new(::Tag.service_class, ::Tag.endpoints) }
 
   subject { ::Tag.new }
@@ -15,16 +15,16 @@ describe ::ActiveRemote::Persistence do
   describe ".create" do
     it "runs create callbacks" do
       expect_any_instance_of(Tag).to receive(:after_create_callback)
-      Tag.create(:name => "foo")
+      Tag.create(name: "foo")
     end
 
     it "initializes and saves a new record" do
       expect_any_instance_of(Tag).to receive(:save)
-      Tag.create(:name => "foo")
+      Tag.create(name: "foo")
     end
 
     it "returns a new record" do
-      value = Tag.create(:name => "foo")
+      value = Tag.create(name: "foo")
       expect(value).to be_a(Tag)
     end
   end
@@ -32,14 +32,14 @@ describe ::ActiveRemote::Persistence do
   describe ".create!" do
     it "initializes and saves a new record" do
       expect_any_instance_of(Tag).to receive(:save!)
-      Tag.create!(:name => "foo")
+      Tag.create!(name: "foo")
     end
 
     context "when the record has errors" do
       before { allow_any_instance_of(Tag).to receive(:save!).and_raise(ActiveRemote::ActiveRemoteError) }
 
       it "raises an exception" do
-        expect { Tag.create!(:name => "foo") }.to raise_error(ActiveRemote::ActiveRemoteError)
+        expect { Tag.create!(name: "foo") }.to raise_error(ActiveRemote::ActiveRemoteError)
       end
     end
   end
@@ -58,8 +58,8 @@ describe ::ActiveRemote::Persistence do
     end
 
     context "when the response has errors" do
-      let(:error) { Generic::Error.new(:field => "name", :message => "Boom!") }
-      let(:response) { Generic::Remote::Tag.new(:errors => [error]) }
+      let(:error) { Generic::Error.new(field: "name", message: "Boom!") }
+      let(:response) { Generic::Remote::Tag.new(errors: [error]) }
 
       before { allow(rpc).to receive(:execute).and_return(response) }
 
@@ -81,8 +81,8 @@ describe ::ActiveRemote::Persistence do
     end
 
     context "when an error occurs" do
-      let(:error) { Generic::Error.new(:field => "name", :message => "Boom!") }
-      let(:response) { Generic::Remote::Tag.new(:errors => [error]) }
+      let(:error) { Generic::Error.new(field: "name", message: "Boom!") }
+      let(:response) { Generic::Remote::Tag.new(errors: [error]) }
 
       before { allow(rpc).to receive(:execute).and_return(response) }
 
@@ -106,8 +106,8 @@ describe ::ActiveRemote::Persistence do
     end
 
     context "when the response has errors" do
-      let(:error) { Generic::Error.new(:field => "name", :message => "Boom!") }
-      let(:response) { Generic::Remote::Tag.new(:errors => [error]) }
+      let(:error) { Generic::Error.new(field: "name", message: "Boom!") }
+      let(:response) { Generic::Remote::Tag.new(errors: [error]) }
 
       before { allow(rpc).to receive(:execute).and_return(response) }
 
@@ -129,8 +129,8 @@ describe ::ActiveRemote::Persistence do
     end
 
     context "when an error occurs" do
-      let(:error) { Generic::Error.new(:field => "name", :message => "Boom!") }
-      let(:response) { Generic::Remote::Tag.new(:errors => [error]) }
+      let(:error) { Generic::Error.new(field: "name", message: "Boom!") }
+      let(:response) { Generic::Remote::Tag.new(errors: [error]) }
 
       before { allow(rpc).to receive(:execute).and_return(response) }
 
@@ -148,7 +148,7 @@ describe ::ActiveRemote::Persistence do
     end
 
     context "when errors are present" do
-      before { subject.errors.add(:base, :invalid, :message => "Boom!") }
+      before { subject.errors.add(:base, :invalid, message: "Boom!") }
 
       its(:has_errors?) { should be_truthy }
     end
@@ -156,13 +156,13 @@ describe ::ActiveRemote::Persistence do
 
   describe "#new_record?" do
     context "when the record is created through instantiate" do
-      subject { Tag.instantiate(:guid => "foo") }
+      subject { Tag.instantiate(guid: "foo") }
 
       its(:new_record?) { should be_falsey }
     end
 
     context "when the record is persisted" do
-      subject { Tag.allocate.instantiate(:guid => "foo") }
+      subject { Tag.allocate.instantiate(guid: "foo") }
 
       its(:new_record?) { should be_falsey }
     end
@@ -176,7 +176,7 @@ describe ::ActiveRemote::Persistence do
 
   describe "#persisted?" do
     context "when the record is persisted" do
-      subject { Tag.allocate.instantiate(:guid => "foo") }
+      subject { Tag.allocate.instantiate(guid: "foo") }
 
       its(:persisted?) { should be_truthy }
     end
@@ -190,7 +190,7 @@ describe ::ActiveRemote::Persistence do
 
   describe "#readonly?" do
     context "when the record is created through instantiate with options[:readonly]" do
-      subject { Tag.instantiate({ :guid => "foo" }, :readonly => true) }
+      subject { Tag.instantiate({guid: "foo"}, readonly: true) }
 
       its(:new_record?) { should be_falsey }
       its(:readonly?) { should be_truthy }
@@ -198,9 +198,9 @@ describe ::ActiveRemote::Persistence do
   end
 
   describe "#remote" do
-    let(:response) { ::Generic::Remote::Tag.new(:guid => tag.guid, :name => "bar") }
+    let(:response) { ::Generic::Remote::Tag.new(guid: tag.guid, name: "bar") }
     let(:rpc) { ::ActiveRemote::RPCAdapters::ProtobufAdapter.new(::Tag.service_class, ::Tag.endpoints) }
-    let(:tag) { ::Tag.new(:guid => SecureRandom.uuid) }
+    let(:tag) { ::Tag.new(guid: SecureRandom.uuid) }
 
     subject { tag }
 
@@ -224,7 +224,7 @@ describe ::ActiveRemote::Persistence do
 
     context "when request args are given" do
       it "calls the given RPC method with default args" do
-        attributes = { :guid => tag.guid, :name => "foo" }
+        attributes = {guid: tag.guid, name: "foo"}
         expect(::Tag.rpc).to receive(:execute).with(:remote_method, attributes)
         tag.remote(:remote_method, attributes)
       end
@@ -232,14 +232,14 @@ describe ::ActiveRemote::Persistence do
 
     context "when response does not respond to errors" do
       it "returns true" do
-        allow(rpc).to receive(:execute).and_return(double(:response, :to_hash => ::Hash.new))
+        allow(rpc).to receive(:execute).and_return(double(:response, to_hash: {}))
         expect(tag.remote(:remote_method)).to be(true)
       end
     end
 
     context "when errors are returned" do
       let(:response) {
-        ::Generic::Remote::Tag.new(:guid => tag.guid, :name => "bar", :errors => [{ :field => "name", :message => "message" }])
+        ::Generic::Remote::Tag.new(guid: tag.guid, name: "bar", errors: [{field: "name", message: "message"}])
       }
 
       it "adds errors from the response" do
@@ -270,7 +270,7 @@ describe ::ActiveRemote::Persistence do
     end
 
     context "when the record is not new" do
-      let(:attributes) { { "guid" => "foo" } }
+      let(:attributes) { {"guid" => "foo"} }
 
       subject { Tag.allocate.instantiate(attributes) }
 
@@ -295,7 +295,7 @@ describe ::ActiveRemote::Persistence do
     end
 
     context "when the record has errors before the save" do
-      before { subject.errors.add(:base, :invalid, :message => "Boom!") }
+      before { subject.errors.add(:base, :invalid, message: "Boom!") }
 
       it "clears the errors before the save" do
         expect(subject.errors).not_to be_empty
@@ -315,10 +315,10 @@ describe ::ActiveRemote::Persistence do
 
     context "when the record is not saved" do
       let(:errors) {
-        [Generic::Error.new(:field => "name", :message => "Error one!"),
-         Generic::Error.new(:field => "name", :message => "Error two!")]
+        [Generic::Error.new(field: "name", message: "Error one!"),
+          Generic::Error.new(field: "name", message: "Error two!")]
       }
-      let(:response) { Generic::Remote::Tag.new(:errors => errors) }
+      let(:response) { Generic::Remote::Tag.new(errors: errors) }
       before { allow(rpc).to receive(:execute).and_return(response) }
 
       it "raises an exception" do
@@ -330,7 +330,7 @@ describe ::ActiveRemote::Persistence do
 
   describe "#success?" do
     context "when errors are present" do
-      before { subject.errors.add(:base, :invalid, :message => "Boom!") }
+      before { subject.errors.add(:base, :invalid, message: "Boom!") }
 
       its(:success?) { should be_falsey }
     end
@@ -343,7 +343,7 @@ describe ::ActiveRemote::Persistence do
   end
 
   describe "#update_attribute" do
-    let(:tag) { Tag.allocate.instantiate(:guid => "123") }
+    let(:tag) { Tag.allocate.instantiate(guid: "123") }
 
     it "runs update callbacks" do
       expect(tag).to receive(:after_update_callback)
@@ -370,8 +370,8 @@ describe ::ActiveRemote::Persistence do
   end
 
   describe "#update_attributes" do
-    let(:attributes) { HashWithIndifferentAccess.new(:name => "bar") }
-    let(:tag) { Tag.allocate.instantiate(:guid => "123") }
+    let(:attributes) { HashWithIndifferentAccess.new(name: "bar") }
+    let(:tag) { Tag.allocate.instantiate(guid: "123") }
 
     it "runs update callbacks" do
       expect(tag).to receive(:after_update_callback)
@@ -398,7 +398,7 @@ describe ::ActiveRemote::Persistence do
   end
 
   describe "#update_attributes!" do
-    let(:attributes) { HashWithIndifferentAccess.new(:name => "bar") }
+    let(:attributes) { HashWithIndifferentAccess.new(name: "bar") }
 
     before { allow(subject).to receive(:save!) }
     after { allow(subject).to receive(:save!).and_call_original }

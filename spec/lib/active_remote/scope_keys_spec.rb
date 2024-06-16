@@ -5,7 +5,7 @@ describe ActiveRemote::ScopeKeys do
   let(:_scope_keys) { ["user_guid"] }
   let(:scope_keys) { ["guid"] + _scope_keys }
   let(:tag) { Tag.new(tag_hash) }
-  let(:tag_hash) { { :guid => "TAG-123", :user_guid => "USR-123", :name => "teh tag" } }
+  let(:tag_hash) { {guid: "TAG-123", user_guid: "USR-123", name: "teh tag"} }
 
   describe ".scope_key" do
     after { Tag._scope_keys = [] }
@@ -31,7 +31,7 @@ describe ActiveRemote::ScopeKeys do
   end
 
   describe "#scope_key_hash" do
-    let(:scope_key_hash) { { "guid" => "TAG-123", "user_guid" => "USR-123" } }
+    let(:scope_key_hash) { {"guid" => "TAG-123", "user_guid" => "USR-123"} }
 
     before { allow(tag).to receive(:scope_keys).and_return(scope_keys) }
 

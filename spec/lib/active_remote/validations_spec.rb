@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe ActiveRemote::Validations do
   let(:invalid_record) { ::Post.new }
-  let(:valid_record) { ::Post.new(:name => "test") }
+  let(:valid_record) { ::Post.new(name: "test") }
 
   before { allow(valid_record).to receive(:create_or_update).and_return(true) }
   before { allow(invalid_record).to receive(:create_or_update).and_return(true) }
