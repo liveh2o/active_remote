@@ -31,6 +31,23 @@ module ActiveRemote
         remote
       end
 
+      # Tries to load the first record; if it fails, returns nil.
+      #
+      # ====Examples
+      #
+      #   # A single hash
+      #   Tag.find_by(:guid => 'foo')
+      #
+      #   # Active remote object
+      #   Tag.find_by(Tag.new(:guid => 'foo'))
+      #
+      #   # Protobuf object
+      #   Tag.find_by(Generic::Remote::TagRequest.new(:guid => 'foo'))
+      #
+      def find_by(args)
+        self.search(args).first
+      end
+
       # Tries to load the first record; if it fails, then create is called
       # with the same arguments.
       #
