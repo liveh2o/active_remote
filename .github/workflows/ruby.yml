@@ -11,9 +11,9 @@ name: Ruby CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   test:
@@ -21,7 +21,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: [2.5, 2.6, 2.7, head, debug, jruby-9.3, jruby-9.4, jruby-head, truffleruby, truffleruby-head]
+        ruby:
+          [2.7, 3.0, 3.1, head, debug, jruby-9.4, jruby-head, truffleruby-head]
     continue-on-error: ${{ endsWith(matrix.ruby, 'head') || matrix.ruby == 'debug' }}
     steps:
       - uses: actions/checkout@v4
@@ -29,4 +30,4 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
       - run: bundle install
-      - run: bundle rspec
+      - run: bundle exec rspec
