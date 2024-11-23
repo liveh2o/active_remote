@@ -7,4 +7,34 @@ describe ActiveRemote::Base do
       described_class.new
     end
   end
+
+  describe "filtered_attributes" do
+    describe "single attribute" do
+      let(:subject) { ::User.new(:password => "foobar") }
+
+      it "#inspect doesn't show the password" do
+        expect(subject.inspect).not_to include("foobar")
+      end
+
+      it "#inspect just equals the class name" do
+        expect(subject.inspect).to eq("#<User>")
+      end
+    end
+
+    describe "multiple attributes" do
+      let(:subject) { ::Author.new(:name => "foo", :age => 15) }
+
+      it "#inspect doesn't show the name" do
+        expect(subject.inspect).not_to include("foo")
+      end
+
+      it "#inspect doesn't show the birthday" do
+        expect(subject.inspect).not_to include("15")
+      end
+
+      it "#inspect just equals the class name" do
+        expect(subject.inspect).to eq("#<Author>")
+      end
+    end
+  end
 end
