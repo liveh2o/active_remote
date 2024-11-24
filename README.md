@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/liveh2o/active_remote.svg?branch=master)](https://travis-ci.org/liveh2o/active_remote)
+![Build](https://github.com/liveh2o/active_remote/actions/workflows/main.yml/badge.svg?branch=main)
 
 # Active Remote
 
@@ -6,7 +6,7 @@ Active Remote provides [Active Record](https://github.com/rails/rails/tree/maste
 
 Active Remote provides a base class that when subclassed, provides the functionality you need to setup your remote model. Because Active Remote provides model persistence between RPC services, it uses a GUID to retrieve records and establish associations. So Active Remote expects your RPC data format to provide a :guid field that can be used to identify your remote models.
 
-Unlike Active Record, Active Remote doesn't have access to a database table to create attribute mappings. So you'll need to do a little setup to let Active Remote know how to persist your model*.
+Unlike Active Record, Active Remote doesn't have access to a database table to create attribute mappings. So you'll need to do a little setup to let Active Remote know how to persist your model\*.
 
 ```Ruby
   # Given a product record that has :guid & :name fields:
@@ -21,7 +21,7 @@ Unlike Active Record, Active Remote doesn't have access to a database table to c
   end
 ```
 
-_*Using Ruby's inherited hook, you could build an attribute mapper to setup your remote models for you._
+_\*Using Ruby's inherited hook, you could build an attribute mapper to setup your remote models for you._
 
 Like Active Record, Active Remote relies heavily on naming conventions and standard CRUD actions. It expects models name to map to it's service (e.g Product => ProductService) and will infer the service name automatically.
 
@@ -50,7 +50,7 @@ Like Active Record, Active Remote relies heavily on naming conventions and stand
   end
 ```
 
- You can, of course override it if need be:
+You can, of course override it if need be:
 
 ```Ruby
   # If you have a custom service:
@@ -77,7 +77,6 @@ And then execute:
 Or install it yourself as:
 
     $ gem install active_remote
-
 
 ## Contributing
 
