@@ -14,13 +14,13 @@ Gem::Specification.new do |s|
   s.executables = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.required_ruby_version = ">= 2.7.0"
+  s.required_ruby_version = ">= 3.2.0"
 
   ##
   # Dependencies
   #
-  s.add_dependency "activemodel", "~> 7.0", "< 7.1"
-  s.add_dependency "activesupport", "~> 7.0", "< 7.1"
+  s.add_dependency "activemodel", "~> 8.0.0"
+  s.add_dependency "activesupport", "~> 8.0.0"
   s.add_dependency "protobuf", ">= 3.0"
 
   ##

@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "3.1"
+          ruby-version: "3.2"
           bundler-cache: true
       - run: bundle exec standardrb --parallel --format github
   test:
@@ -30,12 +30,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby:
-          [2.7, 3.0, 3.1, head, debug, jruby-9.4, jruby-head, truffleruby-head]
+        ruby: [3.2, 3.3, head, debug, jruby-head, truffleruby-head]
     continue-on-error: ${{ endsWith(matrix.ruby, 'head') || matrix.ruby == 'debug' }}
     steps:
       - uses: actions/checkout@v4
-      - uses: ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1
+      - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
       - run: bundle install

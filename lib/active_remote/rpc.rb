@@ -11,7 +11,7 @@ module ActiveRemote
 
     module ClassMethods
       # Builds an attribute hash that be assigned directly
-      # to an object from an rpc response
+      # to an object from an RPC response
       def build_from_rpc(values)
         values = values.stringify_keys
 
