@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
 ## [7.0.0]
 
 ### Changed
@@ -21,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Revert the reader and writer methods so they can be overridden [#95]
+- Revert the reader and writer methods so they can be overridden [https://github.com/liveh2o/active_remote/pull/#95]
 
 ## [6.1.0]
 
@@ -57,7 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Update to ActiveModel 5.2 to get major speed gains [#68]
+- Update to ActiveModel 5.2 to get major speed gains [#68](https://github.com/liveh2o/active_remote/pull/68)
 
 ### Removed
 
@@ -80,55 +82,55 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Include response errors in RemoteRecordNotSaved exception [#75]
+- Include response errors in RemoteRecordNotSaved exception [#75](https://github.com/liveh2o/active_remote/pull/75)
 
 ## [5.0.0]
 
 ### Added
 
-- Use Active Model attributes [#72]
-- Use type casting from Active Model (custom types must be registered) [#71]
-- Use query attributes from Active Record (string values such as 'FALSE', and '0' are now considered present) [#71]
-- Add ability to execute remote calls on current object [#74]
+- Use Active Model attributes [#72](https://github.com/liveh2o/active_remote/pull/72)
+- Use type casting from Active Model (custom types must be registered) [#71](https://github.com/liveh2o/active_remote/pull/71)
+- Use query attributes from Active Record (string values such as 'FALSE', and '0' are now considered present) [#71](https://github.com/liveh2o/active_remote/pull/71)
+- Add ability to execute remote calls on current object [#74](https://github.com/liveh2o/active_remote/pull/74)
 
 ### Fixed
 
-Make query attributes more permissive [#73]
+Make query attributes more permissive [#73](https://github.com/liveh2o/active_remote/pull/73)
 
 ### Removed
 
-- Drop support for Rails 4.2 (versions will match Rails version moving forward) [#71]
+- Drop support for Rails 4.2 (versions will match Rails version moving forward) [#71](https://github.com/liveh2o/active_remote/pull/71)
 
 ## [3.3.3]
 
 ### Added
 
-- Register big_integer type #76
+- Register big_integer type [#76](https://github.com/liveh2o/active_remote/pull/76)
 
 ## [3.3.2]
 
 ### Changed
 
-- Include response errors in RemoteRecordNotSaved exception [#75]
+- Include response errors in RemoteRecordNotSaved exception [#75](https://github.com/liveh2o/active_remote/pull/75)
 
 ## [3.3.1]
 
 ### Fixed
 
-- Fix unknown type error in Protobuf serializer [#70]
+- Fix unknown type error in Protobuf serializer [#70](https://github.com/liveh2o/active_remote/pull/70)
 
 ## [3.3.0]
 
 ### Added
 
 - Add support for registering types that can be used to define attributes without using the existing `:type` or
-  `:typecaster` options `attribute :name, :string` [#69]
+  `:typecaster` options `attribute :name, :string` [#69](https://github.com/liveh2o/active_remote/pull/69)
 
 ## [3.2.2]
 
 ### Fixed
 
-- Speed up boolean typecasting [#67, @abrandoned]
+- Speed up boolean typecasting [#67, @abrandoned](https://github.com/liveh2o/active_remote/pull/67)
 
 ## [3.2.1]
 
@@ -140,7 +142,7 @@ Make query attributes more permissive [#73]
 
 ### Added
 
-- Add ability to override default RPC endpoints [#66]
+- Add ability to override default RPC endpoints [#66](https://github.com/liveh2o/active_remote/pull/66)
 
 ### Changed
 
@@ -154,52 +156,52 @@ Make query attributes more permissive [#73]
 
 ### Fixed
 
-- Cache and dup default attributes instead of building from scratch (4x speed boost on initialize) [#63, @film42]
+- Cache and dup default attributes instead of building from scratch (4x speed boost on initialize) [#63, @film42](https://github.com/liveh2o/active_remote/pull/63)
 
 ## [3.1.2]
 
 ### Fixed
 
-- Allow primary_key to be set on create [#61, @mattnichols]
-- Change the behavior of DateTime types to gracefully handle invalid dates [#62, @brianstien]
+- Allow primary_key to be set on create [#61, @mattnichols](https://github.com/liveh2o/active_remote/pull/61)
+- Change the behavior of DateTime types to gracefully handle invalid dates [#62, @brianstien](https://github.com/liveh2o/active_remote/pull/61)
 
 ## [3.1.1]
 
 ### Fixed
 
-- Guard against undefined method errors in the Protobuf adapter [#59, @brianstien]
+- Guard against undefined method errors in the Protobuf adapter [#59, @brianstien](https://github.com/liveh2o/active_remote/pull/59)
 
 ## [3.1.0]
 
 ### Added
 
-- Bubble up the type of error given from Protobuf instead of a generic `ActiveRemoteError` [#58, @ryanbjones]
+- Bubble up the type of error given from Protobuf instead of a generic `ActiveRemoteError` [#58, @ryanbjones](https://github.com/liveh2o/active_remote/pull/58)
 
 ## [3.0.0]
 
 ### Fixed
 
-- Improve performance of many methods including `respond_to?` and `new`. [#50]
+- Improve performance of many methods including `respond_to?` and `new`. [#50](https://github.com/liveh2o/active_remote/pull/50)
 - Change to internals of typecasting. Declaring `attribute :name, :type => Integer`
-  will no longer affect performance negatively. [#56]
+  will no longer affect performance negatively. [#56](https://github.com/liveh2o/active_remote/pull/56)
 
 ### Changed
 
-- Refactor of attribute storage internals [#50]
-- Refactor of instantiate from RPC codepath [#56]
+- Refactor of attribute storage internals [#50](https://github.com/liveh2o/active_remote/pull/50)
+- Refactor of instantiate from RPC codepath [#56](https://github.com/liveh2o/active_remote/pull/56)
 
 ### Removed
 
-- Remove dependency on ActiveAttr [#48]
-- Remove attribute defaults feature [#50]
-- Remove core exts [#49]
+- Remove dependency on ActiveAttr [#48](https://github.com/liveh2o/active_remote/pull/48)
+- Remove attribute defaults feature [#50](https://github.com/liveh2o/active_remote/pull/50)
+- Remove core exts [#49](https://github.com/liveh2o/active_remote/pull/49)
 - Remove deprecated rpc methods `.request`, `.request_type`, #execute`, `#remote_call`
-  These methods are handled by the rpc adater now. [#49]
-- Remove deprecated method `._active_remote_search_args` [#49]
-- Remove deprecated `.parse_records` method [#49]
-- Remove publication, `#publishable_hash` method [#49]
+  These methods are handled by the rpc adater now. [#49](https://github.com/liveh2o/active_remote/pull/49)
+- Remove deprecated method `._active_remote_search_args` [#49](https://github.com/liveh2o/active_remote/pull/49)
+- Remove deprecated `.parse_records` method [#49](https://github.com/liveh2o/active_remote/pull/49)
+- Remove publication, `#publishable_hash` method [#49](https://github.com/liveh2o/active_remote/pull/49)
 - Drop support for Rails 3 mass assignment protection. Add support for strong param
-  enforcement for Rails 4+. [#50]
-- Remove a method that was doing dirty tracking twice [#52]
-- Extracted bulk methods to active_remote-bulk [#54]
-- Removed search callbacks [#55]
+  enforcement for Rails 4+. [#50](https://github.com/liveh2o/active_remote/pull/50)
+- Remove a method that was doing dirty tracking twice [#52](https://github.com/liveh2o/active_remote/pull/52)
+- Extracted bulk methods to active_remote-bulk [#54](https://github.com/liveh2o/active_remote/pull/54)
+- Removed search callbacks [#55](https://github.com/liveh2o/active_remote/pull/55)
