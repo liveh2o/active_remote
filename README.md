@@ -1,6 +1,6 @@
-![Build](https://github.com/liveh2o/active_remote/actions/workflows/main.yml/badge.svg)
+![CI](https://github.com/liveh2o/active_remote/actions/workflows/main.yml/badge.svg)
 [![Ruby Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://github.com/standardrb/standard)
-[![Gem Version](https://badge.fury.io/rb/standard.svg)](https://rubygems.org/gems/active_remote)
+[![Gem Version](https://badge.fury.io/rb/active_remote.svg)](https://badge.fury.io/rb/active_remote)
 
 # Active Remote
 
