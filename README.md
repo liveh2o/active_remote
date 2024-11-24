@@ -1,4 +1,4 @@
-![Build](https://github.com/liveh2o/active_remote/actions/workflows/main.yml/badge.svg?branch=main)
+![Build](https://github.com/liveh2o/active_remote/actions/workflows/main.yml/badge.svg)
 
 # Active Remote
 
