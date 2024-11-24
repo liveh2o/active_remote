@@ -11,19 +11,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Update to ActiveModel 7.0 [#96]
+- Update to ActiveModel 7.0 [#96](https://github.com/liveh2o/active_remote/pulls/96)
 
 ## [6.1.2] - 2024-06-15
 
 ### Added
 
-- Add Ruby 3.1 compatibility [9477268]
+- Add Ruby 3.1 compatibility [9477268](https://github.com/liveh2o/active_remote/commit/9477268)
 
 ## [6.1.1] - 2022-09-07
 
 ### Fixed
 
-- Revert the reader and writer methods so they can be overridden [https://github.com/liveh2o/active_remote/pull/#95]
+- Revert the reader and writer methods so they can be overridden [#95](https://github.com/liveh2o/active_remote/pull/95)
 
 ## [6.1.0] - 2022-08-24
 
@@ -35,13 +35,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add Ruby 3.1 compatibility [45d8e26]
+- Add Ruby 3.1 compatibility [45d8e26](https://github.com/liveh2o/active_remote/commit/45d8e26)
 
 ## [6.0.2] - 2022-06-17
 
 ### Fixed
 
-- Fix association writer method (so it actually works) [85b369a]
+- Fix association writer method (so it actually works) [85b369a](https://github.com/liveh2o/active_remote/commit/85b369a)
 
 ## [6.0.1] - 2022-02-11
 
@@ -70,7 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Include response errors in RemoteRecordNotSaved exception [#75]
+- Include response errors in RemoteRecordNotSaved exception [#75](https://github.com/liveh2o/active_remote/pull/75)
 
 ## [5.1.0] - 2019-01-26
 
