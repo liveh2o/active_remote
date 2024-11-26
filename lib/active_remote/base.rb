@@ -118,7 +118,7 @@ module ActiveRemote
         "not initialized"
       end
 
-      "#<#{self.class} #{inspection}>"
+      "#<#{[self.class, inspection.presence].compact.join(' ')}>"
     end
 
     # Returns a hash of the given methods with their names as keys and returned values as values.

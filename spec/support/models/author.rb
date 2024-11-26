@@ -17,6 +17,8 @@ class Author < ::ActiveRemote::Base
   attribute :writes_fiction, :boolean
   attribute :net_sales, :float
 
+  filtered_attributes [:birthday, :age]
+
   has_many :posts
   has_many :user_posts, class_name: "::Post", scope: :user_guid
   has_many :flagged_posts, class_name: "::Post"
