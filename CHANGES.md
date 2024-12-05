@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Update to ActiveModel 7.1 [#100](https://github.com/liveh2o/active_remote/pulls/100)
+
 ### Added
 
 - Add `find_by` to the `Search` module to return the first record without raising `RemoteRecordNotFound` [#83](https://github.com/liveh2o/active_remote/pull/83)
