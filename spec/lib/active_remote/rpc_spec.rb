@@ -7,12 +7,12 @@ describe ::ActiveRemote::RPC do
     let(:new_attributes) { {name: "test"} }
 
     it "dups the default attributes" do
-      expect { ::Tag.build_from_rpc(new_attributes) }.to_not change { ::Tag._default_attributes["name"] }
+      expect { ::Tag.build_from_rpc(new_attributes).to_h }.to_not change { ::Tag._default_attributes["name"] }
     end
 
     context "missing attributes from rpc" do
       it "initializes to nil" do
-        expect(::Tag.build_from_rpc(new_attributes)).to include("guid" => nil)
+        expect(::Tag.build_from_rpc(new_attributes).to_h).to include("guid" => nil)
       end
     end
 
@@ -20,7 +20,7 @@ describe ::ActiveRemote::RPC do
       let(:new_attributes) { {foobar: "test"} }
 
       it "ignores unknown attributes" do
-        expect(::Tag.build_from_rpc(new_attributes)).to_not include("foobar" => "test")
+        expect(::Tag.build_from_rpc(new_attributes).to_h).to_not include("foobar" => "test")
       end
     end
 
@@ -28,9 +28,7 @@ describe ::ActiveRemote::RPC do
       let(:new_attributes) { {birthday: "2017-01-01"} }
 
       it "calls the typecasters" do
-        expect(
-          ::Author.build_from_rpc(new_attributes)
-        ).to include({"birthday" => "2017-01-01".to_datetime})
+        expect(::Author.build_from_rpc(new_attributes).to_h).to include({"birthday" => "2017-01-01".to_datetime})
       end
     end
   end
