@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Update to ActiveModel 7.2
+- Require Ruby 3.1 (to match Rails)
+
 ## [7.1.0] - 2024-12-04
 
 ### Changed

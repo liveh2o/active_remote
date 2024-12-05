@@ -1,2 +1,3 @@
-parallel: true # default: false
+# For available configuration options, see:
+#   https://github.com/standardrb/standard
 format: progress # default: Standard::Formatter
