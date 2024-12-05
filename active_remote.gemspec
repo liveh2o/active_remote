@@ -1,38 +1,40 @@
-$LOAD_PATH.push File.expand_path("lib", __dir__)
-require "active_remote/version"
+# frozen_string_literal: true
 
-Gem::Specification.new do |s|
-  s.name = "active_remote"
-  s.version = ActiveRemote::VERSION
-  s.authors = ["Adam Hutchison"]
-  s.email = ["liveh2o@gmail.com"]
-  s.homepage = "https://github.com/liveh2o/active_remote"
-  s.summary = "Active Record for your platform"
-  s.description = "Active Remote provides Active Record-like object-relational mapping over RPC. It was written for use with Google Protocol Buffers, but could be extended to use any RPC data format."
+require_relative "lib/active_remote/version"
 
-  s.files = `git ls-files`.split("\n")
-  s.executables = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
-  s.require_paths = ["lib"]
+Gem::Specification.new do |spec|
+  spec.version = ActiveRemote::VERSION
+  spec.name = "active_remote"
+  spec.authors = ["Adam Hutchison"]
+  spec.email = ["liveh2o@gmail.com"]
 
-  s.required_ruby_version = ">= 3.1.0"
+  spec.summary = "Active Record for your platform"
+  spec.description = "Active Remote provides Active Record-like object-relational mapping over RPC. It was written for use with Google Protocol Buffers, but could be extended to use any RPC data format."
+  spec.homepage = "https://github.com/liveh2o/active_remote"
+  spec.license = "MIT"
+  spec.required_ruby_version = ">= 3.1.0"
+
+  spec.metadata["homepage_uri"] = spec.homepage
+  spec.metadata["source_code_uri"] = spec.homepage
+  spec.metadata["changelog_uri"] = spec.homepage + "/blob/main/CHANGELOG.md"
+
+  # Specify which files should be added to the gem when it is released.
+  # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
+  gemspec = File.basename(__FILE__)
+  spec.files = IO.popen(%w[git ls-files -z], chdir: __dir__, err: IO::NULL) do |ls|
+    ls.readlines("\x0", chomp: true).reject do |f|
+      (f == gemspec) ||
+        f.start_with?(*%w[bin/ test/ spec/ features/ .git .github appveyor Gemfile])
+    end
+  end
+  spec.bindir = "exe"
+  spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
+  spec.require_paths = ["lib"]
 
   ##
   # Dependencies
   #
-  s.add_dependency "activemodel", "~> 7.2.0"
-  s.add_dependency "activesupport", "~> 7.2.0"
-  s.add_dependency "protobuf", ">= 3.0"
-
-  ##
-  # Development Dependencies
-  #
-  s.add_development_dependency "benchmark-ips"
-  s.add_development_dependency "protobuf-rspec", ">= 1.1.2"
-  s.add_development_dependency "pry"
-  s.add_development_dependency "rspec-its"
-  s.add_development_dependency "rspec-pride", ">= 3.1.0"
-  s.add_development_dependency "rspec", ">= 3.3.0"
-  s.add_development_dependency "simplecov"
-  s.add_development_dependency "standard"
-  s.add_development_dependency "rake"
+  spec.add_dependency "activemodel", "~> 7.2.0"
+  spec.add_dependency "activesupport", "~> 7.2.0"
+  spec.add_dependency "protobuf", ">= 3.0"
 end
