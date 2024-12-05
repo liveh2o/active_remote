@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [7.1.0] - 2024-12-04
+
 ### Changed
 
 - Update to ActiveModel 7.1 [#100](https://github.com/liveh2o/active_remote/pulls/100)
