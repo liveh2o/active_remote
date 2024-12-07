@@ -49,10 +49,8 @@ module ActiveRemote
       super
       @new_record = true
 
-      skip_dirty_tracking do
-        run_callbacks :initialize do
-          yield self if block_given?
-        end
+      run_callbacks :initialize do
+        yield self if block_given?
       end
     end
 
