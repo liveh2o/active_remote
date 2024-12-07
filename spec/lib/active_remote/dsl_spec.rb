@@ -1,12 +1,6 @@
 require "spec_helper"
 
-# For testing the DSL methods
-module Another
-  class TagService < Protobuf::Rpc::Service
-  end
-end
-
-describe ActiveRemote::DSL do
+RSpec.describe ActiveRemote::DSL do
   before { reset_dsl_variables(Tag) }
   after { Tag.service_class Generic::Remote::TagService }
 

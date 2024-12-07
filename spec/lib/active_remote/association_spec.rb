@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe ActiveRemote::Association do
+RSpec.describe ActiveRemote::Association do
   let(:record) { double(:record) }
   let(:records) { [record] }
 
@@ -168,7 +168,7 @@ describe ActiveRemote::Association do
 
     context "writer method" do
       context "when new value is not an array" do
-        it "should raise error" do
+        it "raises an error" do
           expect { subject.posts = Post.new }.to raise_error(::RuntimeError, /New value must be an array/)
         end
       end
@@ -223,7 +223,7 @@ describe ActiveRemote::Association do
         expect(subject.senior_author).to eq record
       end
 
-      it "should create a setter method" do
+      it "creates a setter method" do
         expect(subject).to respond_to(:senior_author=)
       end
     end

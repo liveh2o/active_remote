@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe ::ActiveRemote::Persistence do
+RSpec.describe ::ActiveRemote::Persistence do
   let(:response_without_errors) { ::HashWithIndifferentAccess.new(errors: []) }
   let(:rpc) { ::ActiveRemote::RPCAdapters::ProtobufAdapter.new(::Tag.service_class, ::Tag.endpoints) }
 
@@ -144,13 +144,17 @@ describe ::ActiveRemote::Persistence do
     context "when errors are not present" do
       before { subject.errors.clear }
 
-      its(:has_errors?) { should be_falsey }
+      it "is false" do
+        expect(subject.has_errors?).to be(false)
+      end
     end
 
     context "when errors are present" do
       before { subject.errors.add(:base, :invalid, message: "Boom!") }
 
-      its(:has_errors?) { should be_truthy }
+      it "is true" do
+        expect(subject.has_errors?).to be(true)
+      end
     end
   end
 
@@ -158,19 +162,25 @@ describe ::ActiveRemote::Persistence do
     context "when the record is created through instantiate" do
       subject { Tag.instantiate(guid: "foo") }
 
-      its(:new_record?) { should be_falsey }
+      it "is false" do
+        expect(subject.new_record?).to be(false)
+      end
     end
 
     context "when the record is persisted" do
       subject { Tag.allocate.instantiate(guid: "foo") }
 
-      its(:new_record?) { should be_falsey }
+      it "is false" do
+        expect(subject.new_record?).to be(false)
+      end
     end
 
     context "when the record is not persisted" do
       subject { Tag.new }
 
-      its(:new_record?) { should be_truthy }
+      it "is true" do
+        expect(subject.new_record?).to be(true)
+      end
     end
   end
 
@@ -178,13 +188,17 @@ describe ::ActiveRemote::Persistence do
     context "when the record is persisted" do
       subject { Tag.allocate.instantiate(guid: "foo") }
 
-      its(:persisted?) { should be_truthy }
+      it "is true" do
+        expect(subject.persisted?).to be(true)
+      end
     end
 
     context "when the record is not persisted" do
       subject { Tag.new }
 
-      its(:persisted?) { should be_falsey }
+      it "is false" do
+        expect(subject.persisted?).to be(false)
+      end
     end
   end
 
@@ -192,8 +206,9 @@ describe ::ActiveRemote::Persistence do
     context "when the record is created through instantiate with options[:readonly]" do
       subject { Tag.instantiate({guid: "foo"}, readonly: true) }
 
-      its(:new_record?) { should be_falsey }
-      its(:readonly?) { should be_truthy }
+      it "is true" do
+        expect(subject.readonly?).to be(true)
+      end
     end
   end
 
@@ -332,13 +347,17 @@ describe ::ActiveRemote::Persistence do
     context "when errors are present" do
       before { subject.errors.add(:base, :invalid, message: "Boom!") }
 
-      its(:success?) { should be_falsey }
+      it "is false" do
+        expect(subject.success?).to be(false)
+      end
     end
 
     context "when errors are not present" do
       before { subject.errors.clear }
 
-      its(:success?) { should be_truthy }
+      it "is true" do
+        expect(subject.success?).to be(true)
+      end
     end
   end
 

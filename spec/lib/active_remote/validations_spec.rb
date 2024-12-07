@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe ActiveRemote::Validations do
+RSpec.describe ActiveRemote::Validations do
   let(:invalid_record) { ::Post.new }
   let(:valid_record) { ::Post.new(name: "test") }
 

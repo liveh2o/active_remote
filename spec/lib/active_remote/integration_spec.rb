@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe ::ActiveRemote::Integration do
+RSpec.describe ::ActiveRemote::Integration do
   let(:guid) { "GUID-derp" }
   let(:tag) { ::Tag.new(guid: guid) }
 

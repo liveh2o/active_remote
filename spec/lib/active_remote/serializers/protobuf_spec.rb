@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe ActiveRemote::Serializers::Protobuf::Fields do
+RSpec.describe ActiveRemote::Serializers::Protobuf::Fields do
   describe ".from_attributes" do
     let(:ready_value) { {records: [{name: "Cool Post", errors: [{message: "Boom!"}]}]} }
     let(:value) { {records: {name: "Cool Post", errors: {message: "Boom!"}}} }
@@ -11,7 +11,7 @@ describe ActiveRemote::Serializers::Protobuf::Fields do
   end
 end
 
-describe ActiveRemote::Serializers::Protobuf::Field do
+RSpec.describe ActiveRemote::Serializers::Protobuf::Field do
   describe ".from_attribute" do
     context "when field is a repeated message" do
       let(:field) { Generic::Remote::Posts.get_field(:records) }

@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe ::ActiveRemote::RemoteRecordNotSaved do
+RSpec.describe ::ActiveRemote::RemoteRecordNotSaved do
   let(:record) { ::Tag.new }
 
   before do

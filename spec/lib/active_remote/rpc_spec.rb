@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe ::ActiveRemote::RPC do
+RSpec.describe ::ActiveRemote::RPC do
   subject { ::Tag.new }
 
   describe ".build_from_rpc" do

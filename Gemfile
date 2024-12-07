@@ -7,14 +7,12 @@ gem "benchmark-ips"
 
 gem "protobuf-rspec", ">= 1.1.2"
 
-gem "rake"
-
-gem "rspec-its"
+gem "rake", "~> 13.0"
 
 gem "rspec-pride", ">= 3.1.0"
 
-gem "rspec", ">= 3.3.0"
+gem "rspec", "~> 3.0"
 
 gem "simplecov"
 
-gem "standard"
+gem "standard", "~> 1.3"

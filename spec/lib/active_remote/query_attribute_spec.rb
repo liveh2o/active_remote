@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe ::ActiveRemote::QueryAttributes do
+RSpec.describe ::ActiveRemote::QueryAttributes do
   subject { ::Author.new }
 
   describe "#query_attribute" do
