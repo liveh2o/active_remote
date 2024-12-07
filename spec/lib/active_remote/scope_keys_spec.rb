@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe ActiveRemote::ScopeKeys do
+RSpec.describe ActiveRemote::ScopeKeys do
   let(:key) { :user_guid }
   let(:_scope_keys) { ["user_guid"] }
   let(:scope_keys) { ["guid"] + _scope_keys }

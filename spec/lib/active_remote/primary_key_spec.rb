@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe ActiveRemote::PrimaryKey do
+RSpec.describe ActiveRemote::PrimaryKey do
   let(:tag) { Tag.new(id: "1234", guid: "TAG-123", user_guid: "USR-123") }
 
   after { Tag.instance_variable_set :@primary_key, nil }

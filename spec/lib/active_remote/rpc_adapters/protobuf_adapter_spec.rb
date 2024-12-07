@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe ActiveRemote::RPCAdapters::ProtobufAdapter do
+RSpec.describe ActiveRemote::RPCAdapters::ProtobufAdapter do
   let(:adapter) { ActiveRemote::RPCAdapters::ProtobufAdapter.new(Tag.service_class, Tag.endpoints) }
   let(:client) { double(:client) }
 

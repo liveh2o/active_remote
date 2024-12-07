@@ -1,29 +1,31 @@
 require "spec_helper"
 
-describe ActiveRemote::Dirty do
-  context "when writing attributes through the setter" do
-    subject { Post.new(name: "foo") }
+RSpec.describe ActiveRemote::Dirty do
+  context "#attribute=" do
+    subject(:post) { Post.new(name: "foo") }
 
     before do
-      subject.changes_applied
-      subject.clear_changes_information
+      post.changes_applied
+      post.clear_changes_information
     end
 
     context "when the value changes" do
-      before { subject.name = "bar" }
-
-      its(:name_changed?) { should be_truthy }
+      it "tracks changes" do
+        post.name = "bar"
+        expect(post.name_changed?).to be(true)
+      end
     end
 
     context "when the value doesn't change" do
-      before { subject.name = "foo" }
-
-      its(:name_changed?) { should be_falsey }
+      it "tracks changes" do
+        post.name = "foo"
+        expect(post.name_changed?).to be(false)
+      end
     end
   end
 
-  context "when writing attributes directly" do
-    subject { Post.new(name: "foo") }
+  describe "#[]=" do
+    subject(:post) { Post.new(name: "foo") }
 
     before do
       subject.changes_applied
@@ -31,27 +33,27 @@ describe ActiveRemote::Dirty do
     end
 
     context "when the value changes" do
-      before { subject[:name] = "bar" }
-
-      its(:name_changed?) { should be_truthy }
+      it "tracks changes" do
+        post[:name] = "bar"
+        expect(post.name_changed?).to be(true)
+      end
     end
 
     context "when the value doesn't change" do
-      before { subject[:name] = "foo" }
-
-      its(:name_changed?) { should be_falsey }
+      it "tracks changes" do
+        post[:name] = "foo"
+        expect(post.name_changed?).to be(false)
+      end
     end
   end
 
   describe "#reload" do
-    subject { Post.new(name: "foo") }
+    let(:post) { Post.new(name: "foo") }
 
-    before do
+    it "clears changes information" do
       allow(Post).to receive(:find).and_return(Post.new(name: "foo"))
-      subject.reload
+      expect { post.reload }.to change { post.changed? }.to(false)
     end
-
-    its(:changes) { should be_empty }
   end
 
   describe "#remote" do
@@ -64,30 +66,32 @@ describe ActiveRemote::Dirty do
   end
 
   describe "#save" do
-    let!(:changes) { subject.changes }
-
-    subject { Post.new(name: "foo") }
+    subject(:post) { Post.new(name: "foo") }
 
     before do
-      allow(subject).to receive(:create_or_update).and_return(true)
-      subject.save
+      allow(post).to receive(:create_or_update).and_return(true)
     end
 
-    its(:previous_changes) { should eq changes }
-    its(:changes) { should be_empty }
+    it "applies changes" do
+      changes = post.changes
+      post.save
+      expect(post.previous_changes).to eq(changes)
+      expect(post.changes).to be_empty
+    end
   end
 
   describe "#save!" do
-    let!(:changes) { subject.changes }
-
-    subject { Post.new(name: "foo") }
+    subject(:post) { Post.new(name: "foo") }
 
     before do
-      allow(subject).to receive(:save).and_return(true)
-      subject.save!
+      allow(post).to receive(:save).and_return(true)
     end
 
-    its(:previous_changes) { should eq changes }
-    its(:changes) { should be_empty }
+    it "applies changes" do
+      changes = post.changes
+      post.save!
+      expect(post.previous_changes).to eq(changes)
+      expect(post.changes).to be_empty
+    end
   end
 end

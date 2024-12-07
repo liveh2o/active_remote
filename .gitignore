@@ -1,13 +1,14 @@
-*.gem
-*.swp
-.DS_Store
-.bundle
-.config
-.ruby-*
-.rvmrc
-.yardoc
-.idea
-Gemfile.lock
-coverage
-pkg/*
-tmp
+/Gemfile.lock
+/.DS_Store
+/.bundle/
+/.ruby-*
+/.yardoc
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/
+
+# rspec failure tracking
+.rspec_status

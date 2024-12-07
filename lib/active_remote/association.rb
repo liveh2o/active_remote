@@ -74,6 +74,8 @@ module ActiveRemote
       #   end
       #
       def has_many(has_many_class, options = {})
+        options[:has_many] = true
+
         perform_association(has_many_class, options) do |klass, object|
           foreign_key = options.fetch(:foreign_key) { :"#{object.class.name.demodulize.underscore}_guid" }
           search_hash = {}
@@ -82,9 +84,6 @@ module ActiveRemote
 
           search_hash.values.any?(&:nil?) ? [] : klass.search(**search_hash)
         end
-
-        options[:has_many] = true
-        create_association_writer(has_many_class, options)
       end
 
       # Create a `has_one` association for a given remote resource.
@@ -133,15 +132,6 @@ module ActiveRemote
 
       private
 
-      def create_association_writer(associated_klass, options = {})
-        define_method(:"#{associated_klass}=") do |new_value|
-          raise "New value must be an array" if options[:has_many] == true && new_value.class != Array
-
-          instance_variable_set(:"@#{associated_klass}", new_value)
-          new_value
-        end
-      end
-
       def perform_association(associated_klass, options = {})
         define_method(associated_klass) do
           klass_name = options.fetch(:class_name) { associated_klass }
@@ -159,7 +149,12 @@ module ActiveRemote
           value
         end
 
-        create_association_writer(associated_klass, options)
+        define_method(:"#{associated_klass}=") do |new_value|
+          raise "New value must be an array" if options[:has_many] == true && new_value.class != Array
+
+          instance_variable_set(:"@#{associated_klass}", new_value)
+          new_value
+        end
       end
     end
   end

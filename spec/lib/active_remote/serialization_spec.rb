@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe ActiveRemote::Serialization do
+RSpec.describe ActiveRemote::Serialization do
   describe ".serialize_records" do
     let(:records) { [{foo: "bar"}] }
 

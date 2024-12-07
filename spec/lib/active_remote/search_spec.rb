@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe ActiveRemote::Search do
+RSpec.describe ActiveRemote::Search do
   let(:records) { [Generic::Remote::Tag.new(guid: "123")] }
   let(:response) { Generic::Remote::Tags.new(records: records) }
   let(:rpc) { double(:rpc) }
