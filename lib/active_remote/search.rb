@@ -117,6 +117,11 @@ module ActiveRemote
       # Validates the given args to ensure they are compatible
       # Search args must be a hash or respond to to_hash
       #
+      # Returns a new hash with all keys (including nested) converted to symbols.
+      # This ensures consistent key access throughout the codebase, regardless of
+      # whether the input is a plain Hash, HashWithIndifferentAccess, or
+      # ActionController::Parameters.
+      #
       def validate_search_args!(args)
         unless args.is_a?(Hash)
           if args.respond_to?(:to_hash)
@@ -126,7 +131,9 @@ module ActiveRemote
           end
         end
 
-        args
+        # Convert all keys to symbols recursively to ensure consistent access
+        # with symbol keys throughout the codebase (e.g., args[:options][:pagination])
+        args.deep_symbolize_keys
       end
     end
 

@@ -111,4 +111,114 @@ RSpec.describe ActiveRemote::Search do
       expect(subject.attributes).to eq attributes
     end
   end
+
+  describe ".validate_search_args!" do
+    context "when args is a hash with string keys" do
+      let(:args) { {"user_guid" => "123", "options" => {"pagination" => {"page" => 1}}} }
+
+      it "converts all keys to symbols" do
+        result = Tag.validate_search_args!(args)
+        expect(result).to eq({user_guid: "123", options: {pagination: {page: 1}}})
+      end
+
+      it "allows symbol key access on nested hashes" do
+        result = Tag.validate_search_args!(args)
+        expect(result[:options][:pagination][:page]).to eq(1)
+      end
+    end
+
+    context "when args is a hash with symbol keys" do
+      let(:args) { {user_guid: "123", options: {pagination: {page: 1}}} }
+
+      it "returns the hash with symbol keys unchanged" do
+        result = Tag.validate_search_args!(args)
+        expect(result).to eq({user_guid: "123", options: {pagination: {page: 1}}})
+      end
+    end
+
+    context "when args is a hash with mixed keys" do
+      let(:args) { {"user_guid" => "123", options: {pagination: {"page" => 1}}} }
+
+      it "converts all keys to symbols at all levels" do
+        result = Tag.validate_search_args!(args)
+        expect(result).to eq({user_guid: "123", options: {pagination: {page: 1}}})
+      end
+
+      it "allows consistent symbol key access" do
+        result = Tag.validate_search_args!(args)
+        expect(result[:user_guid]).to eq("123")
+        expect(result[:options][:pagination][:page]).to eq(1)
+      end
+    end
+
+    context "when args is a HashWithIndifferentAccess" do
+      let(:args) { HashWithIndifferentAccess.new("user_guid" => "123", "options" => {"pagination" => {"page" => 1}}) }
+
+      it "converts to a hash with symbol keys" do
+        result = Tag.validate_search_args!(args)
+        expect(result).to eq({user_guid: "123", options: {pagination: {page: 1}}})
+      end
+
+      it "allows symbol key access on all levels" do
+        result = Tag.validate_search_args!(args)
+        expect(result[:options][:pagination][:page]).to eq(1)
+      end
+    end
+
+    context "when args responds to to_hash" do
+      let(:object_with_to_hash) do
+        obj = double("params")
+        allow(obj).to receive(:to_hash).and_return({"user_guid" => "123", "options" => {"page" => 1}})
+        obj
+      end
+
+      it "calls to_hash and converts keys to symbols" do
+        result = Tag.validate_search_args!(object_with_to_hash)
+        expect(result).to eq({user_guid: "123", options: {page: 1}})
+      end
+    end
+
+    context "when args does not respond to to_hash and is not a hash" do
+      let(:invalid_args) { "invalid" }
+
+      it "raises an error" do
+        expect { Tag.validate_search_args!(invalid_args) }.to raise_error(RuntimeError, /Invalid parameter/)
+      end
+    end
+
+    context "when simulating ActionController::Parameters behavior" do
+      # Simulates: params.permit(:user_guid).merge(options: {...}).to_hash
+      let(:params_like_hash) do
+        obj = double("ActionController::Parameters")
+        # to_hash returns plain Hash with string keys (converts symbol keys to strings)
+        allow(obj).to receive(:to_hash).and_return({
+          "user_guid" => "123",
+          "options" => {
+            "pagination" => {
+              "page" => 1,
+              "per_page" => 10
+            }
+          }
+        })
+        obj
+      end
+
+      it "converts all string keys to symbols for consistent access" do
+        result = Tag.validate_search_args!(params_like_hash)
+        expect(result[:user_guid]).to eq("123")
+        expect(result[:options][:pagination][:page]).to eq(1)
+        expect(result[:options][:pagination][:per_page]).to eq(10)
+      end
+    end
+
+    context "when args contains arrays with hashes" do
+      let(:args) { {"filters" => [{"field" => "status", "value" => "active"}]} }
+
+      it "converts keys in nested array hashes to symbols" do
+        result = Tag.validate_search_args!(args)
+        expect(result).to eq({filters: [{field: "status", value: "active"}]})
+        expect(result[:filters].first[:field]).to eq("status")
+      end
+    end
+  end
 end
