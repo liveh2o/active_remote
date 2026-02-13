@@ -10,6 +10,12 @@ since Active Remote depends on specific Rails versions.
 
 ### Changed
 
+- Fix Standard violations
+
+## [7.2.0] – 2026-02-13
+
+### Changed
+
 - Update to ActiveModel 7.2
 - Require Ruby 3.1 (to match Rails)
 
