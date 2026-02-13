@@ -19,6 +19,12 @@ since Active Remote depends on specific Rails versions.
 - Update to ActiveModel 7.2
 - Require Ruby 3.1 (to match Rails)
 
+## [7.1.1] - 2025-09-25
+
+- Fix deprecated `to_s(:db)` usage in attribute methods [#107](https://github.com/liveh2o/active_remote/pull/107)
+
+### Changed
+
 ## [7.1.0] - 2024-12-04
 
 ### Changed
