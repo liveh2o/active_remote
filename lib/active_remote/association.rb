@@ -126,8 +126,8 @@ module ActiveRemote
       # when requiring an attribute on your search, we verify the attribute
       # exists on both models
       def validate_scoped_attributes(associated_class, object_class, options)
-        raise "Could not find attribute: '#{options[:scope]}' on #{object_class}" unless object_class.public_instance_methods.include?(options[:scope])
-        raise "Could not find attribute: '#{options[:scope]}' on #{associated_class}" unless associated_class.public_instance_methods.include?(options[:scope])
+        raise "Could not find attribute: '#{options[:scope]}' on #{object_class}" unless object_class.public_method_defined?(options[:scope])
+        raise "Could not find attribute: '#{options[:scope]}' on #{associated_class}" unless associated_class.public_method_defined?(options[:scope])
       end
 
       private

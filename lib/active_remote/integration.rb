@@ -63,7 +63,7 @@ module ActiveRemote
       if new_record?
 
         "#{model_name.cache_key}/new"
-      elsif ::ActiveRemote.config.default_cache_key_updated_at? && (respond_to?(:[]) && (timestamp = self["updated_at"]))
+      elsif ::ActiveRemote.config.default_cache_key_updated_at? && respond_to?(:[]) && (timestamp = self["updated_at"])
         timestamp = timestamp.utc.to_fs(self.class.cache_timestamp_format)
         "#{model_name.cache_key}/#{send(primary_key)}-#{timestamp}"
       else
