@@ -48,7 +48,7 @@ RSpec.describe ActiveRemote::Association do
         end
 
         context "when user_guid doesnt exist on model " do
-          before { allow(subject.class).to receive_message_chain(:public_instance_methods, :include?).with(:user_guid).and_return(false) }
+          before { allow(subject.class).to receive(:public_method_defined?).with(:user_guid).and_return(false) }
 
           it "raises an error" do
             expect { subject.user }.to raise_error(::RuntimeError, /Could not find attribute/)
@@ -56,7 +56,7 @@ RSpec.describe ActiveRemote::Association do
         end
 
         context "when user_guid doesnt exist on associated model " do
-          before { allow(Author).to receive_message_chain(:public_instance_methods, :include?).with(:user_guid).and_return(false) }
+          before { allow(Author).to receive(:public_method_defined?).with(:user_guid).and_return(false) }
 
           it "raises an error" do
             expect { subject.user }.to raise_error(::RuntimeError, /Could not find attribute/)
@@ -158,7 +158,7 @@ RSpec.describe ActiveRemote::Association do
       end
 
       context "when user_guid doesnt exist on associated model " do
-        before { allow(Post).to receive_message_chain(:public_instance_methods, :include?).with(:user_guid).and_return(false) }
+        before { allow(Post).to receive(:public_method_defined?).with(:user_guid).and_return(false) }
 
         it "raises an error" do
           expect { subject.user_posts }.to raise_error(::RuntimeError, /Could not find attribute/)
@@ -246,7 +246,7 @@ RSpec.describe ActiveRemote::Association do
       end
 
       context "when user_guid doesnt exist on associated model " do
-        before { allow(Author).to receive_message_chain(:public_instance_methods, :include?).with(:user_guid).and_return(false) }
+        before { allow(Author).to receive(:public_method_defined?).with(:user_guid).and_return(false) }
 
         it "raises an error" do
           expect { subject.chief_editor }.to raise_error(::RuntimeError, /Could not find attribute/)

@@ -8,8 +8,14 @@ since Active Remote depends on specific Rails versions.
 
 ## [Unreleased]
 
+### Added
+
+- Support ActiveModel/ActiveSupport 8.0 and 8.1 (now allows `>= 7.2, < 8.2`)
+- Test against Rails 7.2, 8.0, and 8.1 via Appraisal, including a JRuby 10.0 leg for the 8.x line
+
 ### Changed
 
+- Require Ruby 3.2 (to match Rails 8)
 - Fix Standard violations
 
 ## [7.2.0] – 2026-02-13
