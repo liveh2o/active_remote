@@ -1,4 +1,12 @@
 ##
+# Apply and clear change information so a record starts from a clean dirty state.
+#
+def reset_changes(record)
+  record.changes_applied
+  record.clear_changes_information
+end
+
+##
 # Reset all DSL variables so specs don't interfere with each other.
 #
 def reset_dsl_variables(klass)
