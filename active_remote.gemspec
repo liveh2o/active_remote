@@ -34,7 +34,7 @@ Gem::Specification.new do |spec|
   ##
   # Dependencies
   #
-  spec.add_dependency "activemodel", "~> 8.0.0"
-  spec.add_dependency "activesupport", "~> 8.0.0"
+  spec.add_dependency "activemodel", "~> 8.1.0"
+  spec.add_dependency "activesupport", "~> 8.1.0"
   spec.add_dependency "protobuf", ">= 3.0"
 end

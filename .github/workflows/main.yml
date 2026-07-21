@@ -4,7 +4,7 @@ name: build
 
 on:
   push:
-    branches: [rails_8_0]
+    branches: [rails_8_1]
   pull_request:
     branches: "*"
 
