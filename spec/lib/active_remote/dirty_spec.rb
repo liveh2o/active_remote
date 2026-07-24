@@ -70,33 +70,20 @@ RSpec.describe ActiveRemote::Dirty do
 
   # Stub at the RPC boundary: stubbing `create_or_update` or `save` skips
   # `#remote`, which is what replaces @attributes with the service response.
-  describe "#save" do
+  describe "#save and #save!" do
     subject(:post) { Post.new(name: "foo") }
 
     before do
       allow(post).to receive(:remote_call).and_return(::Generic::Remote::Post.new(name: "foo"))
     end
 
-    it "applies changes" do
-      changes = post.changes
-      post.save
-      expect(post.previous_changes).to eq(changes)
-      expect(post.changes).to be_empty
-    end
-  end
-
-  describe "#save!" do
-    subject(:post) { Post.new(name: "foo") }
-
-    before do
-      allow(post).to receive(:remote_call).and_return(::Generic::Remote::Post.new(name: "foo"))
-    end
-
-    it "applies changes" do
-      changes = post.changes
-      post.save!
-      expect(post.previous_changes).to eq(changes)
-      expect(post.changes).to be_empty
+    [:save, :save!].each do |method|
+      it "applies changes via ##{method}" do
+        changes = post.changes
+        post.public_send(method)
+        expect(post.previous_changes).to eq(changes)
+        expect(post.changes).to be_empty
+      end
     end
   end
 

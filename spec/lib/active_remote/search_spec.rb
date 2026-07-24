@@ -3,7 +3,6 @@ require "spec_helper"
 RSpec.describe ActiveRemote::Search do
   let(:records) { [Generic::Remote::Tag.new(guid: "123")] }
   let(:response) { Generic::Remote::Tags.new(records: records) }
-  let(:rpc) { double(:rpc) }
 
   describe ".find" do
     let(:args) { {} }
@@ -65,13 +64,15 @@ RSpec.describe ActiveRemote::Search do
 
   describe ".search" do
     let(:serialized_records) { [Tag.instantiate(guid: "123")] }
+    let(:rpc) { ::ActiveRemote::RPCAdapters::ProtobufAdapter.new(::Tag.service_class, ::Tag.endpoints) }
+
+    before do
+      allow(rpc).to receive(:execute).and_return(response)
+      allow(::Tag).to receive(:rpc).and_return(rpc)
+    end
 
     context "given args that respond to :to_hash" do
       let(:args) { {} }
-      let(:rpc) { ::ActiveRemote::RPCAdapters::ProtobufAdapter.new(::Tag.service_class, ::Tag.endpoints) }
-
-      before { allow(rpc).to receive(:execute).and_return(response) }
-      before { allow(::Tag).to receive(:rpc).and_return(rpc) }
 
       it "searches with the given args" do
         expect(Tag.rpc).to receive(:execute).with(:search, args)
@@ -94,11 +95,6 @@ RSpec.describe ActiveRemote::Search do
 
     # The docs advertise a protobuf request or Active Remote object, not just a hash.
     context "given a protobuf request object" do
-      let(:rpc) { ::ActiveRemote::RPCAdapters::ProtobufAdapter.new(::Tag.service_class, ::Tag.endpoints) }
-
-      before { allow(rpc).to receive(:execute).and_return(response) }
-      before { allow(::Tag).to receive(:rpc).and_return(rpc) }
-
       it "normalizes it to a hash" do
         expect(Tag.rpc).to receive(:execute).with(:search, {guid: ["123"]})
         Tag.search(::Generic::Remote::TagRequest.new(guid: ["123"]))
@@ -106,11 +102,6 @@ RSpec.describe ActiveRemote::Search do
     end
 
     context "given an Active Remote object" do
-      let(:rpc) { ::ActiveRemote::RPCAdapters::ProtobufAdapter.new(::Tag.service_class, ::Tag.endpoints) }
-
-      before { allow(rpc).to receive(:execute).and_return(response) }
-      before { allow(::Tag).to receive(:rpc).and_return(rpc) }
-
       it "searches with its attributes" do
         expect(Tag.rpc).to receive(:execute).with(:search, hash_including("guid" => "123"))
         Tag.search(Tag.new(guid: "123"))

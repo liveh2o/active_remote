@@ -350,16 +350,16 @@ RSpec.describe ::ActiveRemote::Persistence do
     context "when the response omits attributes the service didn't touch" do
       subject { Tag.instantiate({"guid" => "123", "name" => "old", "user_guid" => "u-1"}) }
 
-      before { allow(rpc).to receive(:execute).and_return(Generic::Remote::Tag.new(guid: "123", name: "new")) }
+      before do
+        allow(rpc).to receive(:execute).and_return(Generic::Remote::Tag.new(guid: "123", name: "new"))
+        subject.name = "new"
+      end
 
       it "keeps the attributes that were not returned" do
-        subject.name = "new"
-
         expect { subject.save }.not_to change { subject.user_guid }.from("u-1")
       end
 
       it "still adopts the values the service did return" do
-        subject.name = "new"
         subject.save
 
         expect(subject.name).to eq("new")
@@ -374,31 +374,27 @@ RSpec.describe ::ActiveRemote::Persistence do
 
       before do
         allow(rpc).to receive(:execute).and_return(Generic::Remote::Tag.new(guid: "123", name: "old", errors: [error]))
+        subject.name = "new"
       end
 
       it "returns false and records the error" do
-        subject.name = "new"
-
         expect(subject.save).to be(false)
         expect(subject.errors.full_messages).to eq(["Name is taken"])
       end
 
       it "preserves the rejected edit" do
-        subject.name = "new"
         subject.save
 
         expect(subject.name).to eq("new")
       end
 
       it "keeps the change tracked so a retry still sends it" do
-        subject.name = "new"
         subject.save
 
         expect(subject.changes).to eq("name" => ["old", "new"])
       end
 
       it "sends the pending change on the retry" do
-        subject.name = "new"
         subject.save
 
         expect(rpc).to receive(:execute).with(:update, {"name" => "new", "guid" => "123"})

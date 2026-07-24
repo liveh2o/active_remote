@@ -15,7 +15,9 @@ module ActiveRemote
       def build_from_rpc(values)
         values = values.stringify_keys
 
-        attribute_names.each_with_object(_default_attributes.deep_dup) do |name, attributes|
+        # A shallow dup is enough: every slot is overwritten below, so there is
+        # nothing left shared with the defaults.
+        attribute_names.each_with_object(_default_attributes.dup) do |name, attributes|
           attributes.write_from_database(name, values[name])
         end
       end
@@ -76,11 +78,10 @@ module ActiveRemote
     # the fields they touched. The set is replaced rather than mutated so dirty
     # snapshots taken before the call still see the old values.
     def merge_attributes_from_rpc(values)
-      values = values.stringify_keys
-      names = self.class.attribute_names & values.keys
+      values = values.stringify_keys.slice(*self.class.attribute_names)
 
       @attributes = @attributes.deep_dup.tap do |attributes|
-        names.each { |name| attributes.write_from_database(name, values[name]) }
+        values.each { |name, value| attributes.write_from_database(name, value) }
       end
     end
   end

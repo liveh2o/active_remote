@@ -34,11 +34,9 @@ module ActiveRemote
       # Snapshot first: #remote clears the tracker before super returns.
       mutations = mutations_from_database
 
-      if (status = super)
-        @mutations_before_last_save = mutations
+      super.tap do |status|
+        @mutations_before_last_save = mutations if status
       end
-
-      status
     end
 
     # Override #instantiate to provide dirty tracking. It swaps @attributes, so

@@ -38,52 +38,29 @@ RSpec.describe ActiveRemote::RPCAdapters::ProtobufAdapter do
       IO_ERROR: ActiveRemote::IOError
     }
 
-    # Stands in for the client's callback registry so the real blocks run.
-    let(:failing_client) do
-      Class.new do
-        def initialize(error)
-          @error = error
-        end
-
-        def on_failure(&block)
-          @on_failure = block
-        end
-
-        def on_success(&block)
-        end
-
-        def method_missing(_name, _request)
-          yield self
-          @on_failure.call(@error)
-        end
-
-        def respond_to_missing?(*)
-          true
-        end
-      end
-    end
+    # Release the adapter-level double so mock_rpc's stub on the service class
+    # is reached through the client delegation.
+    before { allow(adapter).to receive(:client).and_call_original }
 
     error_class_for_reason.each do |reason, error_class|
       it "raises #{error_class} for #{reason}" do
         error = Struct.new(:error_type, :message).new(
           ::Protobuf::Socketrpc::ErrorReason.const_get(reason), "boom"
         )
-        allow(adapter).to receive(:client).and_return(failing_client.new(error))
+        mock_rpc(Tag.service_class, :search, error: error)
 
         expect { adapter.execute(:search, guid: "1") }.to raise_error(error_class, "boom")
       end
     end
 
     it "falls back to ActiveRemoteError for an unrecognized reason" do
-      error = Struct.new(:error_type, :message).new(9999, "boom")
-      allow(adapter).to receive(:client).and_return(failing_client.new(error))
+      mock_rpc(Tag.service_class, :search, error: Struct.new(:error_type, :message).new(9999, "boom"))
 
       expect { adapter.execute(:search, guid: "1") }.to raise_error(ActiveRemote::ActiveRemoteError, "boom")
     end
 
     it "falls back to ActiveRemoteError when the error has no type" do
-      error = Struct.new(:message).new("boom")
-      allow(adapter).to receive(:client).and_return(failing_client.new(error))
+      mock_rpc(Tag.service_class, :search, error: Struct.new(:message).new("boom"))
 
       expect { adapter.execute(:search, guid: "1") }.to raise_error(ActiveRemote::ActiveRemoteError, "boom")
     end

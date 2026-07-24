@@ -74,14 +74,7 @@ module ActiveRemote
     # the frozen instance, or false if the service reported errors.
     #
     def delete
-      raise ReadOnlyRemoteRecord if readonly?
-
-      errors.clear
-      response = remote_call(:delete, scope_key_hash)
-
-      add_errors(response.errors) if response.respond_to?(:errors)
-
-      success? ? freeze : false
+      remote_delete(:delete)
     end
 
     # Deletes the record from the service (the service determines if the
@@ -100,14 +93,7 @@ module ActiveRemote
     # reported errors.
     #
     def destroy
-      raise ReadOnlyRemoteRecord if readonly?
-
-      errors.clear
-      response = remote_call(:destroy, scope_key_hash)
-
-      add_errors(response.errors) if response.respond_to?(:errors)
-
-      success? ? freeze : false
+      remote_delete(:destroy)
     end
 
     # Destroys (hard deletes) the record from the service and freezes this
@@ -246,6 +232,21 @@ module ActiveRemote
     alias_method :update!, :update_attributes!
 
     private
+
+    # Shared by #delete and #destroy, which differ only in the endpoint they
+    # call. Returns the frozen instance, or false if the service reported
+    # errors.
+    #
+    def remote_delete(endpoint)
+      raise ReadOnlyRemoteRecord if readonly?
+
+      errors.clear
+      response = remote_call(endpoint, scope_key_hash)
+
+      add_errors(response.errors) if response.respond_to?(:errors)
+
+      success? ? freeze : false
+    end
 
     # Handles creating a remote object and serializing it's attributes and
     # errors from the response.

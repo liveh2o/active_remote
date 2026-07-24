@@ -133,15 +133,18 @@ module ActiveRemote
       private
 
       def perform_association(associated_klass, options = {})
+        ivar = :"@#{associated_klass}"
+
         define_method(associated_klass) do
+          # Keyed on presence, not truthiness, so a nil association isn't re-queried.
+          # Checked before resolving the class, since #classify runs the inflector
+          # uncached and would otherwise dominate every cached read.
+          return instance_variable_get(ivar) if instance_variable_defined?(ivar)
+
           klass_name = options.fetch(:class_name) { associated_klass }
           klass = klass_name.to_s.classify.constantize
 
           self.class.validate_scoped_attributes(klass, self.class, options) if options.key?(:scope)
-
-          # Keyed on presence, not truthiness, so a nil association isn't re-queried.
-          ivar = :"@#{associated_klass}"
-          return instance_variable_get(ivar) if instance_variable_defined?(ivar)
 
           instance_variable_set(ivar, yield(klass, self))
         end
@@ -149,7 +152,7 @@ module ActiveRemote
         define_method(:"#{associated_klass}=") do |new_value|
           raise "New value must be an array" if options[:has_many] == true && new_value.class != Array
 
-          instance_variable_set(:"@#{associated_klass}", new_value)
+          instance_variable_set(ivar, new_value)
           new_value
         end
       end
