@@ -57,6 +57,10 @@ RSpec.describe ::ActiveRemote::AttributeMethods do
       expect(tag["bogus"]).to be_nil
     end
 
+    it "raises when writing an unknown attribute through []=" do
+      expect { tag["bogus"] = 1 }.to raise_error(ActiveModel::MissingAttributeError)
+    end
+
     context "with an aliased attribute" do
       let(:model) do
         Class.new(ActiveRemote::Base) do

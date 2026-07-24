@@ -4,7 +4,7 @@ module ActiveRemote
 
     module ClassMethods
       def attribute_names
-        @attribute_names ||= attribute_types.keys
+        attribute_types.keys
       end
     end
 

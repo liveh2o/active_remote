@@ -406,6 +406,11 @@ RSpec.describe ::ActiveRemote::Persistence do
       expect(subject).to receive(:save)
       subject.update_attribute(:name, "foo")
     end
+
+    it "raises when the record is readonly" do
+      readonly = Tag.instantiate({guid: "123"}, readonly: true)
+      expect { readonly.update_attribute(:name, "foo") }.to raise_error(ActiveRemote::ReadOnlyRemoteRecord)
+    end
   end
 
   describe "#update_attributes" do

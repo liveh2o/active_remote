@@ -92,6 +92,13 @@ RSpec.describe "ActiveRemote attribute type casting" do
     it "does not list undeclared attributes" do
       expect(Author.attribute_names).not_to include("bogus")
     end
+
+    it "reflects attributes declared after the first call (not stale)" do
+      klass = Class.new(ActiveRemote::Base) { attribute :a, :string }
+      klass.attribute_names # force a first read to prove the result isn't cached
+      klass.attribute :b, :string
+      expect(klass.attribute_names).to include("a", "b")
+    end
   end
 
   describe "unknown attributes" do

@@ -11,6 +11,32 @@ RSpec.describe ActiveRemote::Serializers::Protobuf::Fields do
   end
 end
 
+RSpec.describe ActiveRemote::Serializers::Protobuf do
+  # The serializer falls back to the :value type for any field it can't map
+  # (e.g. enums), which relies on ActiveRemote registering :value with
+  # ActiveModel::Type. See active_remote/base.rb.
+  describe "the :value type fallback" do
+    let(:enum_field) { Serializer.get_field(:enum_field, true) }
+
+    it "registers the :value type with ActiveModel::Type" do
+      expect(ActiveModel::Type.lookup(:value)).to be_a(ActiveModel::Type::Value)
+    end
+
+    it "returns nil for an unmapped field type" do
+      expect(described_class.type_name_for_field(enum_field)).to be_nil
+    end
+
+    it "returns the mapped type name for a known field type" do
+      expect(described_class.type_name_for_field(Serializer.get_field(:int32_field, true))).to eq(:integer)
+    end
+
+    it "casts an unmapped field through the :value type (a no-op passthrough)" do
+      value = {custom: "object"}
+      expect(ActiveRemote::Serializers::Protobuf::Field.from_attribute(enum_field, value)).to eq(value)
+    end
+  end
+end
+
 RSpec.describe ActiveRemote::Serializers::Protobuf::Field do
   describe ".from_attribute" do
     context "when field is a repeated message" do
