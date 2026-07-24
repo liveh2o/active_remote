@@ -10,8 +10,8 @@ module ActiveRemote
     end
 
     module ClassMethods
-      # Builds an attribute hash that be assigned directly
-      # to an object from an RPC response
+      # Builds an ActiveModel::AttributeSet from an RPC response, ready to be
+      # handed to #init_with.
       def build_from_rpc(values)
         values = values.stringify_keys
 

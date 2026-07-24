@@ -52,7 +52,7 @@ module ActiveRemote
 
     private
 
-    # Override #update to only send changed attributes.
+    # Override #remote_update to only send changed attributes.
     #
     def remote_update(*)
       super(changed)

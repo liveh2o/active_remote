@@ -28,10 +28,10 @@ module ActiveRemote
     #   person.attribute_for_inspect(:created_at)
     #   # => "\"2012-10-22 00:15:07\""
     #
-    #   person.attribute_for_inspect(:tag_ids)
-    #   # => "[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]"
+    #   person.attribute_for_inspect(:age)
+    #   # => "42"
     def attribute_for_inspect(attr_name)
-      value = attribute(attr_name)
+      value = self[attr_name]
 
       if value.is_a?(String) && value.length > 50
         "#{value[0, 50]}...".inspect

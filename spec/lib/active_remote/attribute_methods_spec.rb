@@ -7,6 +7,13 @@ RSpec.describe ::ActiveRemote::AttributeMethods do
       expect(tag.attribute_for_inspect("guid")).to eq("derp".inspect)
     end
 
+    # Every other example here passes a string, which is what hid this: a symbol
+    # used to miss the attribute entirely and report "nil".
+    it "accepts a symbol name, as #[] and #[]= do" do
+      tag = Tag.new(guid: "derp")
+      expect(tag.attribute_for_inspect(:guid)).to eq("derp".inspect)
+    end
+
     context "when the attribute is a string longer than 50 characters" do
       it "returns the inspect-like string for the attribute" do
         tag = Tag.new(name: "The lazy yellow dog was caught by the slow red fox as he lay sleeping in the sun")

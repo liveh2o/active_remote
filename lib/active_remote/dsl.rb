@@ -5,20 +5,6 @@ module ActiveRemote
     extend ActiveSupport::Concern
 
     module ClassMethods
-      # Whitelist enable attributes for serialization purposes.
-      #
-      # ====Examples
-      #
-      #   # To only publish the :guid and :status attributes:
-      #   class User < ActiveRemote::Base
-      #     attr_publishable :guid, :status
-      #   end
-      #
-      def attr_publishable(*attributes)
-        @publishable_attributes ||= []
-        @publishable_attributes += attributes
-      end
-
       def endpoint_for_create(endpoint)
         endpoints create: endpoint
       end
@@ -64,12 +50,6 @@ module ActiveRemote
       def namespace(name = false)
         @namespace = name unless name == false
         @namespace
-      end
-
-      # Retrieve the attributes that have been whitelisted for serialization.
-      #
-      def publishable_attributes
-        @publishable_attributes
       end
 
       # Set the RPC service class directly. By default, ActiveRemote determines
@@ -138,10 +118,6 @@ module ActiveRemote
     #
     def _endpoints
       self.class.endpoints
-    end
-
-    def _publishable_attributes
-      self.class.publishable_attributes
     end
 
     def _service_name

@@ -30,6 +30,16 @@ since Active Remote depends on specific Rails versions.
   becomes `"[\"foo\"]"`; matching on several values now raises `ArgumentError`
 - `belongs_to`/`has_one` memoize a `nil` association and honor an explicitly assigned `nil`
 - Errors from repeated RPC calls no longer accumulate duplicates
+- `#attribute_for_inspect` accepts a symbol name, matching `#[]` and `#[]=`; it previously
+  reported `"nil"` for every attribute
+- Corrected documentation throughout that described ActiveRecord behavior this gem does not have,
+  named the wrong method, or had gone stale — including `#cache_key`'s `cache_versioning` claims,
+  `#to_key`'s example, and the return values documented for `#delete!` and `#destroy!`
+
+### Removed
+
+- `.attr_publishable` and `.publishable_attributes`. Their only consumers, the publication and JSON
+  serializer modules, were removed in 3.0.0; the macro has had no effect since
 
 ## [8.0.0] - 2026-07-24
 

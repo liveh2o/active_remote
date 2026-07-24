@@ -48,8 +48,9 @@ module ActiveRemote
         search(args).first
       end
 
-      # Tries to load the first record; if it fails, then create is called
-      # with the same arguments.
+      # Tries to load the first record; if it fails, then create is called with
+      # the same arguments, with any repeated search field unwrapped to a single
+      # value. Raises ArgumentError if a field carries more than one value.
       #
       # ====Examples
       #
@@ -65,7 +66,8 @@ module ActiveRemote
       end
 
       # Tries to load the first record; if it fails, then create! is called
-      # with the same arguments.
+      # with the same arguments. Unwraps repeated search fields as
+      # .first_or_create does.
       #
       def first_or_create!(attributes)
         attributes = validate_search_args!(attributes)
@@ -73,7 +75,8 @@ module ActiveRemote
       end
 
       # Tries to load the first record; if it fails, then a new record is
-      # initialized with the same arguments.
+      # initialized with the same arguments. Unwraps repeated search fields as
+      # .first_or_create does.
       #
       # ====Examples
       #
@@ -111,8 +114,8 @@ module ActiveRemote
         end
       end
 
-      # Validates the given args to ensure they are compatible
-      # Search args must be a hash or respond to to_hash
+      # Validates the given args to ensure they are compatible. Search args must
+      # be a Hash, an ActiveRemote::Base, or respond to :to_hash.
       #
       def validate_search_args!(args)
         return args if args.is_a?(Hash)

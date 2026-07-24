@@ -52,8 +52,8 @@ module ActiveRemote
     # would return this hash:
     #
     # {
-    #   :guid      => tag[:guid],
-    #   :user_guid => tag[:user_guid]
+    #   "guid"      => tag[:guid],
+    #   "user_guid" => tag[:user_guid]
     # }
     #
     # This hash is used when accessing or modifying a remote object
