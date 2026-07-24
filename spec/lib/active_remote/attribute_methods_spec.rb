@@ -30,4 +30,60 @@ RSpec.describe ::ActiveRemote::AttributeMethods do
       end
     end
   end
+
+  describe "#[] and #[]=" do
+    let(:tag) { Tag.new(guid: "derp") }
+
+    it "reads an attribute by string name" do
+      expect(tag["guid"]).to eq("derp")
+    end
+
+    it "reads an attribute by symbol name" do
+      expect(tag[:guid]).to eq("derp")
+    end
+
+    it "writes an attribute by name" do
+      tag["name"] = "value"
+      expect(tag.name).to eq("value")
+    end
+
+    it "casts the value written through []=" do
+      author = Author.new
+      author["age"] = "7"
+      expect(author.age).to eq(7)
+    end
+
+    it "returns nil for an unknown attribute rather than raising" do
+      expect(tag["bogus"]).to be_nil
+    end
+
+    context "with an aliased attribute" do
+      let(:model) do
+        Class.new(ActiveRemote::Base) do
+          attribute :guid, :string
+          alias_attribute :id, :guid
+        end
+      end
+
+      it "reads through the alias" do
+        expect(model.new(guid: "G")["id"]).to eq("G")
+      end
+
+      it "writes through the alias" do
+        record = model.new
+        record["id"] = "H"
+        expect(record.guid).to eq("H")
+      end
+    end
+  end
+
+  describe "#attribute_names" do
+    it "returns the names of the instance's attributes" do
+      expect(Tag.new.attribute_names).to include("guid", "name", "updated_at", "user_guid")
+    end
+
+    it "does not include undeclared attributes" do
+      expect(Tag.new.attribute_names).not_to include("bogus")
+    end
+  end
 end

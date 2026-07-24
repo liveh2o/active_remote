@@ -295,6 +295,26 @@ RSpec.describe ::ActiveRemote::Persistence do
       end
     end
 
+    context "when only some attributes change after a cast-equal assignment" do
+      let(:author_rpc) { ::ActiveRemote::RPCAdapters::ProtobufAdapter.new(::Author.service_class, ::Author.endpoints) }
+
+      subject { Author.allocate.instantiate(guid: "g", age: 1) }
+
+      before {
+        allow(author_rpc).to receive(:execute).and_return(response_without_errors)
+        allow(Author).to receive(:rpc).and_return(author_rpc)
+      }
+      after { allow(::Author).to receive(:rpc).and_call_original }
+
+      it "sends only the genuinely-changed attributes (plus the primary key)" do
+        subject.age = "1"    # casts to the stored 1 -> dropped from the payload
+        subject.name = "new" # genuine change
+
+        expect(author_rpc).to receive(:execute).with(:update, {"name" => "new", "guid" => "g"})
+        subject.save
+      end
+    end
+
     context "when the record is saved" do
       it "returns true" do
         allow(subject).to receive(:has_errors?) { false }
