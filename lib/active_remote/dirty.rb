@@ -27,10 +27,11 @@ module ActiveRemote
       end
     end
 
-    # Override #save to store changes as previous changes then clear them.
+    # Override #save to expose the changes it persisted as #previous_changes.
+    # Clearing them is #remote's job, which super calls.
     #
     def save(*)
-      # Snapshot first: the response replaces @attributes, emptying the tracker.
+      # Snapshot first: #remote clears the tracker before super returns.
       mutations = mutations_from_database
 
       if (status = super)
@@ -40,6 +41,9 @@ module ActiveRemote
       status
     end
 
+    # Override #instantiate to provide dirty tracking. It swaps @attributes, so
+    # the tracker has to be reset or a freshly loaded record reports changes.
+    #
     def instantiate(*)
       super.tap do
         clear_changes_information
