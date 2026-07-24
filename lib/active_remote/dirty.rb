@@ -18,29 +18,31 @@ module ActiveRemote
       end
     end
 
-    # Override #remote to provide dirty tracking.
+    # Override #remote to provide dirty tracking. A rejected write keeps its
+    # pending changes so the caller can fix and retry.
     #
     def remote(*)
-      super.tap do
-        clear_changes_information
+      super.tap do |success|
+        clear_changes_information if success
       end
     end
 
     # Override #save to store changes as previous changes then clear them.
     #
     def save(*)
+      # Snapshot first: the response replaces @attributes, emptying the tracker.
+      mutations = mutations_from_database
+
       if (status = super)
-        changes_applied
+        @mutations_before_last_save = mutations
       end
 
       status
     end
 
-    # Override #save to store changes as previous changes then clear them.
-    #
-    def save!(*)
+    def instantiate(*)
       super.tap do
-        changes_applied
+        clear_changes_information
       end
     end
 

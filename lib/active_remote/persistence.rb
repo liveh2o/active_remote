@@ -77,6 +77,7 @@ module ActiveRemote
     def delete
       raise ReadOnlyRemoteRecord if readonly?
 
+      errors.clear
       response = remote_call(:delete, scope_key_hash)
 
       add_errors(response.errors) if response.respond_to?(:errors)
@@ -92,7 +93,7 @@ module ActiveRemote
     #
     def delete!
       delete
-      raise ActiveRemoteError, errors.to_s if has_errors?
+      raise ActiveRemoteError, errors.full_messages.to_sentence if has_errors?
     end
 
     # Destroys (hard deletes) the record from the service and freezes this
@@ -103,6 +104,7 @@ module ActiveRemote
     def destroy
       raise ReadOnlyRemoteRecord if readonly?
 
+      errors.clear
       response = remote_call(:destroy, scope_key_hash)
 
       add_errors(response.errors) if response.respond_to?(:errors)
@@ -117,7 +119,7 @@ module ActiveRemote
     #
     def destroy!
       destroy
-      raise ActiveRemoteError, errors.to_s if has_errors?
+      raise ActiveRemoteError, errors.full_messages.to_sentence if has_errors?
     end
 
     # Returns true if the record has errors; otherwise, returns false.

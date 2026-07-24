@@ -38,7 +38,7 @@ module ActiveRemote
     # Instance level access to the scope key of the current class
     #
     def scope_keys
-      @scope_keys ||= self.class.scope_keys
+      self.class.scope_keys
     end
 
     ##

@@ -52,8 +52,14 @@ module ActiveRemote
     end
 
     def assign_attributes_from_rpc(response)
-      @attributes = self.class.build_from_rpc(response.to_hash)
+      errors.clear
       add_errors(response.errors) if response.respond_to?(:errors)
+
+      # A rejected write echoes back the unchanged record; adopting it would
+      # revert the caller's edits and leave nothing to retry with.
+      merge_attributes_from_rpc(response.to_hash) if success?
+
+      success?
     end
 
     def remote_call(rpc_method, request_args)
@@ -62,6 +68,20 @@ module ActiveRemote
 
     def rpc
       self.class.rpc
+    end
+
+    private
+
+    # Merged rather than rebuilt, since partial-update endpoints echo back only
+    # the fields they touched. The set is replaced rather than mutated so dirty
+    # snapshots taken before the call still see the old values.
+    def merge_attributes_from_rpc(values)
+      values = values.stringify_keys
+      names = self.class.attribute_names & values.keys
+
+      @attributes = @attributes.deep_dup.tap do |attributes|
+        names.each { |name| attributes.write_from_database(name, values[name]) }
+      end
     end
   end
 end

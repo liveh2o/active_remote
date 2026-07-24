@@ -2,6 +2,11 @@ module ActiveRemote
   module PrimaryKey
     extend ActiveSupport::Concern
 
+    included do
+      # A class_attribute so subclasses inherit a configured primary key.
+      class_attribute :_primary_key, instance_accessor: false
+    end
+
     module ClassMethods
       ##
       # The default_primary_key is used to define what attribute is used
@@ -20,8 +25,8 @@ module ActiveRemote
       # calls to persist or refresh data.
       #
       def primary_key(value = nil)
-        @primary_key = value if value
-        @primary_key || default_primary_key
+        self._primary_key = value if value
+        _primary_key || default_primary_key
       end
     end
 
@@ -48,8 +53,8 @@ module ActiveRemote
     #   person = Person.new(1)
     #   person.to_key # => [1]
     def to_key
-      @__to_key_key = respond_to?(primary_key) && send(primary_key) if @__to_key_key.nil?
-      @__to_key_key ? [@__to_key_key] : nil
+      key = respond_to?(primary_key) && send(primary_key)
+      key ? [key] : nil
     end
   end
 end

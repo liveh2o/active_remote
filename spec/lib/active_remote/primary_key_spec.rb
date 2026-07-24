@@ -1,9 +1,7 @@
 require "spec_helper"
 
 RSpec.describe ActiveRemote::PrimaryKey do
-  let(:tag) { Tag.new(id: "1234", guid: "TAG-123", user_guid: "USR-123") }
-
-  after { Tag.instance_variable_set :@primary_key, nil }
+  after { Tag._primary_key = nil }
 
   describe ".default_primary_key" do
     it "returns array of :guid" do
@@ -25,6 +23,26 @@ RSpec.describe ActiveRemote::PrimaryKey do
         expect(Tag.primary_key(specified_primary_key)).to eq(specified_primary_key)
       end
     end
+
+    context "when a superclass declares one" do
+      let(:parent) do
+        Class.new(ActiveRemote::Base) do
+          primary_key :uuid
+          attribute :uuid, :string
+        end
+      end
+
+      it "is inherited by subclasses" do
+        expect(Class.new(parent).primary_key).to eq(:uuid)
+      end
+
+      it "can still be overridden by the subclass" do
+        child = Class.new(parent) { primary_key :other }
+
+        expect(child.primary_key).to eq(:other)
+        expect(parent.primary_key).to eq(:uuid)
+      end
+    end
   end
 
   describe "#primary_key" do
@@ -44,6 +62,14 @@ RSpec.describe ActiveRemote::PrimaryKey do
       it "returns guid in array" do
         expect(Tag.new(guid: "TAG-123").to_key).to eq ["TAG-123"]
       end
+    end
+
+    it "reflects a reassigned primary key rather than memoizing the first read" do
+      tag = Tag.new(guid: "TAG-123")
+      tag.to_key
+      tag.guid = "TAG-456"
+
+      expect(tag.to_key).to eq ["TAG-456"]
     end
   end
 end

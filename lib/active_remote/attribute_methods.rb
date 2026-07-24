@@ -2,12 +2,6 @@ module ActiveRemote
   module AttributeMethods
     extend ::ActiveSupport::Concern
 
-    module ClassMethods
-      def attribute_names
-        attribute_types.keys
-      end
-    end
-
     def [](attr_name)
       name = attr_name.to_s
       name = self.class.attribute_aliases[name] || name
@@ -46,10 +40,6 @@ module ActiveRemote
       else
         value.inspect
       end
-    end
-
-    def attribute_names
-      @attributes.keys
     end
   end
 end

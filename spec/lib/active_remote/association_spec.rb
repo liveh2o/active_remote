@@ -8,7 +8,6 @@ RSpec.describe ActiveRemote::Association do
     context "simple association" do
       let(:author_guid) { "AUT-123" }
       let(:user_guid) { "USR-123" }
-      let(:default_category_guid) { "CAT-123" }
       subject { Post.new(author_guid: author_guid, user_guid: user_guid) }
 
       it { is_expected.to respond_to(:author) }
@@ -37,6 +36,19 @@ RSpec.describe ActiveRemote::Association do
           expect(Author).to receive(:search).with({guid: subject.author_guid}).and_return([])
           expect(subject.author).to be_nil
         end
+
+        # Truthiness-keyed memoization would treat a nil result as a cache miss.
+        it "memoizes the miss instead of searching again" do
+          expect(Author).to receive(:search).once.with({guid: subject.author_guid}).and_return([])
+          3.times { expect(subject.author).to be_nil }
+        end
+      end
+
+      it "honors an explicitly assigned nil without searching" do
+        expect(Author).not_to receive(:search)
+        subject.author = nil
+
+        expect(subject.author).to be_nil
       end
 
       context "scoped field" do

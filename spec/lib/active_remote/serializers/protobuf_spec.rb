@@ -18,8 +18,9 @@ RSpec.describe ActiveRemote::Serializers::Protobuf do
   describe "the :value type fallback" do
     let(:enum_field) { Serializer.get_field(:enum_field, true) }
 
+    # be_a would also pass for any subclass of Type::Value.
     it "registers the :value type with ActiveModel::Type" do
-      expect(ActiveModel::Type.lookup(:value)).to be_a(ActiveModel::Type::Value)
+      expect(ActiveModel::Type.lookup(:value)).to be_an_instance_of(ActiveModel::Type::Value)
     end
 
     it "returns nil for an unmapped field type" do

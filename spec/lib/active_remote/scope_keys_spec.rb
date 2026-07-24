@@ -28,6 +28,18 @@ RSpec.describe ActiveRemote::ScopeKeys do
     it "returns the scope keys for the class" do
       expect(Tag.new.scope_keys).to eq Tag.scope_keys
     end
+
+    it "picks up a scope key declared after the first read" do
+      model = Class.new(ActiveRemote::Base) do
+        attribute :guid, :string
+        attribute :user_guid, :string
+      end
+      record = model.new
+      record.scope_keys
+      model.scope_key :user_guid
+
+      expect(record.scope_keys).to eq(["guid", "user_guid"])
+    end
   end
 
   describe "#scope_key_hash" do

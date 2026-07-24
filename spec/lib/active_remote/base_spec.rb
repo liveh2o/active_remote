@@ -8,6 +8,29 @@ RSpec.describe ActiveRemote::Base do
     end
   end
 
+  # #eql? is aliased to #==, so #hash has to agree.
+  describe "#hash" do
+    it "matches for two records with the same class and primary key" do
+      expect(Tag.new(guid: "1").hash).to eq(Tag.new(guid: "1").hash)
+    end
+
+    it "lets equal records collapse in a Set, #uniq and as Hash keys" do
+      a = Tag.new(guid: "1")
+      b = Tag.new(guid: "1")
+
+      expect([a, b].uniq.size).to eq(1)
+      expect({a => :found}[b]).to eq(:found)
+    end
+
+    it "differs for the same key on another class" do
+      expect(Tag.new(guid: "1").hash).not_to eq(Author.new(guid: "1").hash)
+    end
+
+    it "falls back to identity for new records, matching #==" do
+      expect([Tag.new, Tag.new].uniq.size).to eq(2)
+    end
+  end
+
   describe "#== and #eql?" do
     let(:tag) { Tag.new(guid: "1") }
 
@@ -65,6 +88,17 @@ RSpec.describe ActiveRemote::Base do
     it "prevents further writes once frozen" do
       tag = Tag.new(guid: "1").freeze
       expect { tag.name = "nope" }.to raise_error(FrozenError)
+    end
+
+    # An RPC response swaps out @attributes, which used to silently thaw the record.
+    it "freezes the object itself, not just the attribute set" do
+      tag = Tag.new(guid: "1").freeze
+
+      expect(Object.instance_method(:frozen?).bind_call(tag)).to be(true)
+    end
+
+    it "does not report an allocated-but-uninitialized record as frozen" do
+      expect(Tag.allocate).not_to be_frozen
     end
   end
 

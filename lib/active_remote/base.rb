@@ -71,6 +71,16 @@ module ActiveRemote
     end
     alias_method :eql?, :==
 
+    # Records that are +eql?+ must hash alike, or Set, Array#uniq and Hash keys
+    # treat them as distinct.
+    def hash
+      if (key = send(primary_key))
+        [self.class, key].hash
+      else
+        super
+      end
+    end
+
     # Allows sort on objects
     def <=>(other)
       if other.is_a?(self.class)
@@ -78,15 +88,6 @@ module ActiveRemote
       else
         super
       end
-    end
-
-    def freeze
-      @attributes.freeze
-      self
-    end
-
-    def frozen?
-      @attributes.frozen?
     end
 
     # Initialize an object with the attributes hash directly
@@ -117,11 +118,6 @@ module ActiveRemote
       end
 
       "#<#{self.class} #{inspection}>"
-    end
-
-    # Returns a hash of the given methods with their names as keys and returned values as values.
-    def slice(*methods)
-      methods.flatten.map! { |method| [method, public_send(method)] }.to_h.with_indifferent_access
     end
   end
 

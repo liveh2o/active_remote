@@ -139,14 +139,11 @@ module ActiveRemote
 
           self.class.validate_scoped_attributes(klass, self.class, options) if options.key?(:scope)
 
-          value = instance_variable_get(:"@#{associated_klass}")
+          # Keyed on presence, not truthiness, so a nil association isn't re-queried.
+          ivar = :"@#{associated_klass}"
+          return instance_variable_get(ivar) if instance_variable_defined?(ivar)
 
-          unless value
-            value = yield(klass, self)
-            instance_variable_set(:"@#{associated_klass}", value)
-          end
-
-          value
+          instance_variable_set(ivar, yield(klass, self))
         end
 
         define_method(:"#{associated_klass}=") do |new_value|
