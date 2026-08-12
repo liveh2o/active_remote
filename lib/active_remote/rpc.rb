@@ -10,12 +10,14 @@ module ActiveRemote
     end
 
     module ClassMethods
-      # Builds an attribute hash that be assigned directly
-      # to an object from an RPC response
+      # Builds an ActiveModel::AttributeSet from an RPC response, ready to be
+      # handed to #init_with.
       def build_from_rpc(values)
         values = values.stringify_keys
 
-        attribute_names.each_with_object(_default_attributes.deep_dup) do |name, attributes|
+        # A shallow dup is enough: every slot is overwritten below, so there is
+        # nothing left shared with the defaults.
+        attribute_names.each_with_object(_default_attributes.dup) do |name, attributes|
           attributes.write_from_database(name, values[name])
         end
       end
@@ -52,8 +54,14 @@ module ActiveRemote
     end
 
     def assign_attributes_from_rpc(response)
-      @attributes = self.class.build_from_rpc(response.to_hash)
+      errors.clear
       add_errors(response.errors) if response.respond_to?(:errors)
+
+      # A rejected write echoes back the unchanged record; adopting it would
+      # revert the caller's edits and leave nothing to retry with.
+      merge_attributes_from_rpc(response.to_hash) if success?
+
+      success?
     end
 
     def remote_call(rpc_method, request_args)
@@ -62,6 +70,19 @@ module ActiveRemote
 
     def rpc
       self.class.rpc
+    end
+
+    private
+
+    # Merged rather than rebuilt, since partial-update endpoints echo back only
+    # the fields they touched. The set is replaced rather than mutated so dirty
+    # snapshots taken before the call still see the old values.
+    def merge_attributes_from_rpc(values)
+      values = values.stringify_keys.slice(*self.class.attribute_names)
+
+      @attributes = @attributes.deep_dup.tap do |attributes|
+        values.each { |name, value| attributes.write_from_database(name, value) }
+      end
     end
   end
 end

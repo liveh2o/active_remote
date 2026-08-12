@@ -10,6 +10,41 @@ since Active Remote depends on specific Rails versions.
 
 ### Changed
 
+- Update to ActiveModel 8.1
+- `#freeze` freezes the record, not just its attributes
+- A rejected save keeps the caller's edits and change tracking instead of adopting the response
+- Responses are merged into the record, so omitted attributes keep their value
+
+### Fixed
+
+- Transport errors raised `NameError` instead of `RpcFailedError` and friends
+- `#hash` now agrees with `#==`/`#eql?`
+- `#reload` marks the record as persisted, so the next `#save` no longer duplicates it
+- `#delete`, `#destroy` and `#remote` clear stale errors before checking the result
+- `#delete!` and `#destroy!` report the service's messages, not `#<ActiveModel::Errors>`
+- `.primary_key` is inherited by subclasses
+- `.attribute_names`, `#to_key` and `#scope_keys` no longer memoize stale values
+- `#previous_changes` is populated after a successful save
+- `.find` and the `.first_or_*` methods accept the documented protobuf and Active Remote arguments
+- The `.first_or_*` methods unwrap a search request's repeated fields, so `name: ["foo"]` no longer
+  becomes `"[\"foo\"]"`; matching on several values now raises `ArgumentError`
+- `belongs_to`/`has_one` memoize a `nil` association and honor an explicitly assigned `nil`
+- Errors from repeated RPC calls no longer accumulate duplicates
+- `#attribute_for_inspect` accepts a symbol name, matching `#[]` and `#[]=`; it previously
+  reported `"nil"` for every attribute
+- Corrected documentation throughout that described ActiveRecord behavior this gem does not have,
+  named the wrong method, or had gone stale — including `#cache_key`'s `cache_versioning` claims,
+  `#to_key`'s example, and the return values documented for `#delete!` and `#destroy!`
+
+### Removed
+
+- `.attr_publishable` and `.publishable_attributes`. Their only consumers, the publication and JSON
+  serializer modules, were removed in 3.0.0; the macro has had no effect since
+
+## [8.0.0] - 2026-07-24
+
+### Changed
+
 - Update to ActiveModel 8.0
 - Require Ruby 3.2 (to match Rails 8.0)
 - Fix Standard violations

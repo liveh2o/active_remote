@@ -4,17 +4,6 @@ RSpec.describe ActiveRemote::DSL do
   before { reset_dsl_variables(Tag) }
   after { Tag.service_class Generic::Remote::TagService }
 
-  describe ".attr_publishable" do
-    after { reset_publishable_attributes(Tag) }
-
-    it "appends given attributes to @publishable_attributes" do
-      Tag.attr_publishable :guid
-      Tag.attr_publishable :name
-
-      expect(Tag.publishable_attributes).to match_array([:guid, :name])
-    end
-  end
-
   describe ".endpoints" do
     it "has default values" do
       expect(Tag.endpoints).to eq(

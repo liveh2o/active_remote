@@ -2,6 +2,11 @@ module ActiveRemote
   module PrimaryKey
     extend ActiveSupport::Concern
 
+    included do
+      # A class_attribute so subclasses inherit a configured primary key.
+      class_attribute :_primary_key, instance_accessor: false
+    end
+
     module ClassMethods
       ##
       # The default_primary_key is used to define what attribute is used
@@ -20,8 +25,8 @@ module ActiveRemote
       # calls to persist or refresh data.
       #
       def primary_key(value = nil)
-        @primary_key = value if value
-        @primary_key || default_primary_key
+        self._primary_key = value if value
+        _primary_key || default_primary_key
       end
     end
 
@@ -33,23 +38,18 @@ module ActiveRemote
       self.class.primary_key
     end
 
-    # Returns an Array of all key attributes if any of the attributes is set, whether or not
-    # the object is persisted. Returns +nil+ if there are no key attributes.
+    # Returns the primary key value wrapped in an Array, whether or not the
+    # object is persisted. Returns +nil+ when that value is unset.
     #
-    #   class Person
-    #     include ActiveModel::Conversion
-    #     attr_accessor :id
-    #
-    #     def initialize(id)
-    #       @id = id
-    #     end
+    #   class Person < ActiveRemote::Base
+    #     attribute :guid, :string
     #   end
     #
-    #   person = Person.new(1)
-    #   person.to_key # => [1]
+    #   Person.new(guid: "ABC-123").to_key # => ["ABC-123"]
+    #   Person.new.to_key                  # => nil
     def to_key
-      @__to_key_key = respond_to?(primary_key) && send(primary_key) if @__to_key_key.nil?
-      @__to_key_key ? [@__to_key_key] : nil
+      key = respond_to?(primary_key) && send(primary_key)
+      key ? [key] : nil
     end
   end
 end

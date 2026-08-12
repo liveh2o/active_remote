@@ -8,11 +8,13 @@ module ActiveRemote
   class DangerousAttributeError < ActiveRemoteError
   end
 
-  # Raised by ActiveRemove::Base.save when the remote record is readonly.
+  # Raised by ActiveRemote::Base#save, #delete, #destroy and #update_attribute
+  # when the remote record or its class is readonly.
   class ReadOnlyRemoteRecord < ActiveRemoteError
   end
 
-  # Raised by ActiveRemote::Validations when save is called on an invalid record.
+  # Raised by ActiveRemote::Validations when save! is called on a record that
+  # fails local validation. #save returns false instead.
   class RemoteRecordInvalid < ActiveRemoteError
     attr_reader :record
 
@@ -40,8 +42,9 @@ module ActiveRemote
     end
   end
 
-  # Raised by ActiveRemove::Base.save! and ActiveRemote::Base.create! methods
-  # when remote record cannot be saved because it is invalid.
+  # Raised by ActiveRemote::Base#save!, .create! and #update_attributes! when
+  # the service rejects the write. Local validation failures raise
+  # RemoteRecordInvalid instead, since Validations runs first.
   class RemoteRecordNotSaved < ActiveRemoteError
     attr_reader :record
 

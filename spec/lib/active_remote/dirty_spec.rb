@@ -59,29 +59,32 @@ RSpec.describe ActiveRemote::Dirty do
     end
   end
 
-  describe "#save" do
+  describe "#instantiate" do
+    let(:post) { Post.new(name: "foo") }
+
+    # #instantiate swaps @attributes, orphaning the mutation tracker unless reset.
+    it "clears changes information" do
+      expect { post.instantiate("name" => "bar") }.to change { post.changed? }.to(false)
+    end
+  end
+
+  # Stub at the RPC boundary: stubbing `create_or_update` or `save` skips
+  # `#remote`, which is what replaces @attributes with the service response.
+  describe "#save and #save!" do
     subject(:post) { Post.new(name: "foo") }
 
     before do
-      allow(post).to receive(:create_or_update).and_return(true)
+      allow(post).to receive(:remote_call).and_return(::Generic::Remote::Post.new(name: "foo"))
     end
 
-    it "applies changes" do
+    it "applies changes via #save" do
       changes = post.changes
       post.save
       expect(post.previous_changes).to eq(changes)
       expect(post.changes).to be_empty
     end
-  end
 
-  describe "#save!" do
-    subject(:post) { Post.new(name: "foo") }
-
-    before do
-      allow(post).to receive(:save).and_return(true)
-    end
-
-    it "applies changes" do
+    it "applies changes via #save!" do
       changes = post.changes
       post.save!
       expect(post.previous_changes).to eq(changes)
@@ -89,8 +92,7 @@ RSpec.describe ActiveRemote::Dirty do
     end
   end
 
-  # Dirty tracking compares CAST values, not the raw assigned value. This is only
-  # observable on typed attributes, so the string-only specs above don't cover it.
+  # Dirty tracking compares cast values, which only typed attributes reveal.
   describe "cast-aware change tracking" do
     subject(:author) { Author.new(age: 42, writes_fiction: true) }
 

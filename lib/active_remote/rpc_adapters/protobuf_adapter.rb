@@ -67,7 +67,7 @@ module ActiveRemote
           ::ActiveRemote::MethodNotFoundError
         when ::Protobuf::Socketrpc::ErrorReason::RPC_ERROR
           ::ActiveRemote::RpcError
-        when ::Protobuf::Socketrpc::ErrorReason::RPC_FAILED_ERROR
+        when ::Protobuf::Socketrpc::ErrorReason::RPC_FAILED
           ::ActiveRemote::RpcFailedError
         when ::Protobuf::Socketrpc::ErrorReason::INVALID_REQUEST_PROTO
           ::ActiveRemote::InvalidRequestProtoError

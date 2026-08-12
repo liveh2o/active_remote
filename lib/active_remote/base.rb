@@ -35,11 +35,11 @@ module ActiveRemote
     include ::ActiveRemote::Search
     include ::ActiveRemote::Serialization
 
-    # Overrides some methods, providing support for dirty tracking,
-    # so it needs to be included last.
+    # Overrides persistence methods to add dirty tracking, so it has to come
+    # after Persistence and Search.
     include ::ActiveRemote::Dirty
 
-    # Overrides persistence methods, so it must included after
+    # Overrides #save/#save! to validate first, so it has to come after Dirty.
     include ::ActiveRemote::Validations
     include ::ActiveModel::Validations::Callbacks
 
@@ -54,15 +54,15 @@ module ActiveRemote
       end
     end
 
-    # Returns true if +comparison_object+ is the same exact object, or +comparison_object+
-    # is of the same type and +self+ has an ID and it is equal to +comparison_object.id+.
+    # Returns true if +comparison_object+ is the same exact object, or is of the
+    # same type and its primary key is set and equal to this record's.
     #
-    # Note that new records are different from any other record by definition, unless the
-    # other record is the receiver itself. Besides, if you fetch existing records with
-    # +select+ and leave the ID out, you're on your own, this predicate will return false.
+    # Note that this does not consider whether either record is persisted: two
+    # unsaved records built with the same primary key compare equal. Records
+    # whose primary key is nil are only equal to themselves.
     #
-    # Note also that destroying a record preserves its ID in the model instance, so deleted
-    # models are still comparable.
+    # Note also that destroying a record preserves its attributes in the model
+    # instance, so deleted models are still comparable.
     def ==(other)
       super ||
         other.instance_of?(self.class) &&
@@ -70,6 +70,16 @@ module ActiveRemote
           other.send(primary_key) == send(primary_key)
     end
     alias_method :eql?, :==
+
+    # Records that are +eql?+ must hash alike, or Set, Array#uniq and Hash keys
+    # treat them as distinct.
+    def hash
+      if (key = send(primary_key))
+        [self.class, key].hash
+      else
+        super
+      end
+    end
 
     # Allows sort on objects
     def <=>(other)
@@ -80,17 +90,8 @@ module ActiveRemote
       end
     end
 
-    def freeze
-      @attributes.freeze
-      self
-    end
-
-    def frozen?
-      @attributes.frozen?
-    end
-
-    # Initialize an object with the attributes hash directly
-    # When used with allocate, bypasses initialize
+    # Initialize an object from an ActiveModel::AttributeSet, as built by
+    # .build_from_rpc. When used with allocate, bypasses initialize.
     def init_with(attributes)
       @attributes = attributes
       @new_record = false
@@ -117,11 +118,6 @@ module ActiveRemote
       end
 
       "#<#{self.class} #{inspection}>"
-    end
-
-    # Returns a hash of the given methods with their names as keys and returned values as values.
-    def slice(*methods)
-      methods.flatten.map! { |method| [method, public_send(method)] }.to_h.with_indifferent_access
     end
   end
 

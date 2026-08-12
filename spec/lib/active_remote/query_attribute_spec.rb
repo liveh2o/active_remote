@@ -24,6 +24,12 @@ RSpec.describe ::ActiveRemote::QueryAttributes do
       expect(subject.name?).to eq false
     end
 
+    it "is false when the attribute is an empty collection" do
+      author = DefaultAuthor.new
+      author.books = []
+      expect(author.books?).to eq false
+    end
+
     it "is true when the attribute is a non-empty string" do
       subject.name = "Chris"
       expect(subject.name?).to eq true

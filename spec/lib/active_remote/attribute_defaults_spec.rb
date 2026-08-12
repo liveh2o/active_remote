@@ -27,12 +27,18 @@ RSpec.describe "ActiveRemote attribute defaults" do
   # `default: []`) is a single shared object, so mutating it in place leaks
   # across instances. Use `default: -> { [] }` to get a fresh value per record.
   # If a future ActiveModel version starts dup-ing literal defaults, this spec
-  # will flag the behavior change.
+  # will flag the behavior change. Uses a throwaway class so the mutation can't
+  # pollute the shared DefaultAuthor default other specs rely on.
   it "shares a literal mutable default across instances (in-place mutation leaks)" do
-    DefaultAuthor.new.books << :leaked
-    expect(DefaultAuthor.new.books).to eq([:leaked])
-  ensure
-    DefaultAuthor.new.books.clear
+    klass = Class.new(ActiveRemote::Base) { attribute :books, default: [] }
+    klass.new.books << :leaked
+    expect(klass.new.books).to eq([:leaked])
+  end
+
+  it "gives each instance a fresh value from a proc default (no leak)" do
+    klass = Class.new(ActiveRemote::Base) { attribute :books, default: -> { [] } }
+    klass.new.books << :isolated
+    expect(klass.new.books).to eq([])
   end
 
   it "does not apply defaults to models that declare none" do

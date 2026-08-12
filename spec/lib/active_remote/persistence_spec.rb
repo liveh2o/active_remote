@@ -72,6 +72,30 @@ RSpec.describe ::ActiveRemote::Persistence do
         expect(subject.delete).to be_falsey
       end
     end
+
+    # Only #save cleared errors, so a stale one made a good delete report failure.
+    context "when the record already carries errors from an earlier call" do
+      before { subject.errors.add(:name, "left over") }
+
+      it "still succeeds and freezes the record" do
+        expect(subject.delete).to be_truthy
+        expect(subject).to be_frozen
+      end
+
+      it "clears the stale errors" do
+        subject.delete
+        expect(subject.has_errors?).to be(false)
+      end
+    end
+
+    context "when the record is readonly" do
+      subject { Tag.instantiate({guid: "123"}, readonly: true) }
+
+      it "raises before issuing the RPC" do
+        expect(rpc).not_to receive(:execute)
+        expect { subject.delete }.to raise_error(ActiveRemote::ReadOnlyRemoteRecord)
+      end
+    end
   end
 
   describe "#delete!" do
@@ -88,6 +112,11 @@ RSpec.describe ::ActiveRemote::Persistence do
 
       it "raises an exception" do
         expect { subject.delete! }.to raise_error(ActiveRemote::ActiveRemoteError)
+      end
+
+      # errors.to_s yields "#<ActiveModel::Errors:0x...>", which says nothing.
+      it "reports the service error messages" do
+        expect { subject.delete! }.to raise_error(ActiveRemote::ActiveRemoteError, "Name Boom!")
       end
     end
   end
@@ -120,6 +149,24 @@ RSpec.describe ::ActiveRemote::Persistence do
         expect(subject.destroy).to be_falsey
       end
     end
+
+    context "when the record already carries errors from an earlier call" do
+      before { subject.errors.add(:name, "left over") }
+
+      it "still succeeds and freezes the record" do
+        expect(subject.destroy).to be_truthy
+        expect(subject).to be_frozen
+      end
+    end
+
+    context "when the record is readonly" do
+      subject { Tag.instantiate({guid: "123"}, readonly: true) }
+
+      it "raises before issuing the RPC" do
+        expect(rpc).not_to receive(:execute)
+        expect { subject.destroy }.to raise_error(ActiveRemote::ReadOnlyRemoteRecord)
+      end
+    end
   end
 
   describe "#destroy!" do
@@ -136,6 +183,10 @@ RSpec.describe ::ActiveRemote::Persistence do
 
       it "raises an exception" do
         expect { subject.destroy! }.to raise_error(ActiveRemote::ActiveRemoteError)
+      end
+
+      it "reports the service error messages" do
+        expect { subject.destroy! }.to raise_error(ActiveRemote::ActiveRemoteError, "Name Boom!")
       end
     end
   end
@@ -295,6 +346,62 @@ RSpec.describe ::ActiveRemote::Persistence do
       end
     end
 
+    # Partial-update endpoints echo back only the fields they touched.
+    context "when the response omits attributes the service didn't touch" do
+      subject { Tag.instantiate({"guid" => "123", "name" => "old", "user_guid" => "u-1"}) }
+
+      before do
+        allow(rpc).to receive(:execute).and_return(Generic::Remote::Tag.new(guid: "123", name: "new"))
+        subject.name = "new"
+      end
+
+      it "keeps the attributes that were not returned" do
+        expect { subject.save }.not_to change { subject.user_guid }.from("u-1")
+      end
+
+      it "still adopts the values the service did return" do
+        subject.save
+
+        expect(subject.name).to eq("new")
+      end
+    end
+
+    # A rejected write echoes the unchanged record; adopting it reverts the edit.
+    context "when the service rejects the save" do
+      let(:error) { Generic::Error.new(field: "name", message: "is taken") }
+
+      subject { Tag.instantiate({"guid" => "123", "name" => "old"}) }
+
+      before do
+        allow(rpc).to receive(:execute).and_return(Generic::Remote::Tag.new(guid: "123", name: "old", errors: [error]))
+        subject.name = "new"
+      end
+
+      it "returns false and records the error" do
+        expect(subject.save).to be(false)
+        expect(subject.errors.full_messages).to eq(["Name is taken"])
+      end
+
+      it "preserves the rejected edit" do
+        subject.save
+
+        expect(subject.name).to eq("new")
+      end
+
+      it "keeps the change tracked so a retry still sends it" do
+        subject.save
+
+        expect(subject.changes).to eq("name" => ["old", "new"])
+      end
+
+      it "sends the pending change on the retry" do
+        subject.save
+
+        expect(rpc).to receive(:execute).with(:update, {"name" => "new", "guid" => "123"})
+        subject.save
+      end
+    end
+
     context "when only some attributes change after a cast-equal assignment" do
       let(:author_rpc) { ::ActiveRemote::RPCAdapters::ProtobufAdapter.new(::Author.service_class, ::Author.endpoints) }
 
@@ -395,7 +502,6 @@ RSpec.describe ::ActiveRemote::Persistence do
     end
 
     before { allow(subject).to receive(:save) }
-    after { allow(subject).to receive(:save).and_call_original }
 
     it "assigns new attributes" do
       expect(subject).to receive(:name=).with("foo")
@@ -405,6 +511,18 @@ RSpec.describe ::ActiveRemote::Persistence do
     it "saves the record" do
       expect(subject).to receive(:save)
       subject.update_attribute(:name, "foo")
+    end
+
+    context "when the record is readonly" do
+      subject { Tag.instantiate({guid: "123"}, readonly: true) }
+
+      # Must fire before assignment, or the guard in #create_or_update passes it.
+      it "raises without assigning or saving" do
+        expect(subject).not_to receive(:save)
+
+        expect { subject.update_attribute(:name, "foo") }.to raise_error(ActiveRemote::ReadOnlyRemoteRecord)
+        expect(subject.name).to be_nil
+      end
     end
   end
 

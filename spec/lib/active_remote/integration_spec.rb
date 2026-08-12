@@ -36,7 +36,8 @@ RSpec.describe ::ActiveRemote::Integration do
       twenty_o_one_one = tag.updated_at = DateTime.new(2001, 0o1, 0o1)
       expect(tag).to receive(:new_record?).and_return(false)
       expect(tag.cache_key).to eq("tags/#{guid}-#{twenty_o_one_one.to_fs(:usec)}")
-      tag.updated_at = nil
+    ensure
+      # Without this the flag leaks globally whenever the example above fails.
       ::ActiveRemote.config.default_cache_key_updated_at = false
     end
 

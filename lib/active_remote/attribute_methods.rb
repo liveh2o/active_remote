@@ -2,12 +2,6 @@ module ActiveRemote
   module AttributeMethods
     extend ::ActiveSupport::Concern
 
-    module ClassMethods
-      def attribute_names
-        @attribute_names ||= attribute_types.keys
-      end
-    end
-
     def [](attr_name)
       name = attr_name.to_s
       name = self.class.attribute_aliases[name] || name
@@ -34,10 +28,10 @@ module ActiveRemote
     #   person.attribute_for_inspect(:created_at)
     #   # => "\"2012-10-22 00:15:07\""
     #
-    #   person.attribute_for_inspect(:tag_ids)
-    #   # => "[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]"
+    #   person.attribute_for_inspect(:age)
+    #   # => "42"
     def attribute_for_inspect(attr_name)
-      value = attribute(attr_name)
+      value = self[attr_name]
 
       if value.is_a?(String) && value.length > 50
         "#{value[0, 50]}...".inspect
@@ -46,10 +40,6 @@ module ActiveRemote
       else
         value.inspect
       end
-    end
-
-    def attribute_names
-      @attributes.keys
     end
   end
 end

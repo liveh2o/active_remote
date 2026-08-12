@@ -38,7 +38,7 @@ module ActiveRemote
     # Instance level access to the scope key of the current class
     #
     def scope_keys
-      @scope_keys ||= self.class.scope_keys
+      self.class.scope_keys
     end
 
     ##
@@ -52,8 +52,8 @@ module ActiveRemote
     # would return this hash:
     #
     # {
-    #   :guid      => tag[:guid],
-    #   :user_guid => tag[:user_guid]
+    #   "guid"      => tag[:guid],
+    #   "user_guid" => tag[:user_guid]
     # }
     #
     # This hash is used when accessing or modifying a remote object

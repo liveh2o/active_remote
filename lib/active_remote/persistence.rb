@@ -70,54 +70,40 @@ module ActiveRemote
 
     # Deletes the record from the service (the service determines if the
     # record is hard or soft deleted) and freezes this instance to indicate
-    # that no changes should be made (since they can't be persisted). If the
-    # record was not deleted, it will have error messages indicating what went
-    # wrong. Returns the frozen instance.
+    # that no changes should be made (since they can't be persisted). Returns
+    # the frozen instance, or false if the service reported errors.
     #
     def delete
-      raise ReadOnlyRemoteRecord if readonly?
-
-      response = remote_call(:delete, scope_key_hash)
-
-      add_errors(response.errors) if response.respond_to?(:errors)
-
-      success? ? freeze : false
+      remote_delete(:delete)
     end
 
     # Deletes the record from the service (the service determines if the
     # record is hard or soft deleted) and freezes this instance to indicate
     # that no changes should be made (since they can't be persisted). If the
-    # record was not deleted, an exception will be raised. Returns the frozen
-    # instance.
+    # record was not deleted, an ActiveRemoteError is raised. Returns nil.
     #
     def delete!
       delete
-      raise ActiveRemoteError, errors.to_s if has_errors?
+      raise ActiveRemoteError, errors.full_messages.to_sentence if has_errors?
     end
 
     # Destroys (hard deletes) the record from the service and freezes this
     # instance to indicate that no changes should be made (since they can't
-    # be persisted). If the record was not deleted, it will have error
-    # messages indicating what went wrong. Returns the frozen instance.
+    # be persisted). Returns the frozen instance, or false if the service
+    # reported errors.
     #
     def destroy
-      raise ReadOnlyRemoteRecord if readonly?
-
-      response = remote_call(:destroy, scope_key_hash)
-
-      add_errors(response.errors) if response.respond_to?(:errors)
-
-      success? ? freeze : false
+      remote_delete(:destroy)
     end
 
     # Destroys (hard deletes) the record from the service and freezes this
     # instance to indicate that no changes should be made (since they can't
-    # be persisted). If the record was not deleted, an exception will be
-    # raised. Returns the frozen instance.
+    # be persisted). If the record was not destroyed, an ActiveRemoteError is
+    # raised. Returns nil.
     #
     def destroy!
       destroy
-      raise ActiveRemoteError, errors.to_s if has_errors?
+      raise ActiveRemoteError, errors.full_messages.to_sentence if has_errors?
     end
 
     # Returns true if the record has errors; otherwise, returns false.
@@ -158,10 +144,10 @@ module ActiveRemote
       self.class.readonly? || @readonly
     end
 
-    # Executes a remote call on the current object and serializes it's attributes and
-    # errors from the response.
+    # Executes a remote call on the current object, adopting the response's
+    # errors and, when the call succeeded, its attributes.
     #
-    # Defaults request args to the scope key hash (e.g., { guid: 'ABC-123' }) when none are given.
+    # Defaults request args to the scope key hash (e.g., { "guid" => 'ABC-123' }) when none are given.
     # Returns false if the response contained errors; otherwise, returns true.
     #
     def remote(endpoint, request_args = scope_key_hash)
@@ -214,8 +200,8 @@ module ActiveRemote
     # * Callbacks are invoked.
     # * Updates all the attributes that are dirty in this object.
     #
-    # This method raises an ActiveRemote::ReadOnlyRemoteRecord  if the
-    # attribute is marked as readonly.
+    # This method raises an ActiveRemote::ReadOnlyRemoteRecord if the record or
+    # its class is marked as readonly.
     def update_attribute(name, value)
       raise ReadOnlyRemoteRecord if readonly?
 
@@ -235,8 +221,9 @@ module ActiveRemote
     alias_method :update, :update_attributes
 
     # Updates the attributes of the remote record from the passed-in hash and
-    # saves the remote record. If the object is invalid, an
-    # ActiveRemote::RemoteRecordNotSaved is raised.
+    # saves the remote record. If the object fails local validation, an
+    # ActiveRemote::RemoteRecordInvalid is raised; if the service rejects the
+    # write, an ActiveRemote::RemoteRecordNotSaved is raised.
     #
     def update_attributes!(attributes)
       assign_attributes(attributes)
@@ -245,6 +232,21 @@ module ActiveRemote
     alias_method :update!, :update_attributes!
 
     private
+
+    # Shared by #delete and #destroy, which differ only in the endpoint they
+    # call. Returns the frozen instance, or false if the service reported
+    # errors.
+    #
+    def remote_delete(endpoint)
+      raise ReadOnlyRemoteRecord if readonly?
+
+      errors.clear
+      response = remote_call(endpoint, scope_key_hash)
+
+      add_errors(response.errors) if response.respond_to?(:errors)
+
+      success? ? freeze : false
+    end
 
     # Handles creating a remote object and serializing it's attributes and
     # errors from the response.
@@ -270,7 +272,8 @@ module ActiveRemote
 
     # Handles updating a remote object and serializing it's attributes and
     # errors from the response. Only attributes with the given attribute names
-    # (plus :guid) will be updated. Defaults to all attributes.
+    # (plus the scope keys) are sent. The default is every attribute, but
+    # Dirty#remote_update narrows it to the changed ones.
     #
     def remote_update(attribute_names = @attributes.keys)
       run_callbacks :update do
