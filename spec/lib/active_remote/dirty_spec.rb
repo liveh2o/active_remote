@@ -77,13 +77,18 @@ RSpec.describe ActiveRemote::Dirty do
       allow(post).to receive(:remote_call).and_return(::Generic::Remote::Post.new(name: "foo"))
     end
 
-    [:save, :save!].each do |method|
-      it "applies changes via ##{method}" do
-        changes = post.changes
-        post.public_send(method)
-        expect(post.previous_changes).to eq(changes)
-        expect(post.changes).to be_empty
-      end
+    it "applies changes via #save" do
+      changes = post.changes
+      post.save
+      expect(post.previous_changes).to eq(changes)
+      expect(post.changes).to be_empty
+    end
+
+    it "applies changes via #save!" do
+      changes = post.changes
+      post.save!
+      expect(post.previous_changes).to eq(changes)
+      expect(post.changes).to be_empty
     end
   end
 
