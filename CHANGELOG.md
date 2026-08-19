@@ -10,6 +10,12 @@ since Active Remote depends on specific Rails versions.
 
 ### Changed
 
+- Update to ActiveModel 8.1
+
+## [8.0.0]
+
+### Changed
+
 - Update to ActiveModel 8.0
 - Require Ruby 3.2 (to match Rails 8.0)
 - Fix Standard violations
