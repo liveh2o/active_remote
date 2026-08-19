@@ -6,13 +6,13 @@ Active Remote adheres to a shifted version of [semver](https://semver.org/spec/v
 (a la Rails): major/minor versions shadow Rails [versions](https://guides.rubyonrails.org/maintenance_policy.html#versioning)
 since Active Remote depends on specific Rails versions.
 
-## [Unreleased]
+## [8.1.0.alpha]
 
 ### Changed
 
 - Update to ActiveModel 8.1
 
-## [8.0.0]
+## [8.0.0] - 2026-07-24
 
 ### Changed
 
@@ -20,7 +20,7 @@ since Active Remote depends on specific Rails versions.
 - Require Ruby 3.2 (to match Rails 8.0)
 - Fix Standard violations
 
-## [7.2.0] – 2026-02-13
+## [7.2.0] - 2026-02-13
 
 ### Changed
 
